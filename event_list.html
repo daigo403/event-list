@@ -1,6 +1,7 @@
 <html><head>
 
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		table { border-collapse: collapse; width: 100%; font-size: 1.35em; }
 		th, td { border: 1px solid #666; padding: 9px; text-align: left; }
@@ -23,6 +24,18 @@
 
 		.participants { line-height: 1.5em; }
 		.category { font-weight: bold; color: #444; }
+		
+		
+		/* ▼ スマホ最適化（追加） */
+		@media (max-width: 600px) {
+			table {
+				font-size: 1.6em;
+			}
+			th, td {
+				padding: 12px;
+			}
+		}
+
 	</style>
 	
 </head><body>
