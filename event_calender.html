@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        //body { font-family: sans-serif; padding: 10px; }
         body { font-family: sans-serif; padding: 10px; font-size: 24px; }
-        
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: #f0f0f0; height: auto; padding: 5px 0; }
         td { border: 1px solid #ccc; height: 100px; vertical-align: top; padding: 2px; }
@@ -14,12 +12,9 @@
         .sat { background: #f0f8ff; color: #00d; }
         .hol { background: #fff5e6; color: #d60; }
         .event { background: #e3f2fd; font-size: 14px; margin: 2px 0; padding: 2px; cursor: pointer; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .nav { text-align: center; margin-bottom: 10px; }
-        .nav button {
-            font-size: 30px;    /* 文字サイズ */
-            padding: 20px 30px; /* ボタンの大きさ（内側の余白） */
-            cursor: pointer;
-        }
+        .nav { text-align: center; margin: 20px 0; }
+        .nav button { font-size: 30px; padding: 20px 30px; cursor: pointer; }
+        .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
     </style>
 </head>
 <body>
@@ -32,20 +27,30 @@
         <thead><tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr></thead>
         <tbody id="body"></tbody>
     </table>
-    <div class="footer">更新日時: 2026-06-16 09:00:23</div>
+    <div class="nav">
+        <button id="prevBtn2" onclick="changeMonth(-1)">＜ 前月</button>
+        <button id="nextBtn2" onclick="changeMonth(1)">次月 ＞</button>
+    </div>
+    <div class="footer">更新日時: 2026-06-16 09:04:38</div>
     <script>
         const events = [{"date": "2026-06-20", "time": "10:00", "end_time": "12:00", "title": "中級練習会ああああああ", "members": ["佐藤", "鈴木", "高橋", "田中"]}, {"date": "2026-06-20", "time": "12:30", "end_time": "14:30", "title": "中級練習会", "members": ["伊藤", "渡辺", "山本"]}, {"date": "2026-06-20", "time": "15:00", "end_time": "17:00", "title": "初級練習会", "members": ["中村", "小林", "加藤", "吉田", "佐々木"]}, {"date": "2026-06-20", "time": "17:30", "end_time": "19:30", "title": "上級練習会", "members": ["山口", "松本", "井上", "木村"]}, {"date": "2026-06-20", "time": "20:00", "end_time": "22:00", "title": "中級練習会", "members": ["林", "清水", "山崎", "森", "阿部", "池田"]}, {"date": "2026-06-21", "time": "09:00", "end_time": "11:00", "title": "朝練", "members": ["橋本", "斎藤", "石井"]}, {"date": "2026-06-21", "time": "11:30", "end_time": "13:30", "title": "中級練習会", "members": ["広瀬", "三浦", "藤井", "西村"]}, {"date": "2026-06-21", "time": "14:00", "end_time": "16:00", "title": "中級練習会", "members": ["遠藤", "大野", "中島", "小川", "菊地"]}, {"date": "2026-06-21", "time": "16:30", "end_time": "18:30", "title": "中級練習会", "members": ["藤田", "村上", "竹内", "岡田", "野口", "長谷川"]}, {"date": "2026-06-21", "time": "19:00", "end_time": "21:00", "title": "ダブルス練習", "members": ["後藤", "村田", "坂本", "石川"]}, {"date": "2026-07-10", "time": "10:00", "end_time": "12:00", "title": "七夕記念練習会", "members": ["田中", "佐藤", "鈴木"]}, {"date": "2026-07-11", "time": "18:00", "end_time": "20:00", "title": "サマーナイト練習", "members": ["高橋", "伊藤", "渡辺", "中村"]}];
         const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23"];
-        // 現在の日付を基準に初期化
         let currentYear = 2026;
         let currentMonth = 6;
         const maxYear = 2027;
         const maxMonth = 12;
 
         function render() {
-            document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
-            document.getElementById('prevBtn').disabled = (currentYear === 2026 && currentMonth === 6);
-            document.getElementById('nextBtn').disabled = (currentYear === maxYear && currentMonth === maxMonth);
+            const label = currentYear + "年" + currentMonth + "月";
+            document.getElementById('label').innerText = label;
+            
+            const isFirst = (currentYear === 2026 && currentMonth === 6);
+            const isLast = (currentYear === maxYear && currentMonth === maxMonth);
+            
+            document.getElementById('prevBtn').disabled = isFirst;
+            document.getElementById('prevBtn2').disabled = isFirst;
+            document.getElementById('nextBtn').disabled = isLast;
+            document.getElementById('nextBtn2').disabled = isLast;
             
             const body = document.getElementById('body');
             body.innerHTML = '';
@@ -58,34 +63,18 @@
                 let cell = row.insertCell();
                 let dateKey = `${currentYear}-${currentMonth.toString().padStart(2,'0')}-${i.toString().padStart(2,'0')}`;
                 let day = new Date(currentYear, currentMonth - 1, i).getDay();
-                
                 if (holidays.includes(dateKey)) cell.className = 'hol';
                 else if (day === 0) cell.className = 'sun';
                 else if (day === 6) cell.className = 'sat';
-                
                 cell.innerHTML = `<strong>${i}</strong>`;
                 events.filter(e => e.date === dateKey).forEach(e => {
                     let ev = document.createElement('div');
                     ev.className = 'event';
                     ev.innerText = `${e.time} ${e.title}`;
-                    //ev.onclick = () => alert(`${currentMonth}月${i}日 ${e.title}\n時間: ${e.time}\n参加者: ${e.members.join(', ')}`);
-                    
-                    /*
                     ev.onclick = () => {
-                        const d = new Date(currentYear, currentMonth - 1, i);
-                        const s = d.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
-                        alert('【' + s + '】\n内容: ' + e.title + '\n時間: ' + e.time + '\n参加者(' + e.members.length + '名):\n' + e.members.join(', '));
-                    };
-                    */
-                    
-                    ev.onclick = () => {
-                        const d = new Date(currentYear, currentMonth - 1, i);
-                        const s = d.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
-                        // 時間表示を「開始～終了」に変更
                         const timeStr = e.time + '～' + e.end_time;
-                        alert('【' + s + 'の予定】\n内容: ' + e.title + '\n時間: ' + timeStr + '\n参加者(' + e.members.length + '名):\n' + e.members.join(', '));
+                        alert('【予定】\n内容: ' + e.title + '\n時間: ' + timeStr + '\n参加者(' + e.members.length + '名):\n' + e.members.join(', '));
                     };
-                                        
                     cell.appendChild(ev);
                 });
             }
