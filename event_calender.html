@@ -23,11 +23,8 @@
 <body>
     <div style="margin-bottom: 20px; font-size: 20px;">
         参加者を選択: 
-                
-        //【追加】
         <input type="text" id="userSelect" list="userList" oninput="saveUser()" style="font-size: 20px; width: 250px;" placeholder="名前を入力・選択...">
         <datalist id="userList"></datalist>
-        
     </div>
 
     <div id="modal">
@@ -48,7 +45,7 @@
         <thead><tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr></thead>
         <tbody id="body"></tbody>
     </table>
-    <div class="footer">更新日時: 2026-06-16 14:45:03</div>
+    <div class="footer">更新日時: 2026-06-16 14:49:31</div>
 
     <script>
         const events = [{"date": "2026-06-20", "time": "10:00", "end_time": "12:00", "title": "中級練習会ああああ", "members": ["佐藤", "鈴木", "高橋", "田中"], "url": "https://example.com/1", "place": "体育館A", "category": "中級", "capacity": "4/10名 (空き: 6名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-20 (土)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館A | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 10:00 ～ 12:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 4/10名 (空き: 6名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 佐藤, 鈴木, 高橋, 田中</div>\n        <a href=\"https://example.com/1\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-20", "time": "12:30", "end_time": "14:30", "title": "中級練習会", "members": ["伊藤", "渡辺", "山本"], "url": "https://example.com/2", "place": "体育館B", "category": "中級", "capacity": "3/10名 (空き: 7名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-20 (土)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館B | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 12:30 ～ 14:30</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 3/10名 (空き: 7名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 伊藤, 渡辺, 山本</div>\n        <a href=\"https://example.com/2\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-20", "time": "15:00", "end_time": "17:00", "title": "初級練習会", "members": ["中村", "小林", "加藤", "吉田", "佐々木"], "url": "https://example.com/3", "place": "体育館A", "category": "初級", "capacity": "5/15名 (空き: 10名)", "bg_color": "#ffe0b2", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-20 (土)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館A | 初級</div>\n        <div style=\"font-size: 28px;\">時間: 15:00 ～ 17:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 5/15名 (空き: 10名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 中村, 小林, 加藤, 吉田, 佐々木</div>\n        <a href=\"https://example.com/3\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-20", "time": "17:30", "end_time": "19:30", "title": "上級練習会", "members": ["山口", "松本", "井上", "木村"], "url": "https://example.com/4", "place": "体育館A", "category": "上級", "capacity": "4/8名 (空き: 4名)", "bg_color": "#f8bbd0", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-20 (土)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館A | 上級</div>\n        <div style=\"font-size: 28px;\">時間: 17:30 ～ 19:30</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 4/8名 (空き: 4名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 山口, 松本, 井上, 木村</div>\n        <a href=\"https://example.com/4\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-20", "time": "20:00", "end_time": "22:00", "title": "中級練習会", "members": ["林", "清水", "山崎", "森", "阿部", "池田"], "url": "https://example.com/5", "place": "体育館B", "category": "中級", "capacity": "6/12名 (空き: 6名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-20 (土)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館B | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 20:00 ～ 22:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 6/12名 (空き: 6名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 林, 清水, 山崎, 森, 阿部, 池田</div>\n        <a href=\"https://example.com/5\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-21", "time": "09:00", "end_time": "11:00", "title": "朝練", "members": ["橋本", "斎藤", "石井"], "url": "https://example.com/6", "place": "屋外コート", "category": "フリー", "capacity": "3/6名 (空き: 3名)", "bg_color": "#e8f5e9", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-21 (日)</div>\n        <div style=\"font-size: 28px;\">場所: 屋外コート | フリー</div>\n        <div style=\"font-size: 28px;\">時間: 09:00 ～ 11:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 3/6名 (空き: 3名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 橋本, 斎藤, 石井</div>\n        <a href=\"https://example.com/6\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-21", "time": "11:30", "end_time": "13:30", "title": "中級練習会", "members": ["広瀬", "三浦", "藤井", "西村"], "url": "https://example.com/7", "place": "体育館A", "category": "中級", "capacity": "4/10名 (空き: 6名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-21 (日)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館A | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 11:30 ～ 13:30</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 4/10名 (空き: 6名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 広瀬, 三浦, 藤井, 西村</div>\n        <a href=\"https://example.com/7\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-21", "time": "14:00", "end_time": "16:00", "title": "中級練習会", "members": ["遠藤", "大野", "中島", "小川", "菊地"], "url": "https://example.com/8", "place": "体育館B", "category": "中級", "capacity": "5/10名 (空き: 5名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-21 (日)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館B | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 14:00 ～ 16:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 5/10名 (空き: 5名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 遠藤, 大野, 中島, 小川, 菊地</div>\n        <a href=\"https://example.com/8\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-21", "time": "16:30", "end_time": "18:30", "title": "中級練習会", "members": ["藤田", "村上", "竹内", "岡田", "野口", "長谷川"], "url": "https://example.com/9", "place": "体育館A", "category": "中級", "capacity": "6/12名 (空き: 6名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-21 (日)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館A | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 16:30 ～ 18:30</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 6/12名 (空き: 6名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 藤田, 村上, 竹内, 岡田, 野口, 長谷川</div>\n        <a href=\"https://example.com/9\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-06-21", "time": "19:00", "end_time": "21:00", "title": "ダブルス練習", "members": ["後藤", "村田", "坂本", "石川"], "url": "https://example.com/10", "place": "体育館B", "category": "上級", "capacity": "4/8名 (空き: 4名)", "bg_color": "#f8bbd0", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-06-21 (日)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館B | 上級</div>\n        <div style=\"font-size: 28px;\">時間: 19:00 ～ 21:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 4/8名 (空き: 4名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 後藤, 村田, 坂本, 石川</div>\n        <a href=\"https://example.com/10\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-07-10", "time": "10:00", "end_time": "12:00", "title": "七夕記念練習会", "members": ["田中", "佐藤", "鈴木"], "url": "https://example.com/11", "place": "体育館A", "category": "中級", "capacity": "3/20名 (空き: 17名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-07-10 (金)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館A | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 10:00 ～ 12:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 3/20名 (空き: 17名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 田中, 佐藤, 鈴木</div>\n        <a href=\"https://example.com/11\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-07-11", "time": "18:00", "end_time": "20:00", "title": "サマーナイト練習", "members": ["高橋", "伊藤", "渡辺", "中村"], "url": "https://example.com/12", "place": "屋外コート", "category": "初級", "capacity": "4/15名 (空き: 11名)", "bg_color": "#ffe0b2", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-07-11 (土)</div>\n        <div style=\"font-size: 28px;\">場所: 屋外コート | 初級</div>\n        <div style=\"font-size: 28px;\">時間: 18:00 ～ 20:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 4/15名 (空き: 11名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 高橋, 伊藤, 渡辺, 中村</div>\n        <a href=\"https://example.com/12\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}, {"date": "2026-07-20", "time": "18:00", "end_time": "20:00", "title": "サマーナイト練習", "members": ["高橋", "伊藤", "渡辺", "中村"], "url": "https://example.com/13", "place": "体育館A", "category": "中級", "capacity": "4/15名 (空き: 11名)", "bg_color": "#e3f2fd", "html": "\n        <div style=\"font-size: 24px; color: #555;\">2026-07-20 (月)</div>\n        <div style=\"font-size: 28px;\">場所: 体育館A | 中級</div>\n        <div style=\"font-size: 28px;\">時間: 18:00 ～ 20:00</div>\n        <div style=\"font-size: 24px; margin: 10px 0; color: #d60;\">状況: 4/15名 (空き: 11名)</div>\n        <div style=\"font-size: 24px; margin-bottom:10px;\">参加者: 高橋, 伊藤, 渡辺, 中村</div>\n        <a href=\"https://example.com/13\" target=\"_blank\" style=\"font-size: 24px; color: blue;\">詳細・申込はこちら</a>\n    "}];
@@ -60,21 +57,14 @@
         let currentIndex = 0;
 
         function updatePulldown() {
-            
-            
-            //【追加】
             const dataList = document.getElementById('userList');
-            
-            
             const monthKey = `${currentYear}-${currentMonth.toString().padStart(2,'0')}`;
             const members = membersByMonth[monthKey] || [];
-            const saved = localStorage.getItem('selectedUser');
-            select.innerHTML = '<option value="">選択してください</option>';
+            dataList.innerHTML = '';
             members.forEach(m => {
                 let opt = document.createElement('option');
-                opt.value = m; opt.textContent = m;
-                if (m === saved) opt.selected = true;
-                select.appendChild(opt);
+                opt.value = m;
+                dataList.appendChild(opt);
             });
         }
 
@@ -111,7 +101,6 @@
                 document.getElementById('userSelect').value = saved;
             }
             const myName = document.getElementById('userSelect').value;
-            
             
             const body = document.getElementById('body');
             body.innerHTML = '';
@@ -154,6 +143,12 @@
             if (currentMonth > 12) { currentMonth = 1; currentYear++; }
             else if (currentMonth < 1) { currentMonth = 12; currentYear--; }
             render();
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlUser = urlParams.get('user');
+        if (urlUser) {
+            localStorage.setItem('selectedUser', urlUser);
         }
         render();
     </script>
