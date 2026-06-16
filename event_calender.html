@@ -3,25 +3,30 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-family: sans-serif; padding: 10px; font-size: 24px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { background: #f0f0f0; padding: 5px 0; }
-        td { border: 1px solid #ccc; height: 120px; vertical-align: top; padding: 2px; }
-        .event { background: #e3f2fd; font-size: 14px; margin: 2px 0; padding: 4px; cursor: pointer; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        th { background: #f0f0f0; padding: 10px 0; }
+        td { border: 1px solid #ccc; height: 120px; vertical-align: top; padding: 5px; }
+        .sun { background: #fff0f0; color: #d00; }
+        .sat { background: #f0f8ff; color: #00d; }
+        .hol { background: #fff5e6; color: #d60; }
+        .event { background: #e3f2fd; font-size: 16px; margin: 4px 0; padding: 6px; cursor: pointer; border-radius: 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .nav { text-align: center; margin: 20px 0; }
-        .nav button { font-size: 24px; padding: 10px 20px; cursor: pointer; }
+        .nav button { font-size: 30px; padding: 20px 30px; cursor: pointer; }
         
         /* モーダル */
-        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000; }
-        .modal-content { background: white; margin: 20% auto; padding: 20px; width: 85%; border-radius: 10px; text-align: center; }
-        .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
+        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 1000; }
+        .modal-content { background: white; margin: 15% auto; padding: 50px; width: 85%; border-radius: 20px; text-align: center; }
+        .modal-content button { font-size: 32px; padding: 20px 40px; margin: 15px; cursor: pointer; border-radius: 10px; }
+        .footer { margin-top: 40px; font-size: 20px; color: #666; text-align: center; }
     </style>
 </head>
 <body>
     <div id="modal">
         <div class="modal-content">
-            <div id="modalBody" style="font-size: 20px; margin-bottom: 20px;"></div>
+            <div id="modalBody" style="font-size: 32px; margin-bottom: 40px; line-height: 1.6;"></div>
             <button onclick="changeEvent(-1)">＜ 戻る</button>
             <button onclick="changeEvent(1)">次へ ＞</button>
             <button onclick="document.getElementById('modal').style.display='none'">閉じる</button>
@@ -30,23 +35,30 @@
 
     <div class="nav">
         <button id="prevBtn" onclick="changeMonth(-1)">＜ 前月</button>
-        <span id="label" style="margin:0 20px; font-weight:bold;"></span>
+        <span id="label" style="margin:0 30px; font-weight:bold; font-size: 36px;"></span>
         <button id="nextBtn" onclick="changeMonth(1)">次月 ＞</button>
     </div>
     <table>
         <thead><tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr></thead>
         <tbody id="body"></tbody>
     </table>
-    <div class="footer">更新日時: 2026-06-16 09:12:34</div>
+    <div class="nav">
+        <button id="prevBtn2" onclick="changeMonth(-1)">＜ 前月</button>
+        <button id="nextBtn2" onclick="changeMonth(1)">次月 ＞</button>
+    </div>
+    <div class="footer">更新日時: 2026-06-16 09:45:44</div>
 
     <script>
         const events = [{"date": "2026-06-20", "time": "10:00", "end_time": "12:00", "title": "中級練習会ああああああ", "members": ["佐藤", "鈴木", "高橋", "田中"]}, {"date": "2026-06-20", "time": "12:30", "end_time": "14:30", "title": "中級練習会", "members": ["伊藤", "渡辺", "山本"]}, {"date": "2026-06-20", "time": "15:00", "end_time": "17:00", "title": "初級練習会", "members": ["中村", "小林", "加藤", "吉田", "佐々木"]}, {"date": "2026-06-20", "time": "17:30", "end_time": "19:30", "title": "上級練習会", "members": ["山口", "松本", "井上", "木村"]}, {"date": "2026-06-20", "time": "20:00", "end_time": "22:00", "title": "中級練習会", "members": ["林", "清水", "山崎", "森", "阿部", "池田"]}, {"date": "2026-06-21", "time": "09:00", "end_time": "11:00", "title": "朝練", "members": ["橋本", "斎藤", "石井"]}, {"date": "2026-06-21", "time": "11:30", "end_time": "13:30", "title": "中級練習会", "members": ["広瀬", "三浦", "藤井", "西村"]}, {"date": "2026-06-21", "time": "14:00", "end_time": "16:00", "title": "中級練習会", "members": ["遠藤", "大野", "中島", "小川", "菊地"]}, {"date": "2026-06-21", "time": "16:30", "end_time": "18:30", "title": "中級練習会", "members": ["藤田", "村上", "竹内", "岡田", "野口", "長谷川"]}, {"date": "2026-06-21", "time": "19:00", "end_time": "21:00", "title": "ダブルス練習", "members": ["後藤", "村田", "坂本", "石川"]}, {"date": "2026-07-10", "time": "10:00", "end_time": "12:00", "title": "七夕記念練習会", "members": ["田中", "佐藤", "鈴木"]}, {"date": "2026-07-11", "time": "18:00", "end_time": "20:00", "title": "サマーナイト練習", "members": ["高橋", "伊藤", "渡辺", "中村"]}];
+        const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23"];
         let currentYear = 2026;
         let currentMonth = 6;
         let currentDayEvents = [];
         let currentIndex = 0;
+        let currentDateKey = "";
 
         function openModal(dateKey, indexInDate) {
+            currentDateKey = dateKey;
             currentDayEvents = events.filter(e => e.date === dateKey);
             currentIndex = indexInDate;
             renderModal();
@@ -55,10 +67,13 @@
 
         function renderModal() {
             const e = currentDayEvents[currentIndex];
+            const d = new Date(currentDateKey);
+            const weekday = d.toLocaleDateString('ja-JP', { weekday: 'short' });
             document.getElementById('modalBody').innerHTML = `
-                <strong>${e.title}</strong><br>
-                ${e.time} ～ ${e.end_time}<br>
-                参加者(${e.members.length}名): ${e.members.join(', ')}
+                <div style="color:#555; margin-bottom:10px;">${currentDateKey} (${weekday})</div>
+                <div style="font-weight:bold; color:#000;">${e.title}</div>
+                <div style="margin-top:10px;">時間: ${e.time} ～ ${e.end_time}</div>
+                <div style="margin-top:10px;">参加者(${e.members.length}名): ${e.members.join(', ')}</div>
             `;
         }
 
@@ -81,10 +96,14 @@
                 if((firstDay + i - 1) % 7 === 0) row = body.insertRow();
                 let cell = row.insertCell();
                 let dateKey = `${currentYear}-${currentMonth.toString().padStart(2,'0')}-${i.toString().padStart(2,'0')}`;
-                cell.innerHTML = `<strong>${i}</strong>`;
+                let day = new Date(currentYear, currentMonth - 1, i).getDay();
                 
-                let dayEvents = events.filter(e => e.date === dateKey);
-                dayEvents.forEach((e, idx) => {
+                if (holidays.includes(dateKey)) cell.className = 'hol';
+                else if (day === 0) cell.className = 'sun';
+                else if (day === 6) cell.className = 'sat';
+                
+                cell.innerHTML = `<strong>${i}</strong>`;
+                events.filter(e => e.date === dateKey).forEach((e, idx) => {
                     let ev = document.createElement('div');
                     ev.className = 'event';
                     ev.innerText = `${e.time} ${e.title}`;
