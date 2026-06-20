@@ -18,20 +18,23 @@
         #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;}
         .modal-content { background: white; margin: 10% auto; padding: 20px; width: 85%; border-radius: 10px; text-align: center; }
         .modal-content button { font-size: 24px; padding: 10px 20px; }
+        .btn-lg { font-size: 20px; padding: 10px 20px; } /* ボタンサイズ拡大 */
         .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
         .filter-area { margin: 15px 0; font-size: 18px; }
     </style>
 </head>
 <body>
     <div style="margin-bottom: 20px; font-size: 20px;">
-        参加者を選択: <input type="text" id="userSelect" list="userList" oninput="saveUser()" style="font-size: 20px; width: 250px;">
-        <datalist id="userList"></datalist>
+        参加者を選択: 
+        <select id="userSelect" onchange="saveUser()" style="font-size: 20px; width: 250px; padding: 5px;">
+            <option value="">選択してください...</option>
+        </select>
     </div>
 
     <div class="filter-area">
-        <button onclick="toggleAll(true)" style="margin-right: 10px;">全選択</button>
-        <button onclick="toggleAll(false)">全解除</button>
-        <div id="filterButtons" style="margin-top: 10px;"></div>
+        <button class="btn-lg" onclick="toggleAll(true)" style="margin-right: 10px;">全選択</button>
+        <button class="btn-lg" onclick="toggleAll(false)">全解除</button>
+        <div id="filterButtons" style="margin-top: 15px;"></div>
     </div>
 
     <div id="modal">
@@ -53,7 +56,7 @@
         <tbody id="body"></tbody>
     </table>
     
-    <div class="footer">更新日時: 2026-06-20 20:23:18</div>
+    <div class="footer">更新日時: 2026-06-20 20:28:32</div>
 
     <script>
         const events = [{"date": "2026-07-04", "time": "08:00", "end_time": "10:00", "title": "*空1*🟣【基礎+】浮間舟渡_ B面オムニ_2時間", "members": ["なかはら", "かほさん", "和田伶央", "kou", "三瀬倭", "まど", "mida"], "url": "https://www.tennisbear.net/event/1427348/info", "place": "浮間舟渡庭球場", "category": "基礎+", "capacity": "参加状況：7 / 8名  (空き：1名)", "tag": "空1_基礎+", "bg_color": "#e0ccff", "text_color": "#663399"}, {"date": "2026-07-04", "time": "10:00", "end_time": "12:00", "title": "*満**満**満*🟢【中級練】浮間舟渡_ A面オムニ_2時間", "members": ["きたたか", "うえたけ", "teru", "あけちゃん", "おおやん", "Maro"], "url": "https://www.tennisbear.net/event/1427350/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "参加状況：6 / 6名  (空き：0名)", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-07-04", "time": "18:30", "end_time": "20:30", "title": "*空4*🟠【通常練】桐ケ丘_ E面ハードナイター_2時間", "members": ["ロマネ", "りんた"], "url": "https://www.tennisbear.net/event/1427355/info", "place": "桐ヶ丘体育館テニスコート", "category": "通常練", "capacity": "参加状況：2 / 6名  (空き：4名)", "tag": "空4_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-07-05", "time": "08:00", "end_time": "10:00", "title": "*満**満**満*🟢【中級練】浮間舟渡_B面オムニ_2時間", "members": ["しゅう", "さきえ", "わかこ", "あけちゃん", "らせ", "あら"], "url": "https://www.tennisbear.net/event/1427357/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "参加状況：6 / 6名  (空き：0名)", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-07-05", "time": "08:00", "end_time": "10:00", "title": "*空3*🔰【基礎練】浮間舟渡_ D面オムニ_2時間", "members": ["Kenta T.", "和田伶央", "kou", "あやの", "よしなり"], "url": "https://www.tennisbear.net/event/1427363/info", "place": "浮間舟渡庭球場", "category": "基礎練", "capacity": "参加状況：5 / 8名  (空き：3名)", "tag": "空3_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-07-05", "time": "10:00", "end_time": "12:00", "title": "*空2*🔵【中級W】浮間舟渡_ B面オムニ_2時間", "members": ["Kenta T.", "みやけひろき", "あら", "かいと"], "url": "https://www.tennisbear.net/event/1427413/info", "place": "浮間舟渡庭球場", "category": "中級W", "capacity": "参加状況：4 / 6名  (空き：2名)", "tag": "空2_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-07-11", "time": "08:00", "end_time": "10:00", "title": "*空2*🟠【通常練】浮間舟渡_ B面オムニ_2時間", "members": ["ロマネ", "和田伶央", "三瀬倭", "りんた"], "url": "https://www.tennisbear.net/event/1427420/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "参加状況：4 / 6名  (空き：2名)", "tag": "空2_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-07-11", "time": "08:00", "end_time": "10:00", "title": "*満**満*🟢【中級練】*2面*浮間舟渡_ CD面オムニ_2時間", "members": ["しゅう", "きたたか", "さきえ", "わかこ", "うえたけ", "Mano", "Maro", "おおとも", "とっきー", "はる", "Lisa", "あら"], "url": "https://www.tennisbear.net/event/1427417/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "参加状況：12 / 12名  (空き：0名)", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-07-11", "time": "10:00", "end_time": "12:00", "title": "*空3*🔵【中級W】浮間舟渡_ A面オムニ_2時間", "members": ["きたたか", "Yu Sumita", "みやけひろき"], "url": "https://www.tennisbear.net/event/1427423/info", "place": "浮間舟渡庭球場", "category": "中級W", "capacity": "参加状況：3 / 6名  (空き：3名)", "tag": "空3_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-07-12", "time": "08:00", "end_time": "12:00", "title": "*空2*🔵【団体戦練習】桐ケ丘_ A→A面オムニ_4時間", "members": ["きたたか", "みやけひろき", "marina", "しゅんすけ", "松", "まつひさ"], "url": "https://www.tennisbear.net/event/1427427/info", "place": "桐ヶ丘体育館テニスコート", "category": "団体戦練習", "capacity": "参加状況：6 / 8名  (空き：2名)", "tag": "空2_団体戦練習", "bg_color": "#e3f2fd", "text_color": "#555"}, {"date": "2026-07-12", "time": "08:00", "end_time": "10:00", "title": "*空5*🔰【基礎練】桐ケ丘_ D面オムニ_2時間", "members": ["なかはら", "和田伶央", "kou"], "url": "https://www.tennisbear.net/event/1427429/info", "place": "桐ヶ丘体育館テニスコート", "category": "基礎練", "capacity": "参加状況：3 / 8名  (空き：5名)", "tag": "空5_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-07-12", "time": "10:00", "end_time": "12:00", "title": "*空5*🟠【通常練】桐ケ丘_ E面ハード_2時間", "members": ["ロマネ"], "url": "https://www.tennisbear.net/event/1427441/info", "place": "桐ヶ丘体育館テニスコート", "category": "通常練", "capacity": "参加状況：1 / 6名  (空き：5名)", "tag": "空5_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-07-12", "time": "10:00", "end_time": "12:00", "title": "*空3*🟢【中級練】桐ケ丘_ F面ハード_2時間", "members": ["なかはら", "teru", "ひこ"], "url": "https://www.tennisbear.net/event/1427436/info", "place": "桐ヶ丘体育館テニスコート", "category": "中級練", "capacity": "参加状況：3 / 6名  (空き：3名)", "tag": "空3_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-07-18", "time": "08:00", "end_time": "10:00", "title": "*空4*🟠【通常練】桐ケ丘_ B面オムニ_2時間", "members": ["ロマネ", "和田伶央"], "url": "https://www.tennisbear.net/event/1427447/info", "place": "桐ヶ丘体育館テニスコート", "category": "通常練", "capacity": "参加状況：2 / 6名  (空き：4名)", "tag": "空4_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-07-18", "time": "10:00", "end_time": "12:00", "title": "*空4*🟢【中級練】*2面*桐ケ丘_ CD面オムニ_2時間", "members": ["しゅう", "きたたか", "わかこ", "うえたけ", "みやけひろき", "hikari", "おおやん", "まつざき"], "url": "https://www.tennisbear.net/event/1427449/info", "place": "桐ヶ丘体育館テニスコート", "category": "中級練", "capacity": "参加状況：8 / 12名  (空き：4名)", "tag": "空4_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-07-19", "time": "08:00", "end_time": "10:00", "title": "*空9*🟢【中級練】*2面*桐ケ丘_ AB面オムニ_2時間", "members": ["きたたか", "なかはら", "あけちゃん"], "url": "https://www.tennisbear.net/event/1427452/info", "place": "桐ヶ丘体育館テニスコート", "category": "中級練", "capacity": "参加状況：3 / 12名  (空き：9名)", "tag": "空9_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-07-19", "time": "08:00", "end_time": "10:00", "title": "*満**満*🙎‍♀️【女子練】桐ケ丘_ C面オムニ_2時間", "members": ["かな", "りん", "まつざき", "とっきー", "ふくもと", "おおとも", "しお", "はる"], "url": "https://www.tennisbear.net/event/1427450/info", "place": "桐ヶ丘体育館テニスコート", "category": "女子練", "capacity": "参加状況：8 / 8名  (空き：0名)", "tag": "満_女子練", "bg_color": "#ffccff", "text_color": "#993399"}, {"date": "2026-07-19", "time": "10:00", "end_time": "12:00", "title": "*空3*🟠【通常練】桐ケ丘_ E面ハード_2時間", "members": ["ロマネ", "三瀬倭", "りんた"], "url": "https://www.tennisbear.net/event/1427471/info", "place": "桐ヶ丘体育館テニスコート", "category": "通常練", "capacity": "参加状況：3 / 6名  (空き：3名)", "tag": "空3_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-07-19", "time": "10:00", "end_time": "12:00", "title": "*空4*🔵【中級W】桐ケ丘_ F面ハード_2時間", "members": ["きたたか", "なかはら"], "url": "https://www.tennisbear.net/event/1427464/info", "place": "桐ヶ丘体育館テニスコート", "category": "中級W", "capacity": "参加状況：2 / 6名  (空き：4名)", "tag": "空4_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-07-20", "time": "08:00", "end_time": "10:00", "title": "*空3*🟠【通常練】桐ケ丘_ D面オムニ_2時間", "members": ["ロマネ", "和田伶央", "三瀬倭"], "url": "https://www.tennisbear.net/event/1427483/info", "place": "桐ヶ丘体育館テニスコート", "category": "通常練", "capacity": "参加状況：3 / 6名  (空き：3名)", "tag": "空3_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-07-20", "time": "08:00", "end_time": "10:00", "title": "*空10*🟢【中級練】*2面*桐ケ丘_ AB面オムニ_2時間", "members": ["Kenta T.", "タケダ"], "url": "https://www.tennisbear.net/event/1427477/info", "place": "桐ヶ丘体育館テニスコート", "category": "中級練", "capacity": "参加状況：2 / 12名  (空き：10名)", "tag": "空10_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-07-20", "time": "10:00", "end_time": "12:00", "title": "*空5*🔵【中級W】桐ケ丘_ A面オムニ_2時間", "members": ["Kenta T."], "url": "https://www.tennisbear.net/event/1427486/info", "place": "桐ヶ丘体育館テニスコート", "category": "中級W", "capacity": "参加状況：1 / 6名  (空き：5名)", "tag": "空5_中級W", "bg_color": "#ccccff", "text_color": "#333399"}];
@@ -66,6 +69,20 @@
         let currentYear = 2026, currentMonth = 6;
         let activeDates = [...new Set(events.map(e => e.date))].sort();
         let currentDayIndex = 0;
+
+        function updatePulldown() {
+            const select = document.getElementById('userSelect');
+            const monthKey = `${currentYear}-${currentMonth.toString().padStart(2,'0')}`;
+            const members = membersByMonth[monthKey] || [];
+            const saved = localStorage.getItem('selectedUser');
+            select.innerHTML = '<option value="">選択してください...</option>';
+            members.forEach(m => {
+                let opt = document.createElement('option');
+                opt.value = m; opt.text = m;
+                if (m === saved) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
 
         function toggleAll(checked) {
             selectedCategories = checked ? new Set(allCategories) : new Set();
@@ -81,7 +98,8 @@
             dayEvents.forEach(e => {
                 html += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:5px;">
                     <div style="font-size:24px;">${e.title}</div>
-                    <div style="font-size:20px; color:#555;">場所: ${e.place} | 時間: ${e.time}-${e.end_time}</div>
+                    <div style="font-size:22px; color:#c00; font-weight:bold;">${e.time} ～ ${e.end_time}</div>
+                    <div style="font-size:20px; color:#555;">場所: ${e.place} | カテゴリ: ${e.category}</div>
                     <div style="font-size:18px;">参加者: ${e.members.join(', ')}</div>
                     <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
                 </div>`;
@@ -95,9 +113,9 @@
         }
 
         function render() {
+            updatePulldown();
             document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
-            const myName = localStorage.getItem('selectedUser') || '';
-            if(document.getElementById('userSelect').value !== myName) document.getElementById('userSelect').value = myName;
+            const myName = document.getElementById('userSelect').value;
 
             const body = document.getElementById('body'); body.innerHTML = '';
             let firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
