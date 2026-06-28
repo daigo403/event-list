@@ -64,7 +64,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-06-28(日) 12:16:29</div>
+    <div class="footer">更新日時: 2026-06-28(日) 12:17:04</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -117,26 +117,17 @@
         function saveUser() { localStorage.setItem('selectedUser', document.getElementById('userSelect').value); render(); }
 
         function renderModal(dateKey) {
-            const myName = document.getElementById('userSelect').value;
             const dayEvents = events.filter(e => e.date === dateKey);
             let html = `<div style="font-size:24px; font-weight:bold; margin-bottom:10px;">${dateKey} の全イベント</div>`;
-            
             dayEvents.forEach(e => {
-                const membersHtml = e.members.map(m => {
-                    let colored = getColoredName(m);
-                    if (myName && m.includes(myName)) {
-                        return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span>`;
-                    }
-                    return colored;
-                }).join(', ');
-
                 html += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:5px;">
                     <div style="font-size:24px;">${e.title}</div>
                     <div style="font-size:22px; color:#c00; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time}</div>
                     <div style="font-size:20px; color:#555;">場所: ${e.place} | ${e.capacity}</div>
                     <div style="font-size:20px; color:#005500; font-weight:bold;">
-                        参加者: ${membersHtml}
+                        参加者: ${e.members.map(m => getColoredName(m)).join(', ')}
                     </div>
+                    
                     <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
                     <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
                 </div>`;
