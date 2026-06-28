@@ -64,7 +64,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-06-28(日) 12:42:34</div>
+    <div class="footer">更新日時: 2026-06-28(日) 12:54:40</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -117,17 +117,26 @@
         function saveUser() { localStorage.setItem('selectedUser', document.getElementById('userSelect').value); render(); }
 
         function renderModal(dateKey) {
+            const myName = document.getElementById('userSelect').value;
             const dayEvents = events.filter(e => e.date === dateKey);
             let html = `<div style="font-size:24px; font-weight:bold; margin-bottom:10px;">${dateKey} の全イベント</div>`;
+            
             dayEvents.forEach(e => {
+                const membersHtml = e.members.map(m => {
+                    let colored = getColoredName(m);
+                    if (myName && m.includes(myName)) {
+                        return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span>`;
+                    }
+                    return colored;
+                }).join(', ');
+
                 html += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:5px;">
                     <div style="font-size:24px;">${e.title}</div>
                     <div style="font-size:22px; color:#c00; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time}</div>
                     <div style="font-size:20px; color:#555;">場所: ${e.place} | ${e.capacity}</div>
                     <div style="font-size:20px; color:#005500; font-weight:bold;">
-                        参加者: ${e.members.map(m => getColoredName(m)).join(', ')}
+                        参加者: ${membersHtml}
                     </div>
-                    
                     <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
                     <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
                 </div>`;
@@ -139,7 +148,7 @@
             currentDayIndex = Math.max(0, Math.min(currentDayIndex + n, activeDates.length - 1));
             renderModal(activeDates[currentDayIndex]);
         }
-
+        
         function render() {
             updatePulldown();
             document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
@@ -189,18 +198,31 @@
                 listBody.innerHTML = '<p style="color: #666; font-size: 16px;">この月に予定されているイベントはありません。</p>';
             } else {
                 monthlyEvents.forEach(e => {
+                    const isParticipating = myName && e.members.some(m => m.includes(myName));
                     const eventDiv = document.createElement('div');
-                    eventDiv.style.cssText = "border-bottom:5px solid #eee; padding:10px 0; font-size: 18px;";
+                    
+                    const borderStyle = isParticipating ? "border: 2px solid #d00; background-color: #fff9f9;" : "";
+                    eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:5px; font-size: 18px; border-radius: 5px; ${borderStyle}`;
+                    
+                    const membersHtml = e.members.map(m => {
+                        let colored = getColoredName(m);
+                        if (myName && m.includes(myName)) {
+                            return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span>`;
+                        }
+                        return colored;
+                    }).join(', ');
+
                     eventDiv.innerHTML = `
                         <div style="font-weight:bold;">${e.date_str} ${e.time}～ ${e.title}</div>
-                        <div style="color:#555;">場所: ${e.place} | 参加者: ${e.members.map(m => getColoredName(m)).join(', ')}</div>
+                        <div style="color:#555;">場所: ${e.place} | 参加者: ${membersHtml}</div>
                         <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
                     `;
                     listBody.appendChild(eventDiv);
                 });
             }
         }
-
+        
+        
         const filterContainer = document.getElementById('filterButtons');
         allCategories.forEach(cat => {
             let label = document.createElement('label');
