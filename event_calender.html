@@ -64,7 +64,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-06-28(日) 12:13:22</div>
+    <div class="footer">更新日時: 2026-06-28(日) 12:15:24</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -142,8 +142,7 @@
                 </div>`;
             });
             document.getElementById('modalBody').innerHTML = html;
-        }getElementById('modalBody').innerHTML = html;
-      
+        }
 
         function changeDay(n) {
             currentDayIndex = Math.max(0, Math.min(currentDayIndex + n, activeDates.length - 1));
