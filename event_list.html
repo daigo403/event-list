@@ -2,14 +2,22 @@
 
 	<meta charset="UTF-8">
 	<style>
-		table { border-collapse: collapse; width: 100%; font-size: 1.35em; }
-		th, td { border: 1px solid #666; padding: 9px; text-align: left; }
+		table { border-collapse: collapse; width: 100%; font-size: 1.35em; table-layout: fixed; }
+		th, td { border: 1px solid #666; padding: 6px; text-align: left; overflow-wrap: break-word; }
+
+		/* 列幅の調整 */
+		th:nth-child(1) { width: 12%; } /* 日付 */
+		th:nth-child(2) { width: 14%; } /* 時間 */
+		th:nth-child(3) { width: 18%; } /* 場所 */
+		th:nth-child(4) { width: 22%; } /* 練習会名 */
+		th:nth-child(5) { width: 34%; } /* 参加者 */
 
 		th {
 			background: #fafafa;
 			position: sticky;
 			top: 0;
 			z-index: 50;
+			font-size: 0.9em;
 		}
 
 		.sticky-title {
@@ -19,22 +27,19 @@
 			z-index: 25;
 		}
 
-		.participants { line-height: 1.5em; }
-
-		/* ★ 予約行の行間を極限まで詰める */
+		.participants { line-height: 1.4em; font-size: 0.9em; }
 
 		tr.reservation_row td {
-			padding-top: 0px !important;
-			padding-bottom: 0px !important;
+			padding-top: 2px !important;
+			padding-bottom: 2px !important;
 			line-height: 1.0em !important;
 			font-size: 0.85em !important;
 		}
-
 	</style>
 	
 </head><body>
 <h2>練習会一覧</h2>
-<div style='font-size:1.1em; color:#555;'>データ更新日時：2026-06-28 12:57</div>
+<div style='font-size:1.1em; color:#555;'>データ更新日時：2026-06-28 13:09</div>
 <table>
 <tr>
 <th>日付</th>
