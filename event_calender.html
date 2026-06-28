@@ -64,7 +64,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-06-28(日) 11:51:33</div>
+    <div class="footer">更新日時: 2026-06-28(日) 11:53:45</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -190,7 +190,7 @@
             } else {
                 monthlyEvents.forEach(e => {
                     const eventDiv = document.createElement('div');
-                    eventDiv.style.cssText = "border-bottom:1px solid #eee; padding:10px 0; font-size: 18px;";
+                    eventDiv.style.cssText = "border-bottom:2px solid #eee; padding:10px 0; font-size: 18px;";
                     eventDiv.innerHTML = `
                         <div style="font-weight:bold;">${e.date_str} ${e.time}～ ${e.title}</div>
                         <div style="color:#555;">場所: ${e.place} | 参加者: ${e.members.map(m => getColoredName(m)).join(', ')}</div>
