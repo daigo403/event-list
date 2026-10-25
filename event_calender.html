@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: sans-serif; padding: 10px; font-size: 24px; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th { background: #f0f0f0; padding: 5px 0; }
+        td { border: 1px solid #ccc; height: 120px; vertical-align: top; padding: 2px; }
+        .event { font-size: 14px; margin: 2px 0; padding: 4px; cursor: pointer; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .nav { text-align: center; margin: 20px 0; }
+        .nav button { font-size: 24px; padding: 10px 20px; cursor: pointer; }
+        .sun { background: #fff0f0; color: #d00; }
+        .sat { background: #f0f8ff; color: #00d; }
+        .hol { background: #fff5e6; color: #d60; }
+        .today { border: 4px solid #f00 !important; }
+        #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;}
+        .modal-content { background: white; margin: 10% auto; padding: 20px; width: 85%; border-radius: 10px; text-align: center; }
+        .modal-content button { font-size: 24px; padding: 10px 20px; }
+        .btn-lg { font-size: 20px; padding: 10px 20px; } /* ボタンサイズ拡大 */
+        .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
+        .filter-area { margin: 15px 0; font-size: 18px; }
+        .gender-f { color: #ff69b4 !important; font-weight: bold; } /* ピンク */
+        .gender-m { color: #1e90ff !important; font-weight: bold; } /* 青 */
+        .gender-unknown { color: #555555 !important; } /* 濃いグレー */
+    </style>
+</head>
+<body>
+    <div style="margin-bottom: 20px; font-size: 20px;">
+        参加者を選択: 
+        <select id="userSelect" onchange="saveUser()" style="font-size: 20px; width: 250px; padding: 5px;">
+            <option value="">選択してください...</option>
+        </select>
+    </div>
+
+    <div class="filter-area">
+        <button class="btn-lg" onclick="toggleAll(true)" style="margin-right: 10px;">全選択</button>
+        <button class="btn-lg" onclick="toggleAll(false)">全解除</button>
+        <div id="filterButtons" style="margin-top: 15px;"></div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <div id="modalBody" style="font-size: 20px; margin-bottom: 20px; text-align: left;"></div>
+            <button onclick="changeDay(-1)">＜ 前日</button>
+            <button onclick="changeDay(1)">翌日 ＞</button>
+            <button onclick="document.getElementById('modal').style.display='none'">閉じる</button>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button onclick="changeMonth(-1)">＜ 前月</button>
+        <span id="label" style="margin:0 20px; font-weight:bold;"></span>
+        <button onclick="changeMonth(1)">次月 ＞</button>
+    </div>
+    <table>
+        <thead><tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr></thead>
+        <tbody id="body"></tbody>
+    </table>
+
+    <div class="nav">
+        <button onclick="changeMonth(-1)">＜ 前月</button>
+        <button onclick="changeMonth(0)">当月</button>
+        <button onclick="changeMonth(1)">次月 ＞</button>
+    </div>
+    <div class="footer">更新日時: 2026-10-25(日) 09:44:57</div>
+    
+    <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+        <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
+        <div id="eventListBody"></div>
+    </div>
+
+    <script>
+        const events = [{"date": "2026-10-25", "date_str": "2026/10/25(日)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】*2面*浮間舟渡_ AB面オムニ_2時間", "members": ["みやけひろき[m]", "きたたか[m]", "Yu Sumita[m]", "らせ[m]", "はる[f]", "おおやん[m]", "あら[m]", "体験参加(芳賀さん)", "れつ", "teru[m]", "やました[m]"], "url": "https://www.tennisbear.net/event/1694913/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "11名 / 12名 (空き：1名)", "reservation_name": "不明", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-10-31", "date_str": "2026/10/31(土)", "time": "09:00", "end_time": "11:00", "title": "*空1*🔰【基礎練】桐ケ丘_ F面ハード_2時間", "members": ["いわた[m]", "和田伶央[m]", "住谷 一真[m]", "kou[m]", "naoki[m]", "ゆっきー[m]", "ツシマ[m]"], "url": "https://www.tennisbear.net/event/1616595/info", "place": "桐ケ丘体育館テニスコート", "category": "基礎練", "capacity": "7名 / 8名 (空き：1名)", "reservation_name": "◎(29)新坂まどか", "tag": "空1_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-10-31", "date_str": "2026/10/31(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟠【通常練】桐ケ丘_ E面ハード_2時間", "members": ["ロマネ[m]", "おおた[m]", "三瀬倭[m]", "ヒロ[m]", "コージ[m]", "体験参加者"], "url": "https://www.tennisbear.net/event/1616591/info", "place": "桐ケ丘体育館テニスコート", "category": "通常練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "×(14)長尾さやか", "tag": "満_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-10-31", "date_str": "2026/10/31(土)", "time": "11:00", "end_time": "13:00", "title": "*空2*🟢【中級練】桐ケ丘_ A面オムニ_2時間", "members": ["りんた[m]", "Yutaka[m]", "やました[m]", "あけちゃん[m]"], "url": "https://www.tennisbear.net/event/1616598/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "4名 / 6名 (空き：2名)", "reservation_name": "〇(36)前田和也", "tag": "空2_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-01", "date_str": "2026/11/1(日)", "time": "09:00", "end_time": "11:00", "title": "*満*🟠【通常練】浮間舟渡_ D面オムニ_2時間", "members": ["ゆっきー[m]", "ロマネ[m]", "あけちゃん[m]", "Lisa[f]", "みやけさん知人", "みやけひろき[m]"], "url": "https://www.tennisbear.net/event/1671420/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "◎(21)金井駿典", "tag": "満_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-03", "date_str": "2026/11/3(火祝)", "time": "09:00", "end_time": "11:00", "title": "*空3*🟠【通常練】新河岸川_ D面ハード_2時間", "members": ["ichi02TA[m]", "牛久保晃平[m]", "ヒロ[m]"], "url": "https://www.tennisbear.net/event/1671422/info", "place": "新河岸川庭球場", "category": "通常練", "capacity": "3名 / 6名 (空き：3名)", "reservation_name": "◎(8)金野大悟", "tag": "空3_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-07", "date_str": "2026/11/7(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】桐ケ丘_ F面ハード_2時間", "members": ["うえたけ[m]", "きたたか[m]", "まつざき[f]", "みやけひろき[m]", "らせ[m]", "ヒロ[m]"], "url": "https://www.tennisbear.net/event/1671429/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "◎(8)金野大悟", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-07", "date_str": "2026/11/7(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】桐ケ丘_ E面ハード_2時間", "members": ["ふくもと[m]", "わかこ[f]", "なかはら[m]", "あけちゃん[m]", "和田伶央[m]", "teru[m]", "kou[m]", "おおとも[f]"], "url": "https://www.tennisbear.net/event/1671426/info", "place": "桐ケ丘体育館テニスコート", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "◎(8)金野大悟", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-07", "date_str": "2026/11/7(土)", "time": "11:00", "end_time": "13:00", "title": "*満*🙎‍♀️【女子練】桐ケ丘_ A面オムニ_2時間", "members": ["りん[f]", "かな[f]", "わかこ[f]", "おおとも[f]"], "url": "https://www.tennisbear.net/event/1671431/info", "place": "桐ケ丘体育館テニスコート", "category": "女子練", "capacity": "4名 / 4名 (空き：0名)", "reservation_name": "◎(8)金野大悟", "tag": "満_女子練", "bg_color": "#ffccff", "text_color": "#993399"}, {"date": "2026-11-08", "date_str": "2026/11/8(日)", "time": "09:00", "end_time": "11:00", "title": "*空1*🙎‍♀️【女子練】浮間舟渡_ A面オムニ_2時間", "members": ["かな[f]", "りん[f]", "藤原さん", "とっきー[f]", "ふくもと[m]", "しお", "鈴木ほのかさん体験参加"], "url": "https://www.tennisbear.net/event/1671433/info", "place": "浮間舟渡庭球場", "category": "女子練", "capacity": "7名 / 8名 (空き：1名)", "reservation_name": "×(22)吉原山人イスル", "tag": "空1_女子練", "bg_color": "#ffccff", "text_color": "#993399"}, {"date": "2026-11-08", "date_str": "2026/11/8(日)", "time": "09:00", "end_time": "11:00", "title": "*空3*🟠【通常練】浮間舟渡_ B面オムニ_2時間", "members": ["ロマネ[m]", "住谷 一真[m]", "おおた[m]"], "url": "https://www.tennisbear.net/event/1671432/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "3名 / 6名 (空き：3名)", "reservation_name": "×(22)吉原山人イスル", "tag": "空3_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-08", "date_str": "2026/11/8(日)", "time": "11:00", "end_time": "13:00", "title": "*満*🟢【中級練】浮間公園_2時間", "members": ["みやけひろき[m]", "らせ[m]", "なお[m]", "やました[m]", "Yutaka[m]", "シーン[f]"], "url": "https://www.tennisbear.net/event/1671663/info", "place": "浮間公園", "category": "中級練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】桐ケ丘_ E面ハード_2時間", "members": ["Kenta T.[m]", "けん妻さん", "住谷 一真[m]", "牛久保晃平[m]", "和田伶央[m]", "ヒロ[m]", "おおた[m]", "ツシマ[m]"], "url": "https://www.tennisbear.net/event/1671444/info", "place": "桐ケ丘体育館テニスコート", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "×(35)古永弘", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "11:00", "end_time": "13:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ AB面オムニ_2時間", "members": ["うえたけ[m]", "Kenta T.[m]", "きたたか[m]", "まつざき[f]", "みやけひろき[m]", "はる[f]", "らせ[m]", "おおやん[m]", "あけちゃん[m]", "teru[m]", "あら[m]", "りんた[m]", "竹内さん体験参加"], "url": "https://www.tennisbear.net/event/1671446/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "×(25)高橋和也×(23)松田優", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】浮間公園_2時間", "members": ["ゆかちー[f]", "みやけひろき[m]", "わかこ[f]", "けー[f]", "おおとも[f]", "カスミ[f]"], "url": "https://www.tennisbear.net/event/1671664/info", "place": "浮間公園", "category": "中級練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "11:00", "end_time": "13:00", "title": "*空2*🔵【中級W】浮間公園_2時間", "members": ["おおとも[f]", "カスミ[f]", "ゆかちー[f]", "Lisa[f]"], "url": "https://www.tennisbear.net/event/1671668/info", "place": "浮間公園", "category": "中級W", "capacity": "4名 / 6名 (空き：2名)", "reservation_name": "不明", "tag": "空2_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*空2*🟠【通常練】桐ケ丘_ D面オムニ_2時間", "members": ["ロマネ[m]", "住谷 一真[m]", "牛久保晃平[m]", "おおた[m]"], "url": "https://www.tennisbear.net/event/1671451/info", "place": "桐ケ丘体育館テニスコート", "category": "通常練", "capacity": "4名 / 6名 (空き：2名)", "reservation_name": "◎(8)金野大悟", "tag": "空2_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ BC面オムニ_2時間", "members": ["うえたけ[m]", "わかこ[f]", "きたたか[m]", "ゆー[m]", "おおとも[f]", "なかはら[m]", "あけちゃん[m]", "ゆかちー[f]", "teru[m]", "りんた[m]", "なお[m]", "やました[m]"], "url": "https://www.tennisbear.net/event/1671453/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "12名 / 12名 (空き：0名)", "reservation_name": "〇(36)前田和也〇(36)前田和也", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-22", "date_str": "2026/11/22(日)", "time": "09:00", "end_time": "11:00", "title": "*空11*🟢【中級練】*2面*浮間舟渡_ BD面オムニ_2時間", "members": ["ひこ[m]"], "url": "https://www.tennisbear.net/event/1671455/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "1名 / 12名 (空き：11名)", "reservation_name": "△(15)松久航輝△(16)堀口つぐみ", "tag": "空11_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-22", "date_str": "2026/11/22(日)", "time": "11:00", "end_time": "13:00", "title": "*空6*🔵【中級W】浮間舟渡_ A面オムニ_2時間", "members": [], "url": "https://www.tennisbear.net/event/1671458/info", "place": "浮間舟渡庭球場", "category": "中級W", "capacity": "0名 / 6名 (空き：6名)", "reservation_name": "◎(8)金野大悟", "tag": "空6_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空9*🟢【中級練】*2面*浮間舟渡_ AB面オムニ_2時間", "members": ["ichi02TA[m]", "きたたか[m]", "teru[m]"], "url": "https://www.tennisbear.net/event/1671460/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "3名 / 12名 (空き：9名)", "reservation_name": "△(16)堀口つぐみ△(16)堀口つぐみ", "tag": "空9_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空4*🟠【通常練】浮間舟渡_ D面オムニ_2時間", "members": ["ロマネ[m]", "おおた[m]"], "url": "https://www.tennisbear.net/event/1671464/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "2名 / 6名 (空き：4名)", "reservation_name": "◎(8)金野大悟", "tag": "空4_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】*2面*浮間舟渡_ BC面オムニ_2時間", "members": ["うえたけ[m]", "さきえ[f]", "わかこ[f]", "ゆー[m]", "あけちゃん[m]", "teru[m]", "りんた[m]", "みやけひろき[m]", "やました[m]", "あら[m]", "おおとも[f]"], "url": "https://www.tennisbear.net/event/1671468/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "11名 / 12名 (空き：1名)", "reservation_name": "◎(8)金野大悟△(5)牛久保", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*空1*🔰【基礎練】浮間舟渡_ D面オムニ_2時間", "members": ["なかはら[m]", "住谷 一真[m]", "牛久保晃平[m]", "和田伶央[m]", "よしなり[f]", "あやの[f]", "kou[m]"], "url": "https://www.tennisbear.net/event/1671466/info", "place": "浮間舟渡庭球場", "category": "基礎練", "capacity": "7名 / 8名 (空き：1名)", "reservation_name": "△(5)牛久保", "tag": "空1_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "09:00", "end_time": "11:00", "title": "*空8*🟢【中級練】*2面*浮間舟渡_ CD面オムニ_2時間", "members": ["Kenta T.[m]", "かな[f]", "みやけひろき[m]", "あら[m]"], "url": "https://www.tennisbear.net/event/1671470/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "4名 / 12名 (空き：8名)", "reservation_name": "×(30)根井美咲×(20)加藤慎也", "tag": "空8_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "11:00", "end_time": "13:00", "title": "*空4*🔵【中級W】浮間公園_2時間", "members": ["Kenta T.[m]", "ひこ[m]"], "url": "https://www.tennisbear.net/event/1671670/info", "place": "浮間公園", "category": "中級W", "capacity": "2名 / 6名 (空き：4名)", "reservation_name": "不明", "tag": "空4_中級W", "bg_color": "#ccccff", "text_color": "#333399"}];
+        const membersByMonth = {"2026-10": ["Yu Sumita[m]", "Yutaka[m]", "kou[m]", "naoki[m]", "teru[m]", "あけちゃん[m]", "あら[m]", "いわた[m]", "おおた[m]", "おおやん[m]", "きたたか[m]", "はる[f]", "みやけひろき[m]", "やました[m]", "ゆっきー[m]", "らせ[m]", "りんた[m]", "れつ", "コージ[m]", "ツシマ[m]", "ヒロ[m]", "ロマネ[m]", "三瀬倭[m]", "住谷 一真[m]", "体験参加(芳賀さん)", "体験参加者", "和田伶央[m]"], "2026-11": ["Kenta T.[m]", "Lisa[f]", "Yutaka[m]", "ichi02TA[m]", "kou[m]", "teru[m]", "あけちゃん[m]", "あやの[f]", "あら[m]", "うえたけ[m]", "おおた[m]", "おおとも[f]", "おおやん[m]", "かな[f]", "きたたか[m]", "けん妻さん", "けー[f]", "さきえ[f]", "しお", "とっきー[f]", "なお[m]", "なかはら[m]", "はる[f]", "ひこ[m]", "ふくもと[m]", "まつざき[f]", "みやけさん知人", "みやけひろき[m]", "やました[m]", "ゆかちー[f]", "ゆっきー[m]", "ゆー[m]", "よしなり[f]", "らせ[m]", "りん[f]", "りんた[m]", "わかこ[f]", "カスミ[f]", "シーン[f]", "ツシマ[m]", "ヒロ[m]", "ロマネ[m]", "住谷 一真[m]", "和田伶央[m]", "牛久保晃平[m]", "竹内さん体験参加", "藤原さん", "鈴木ほのかさん体験参加"]};
+        const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23", "2028-01-01", "2028-01-10", "2028-02-11", "2028-02-23", "2028-03-20", "2028-04-29", "2028-05-03", "2028-05-04", "2028-05-05", "2028-07-17", "2028-08-11", "2028-09-18", "2028-09-22", "2028-10-09", "2028-11-03", "2028-11-23"];
+        const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
+        
+        // --- 追加箇所 ---
+        function getColoredName(name) {
+            if (name.includes('[f]')) {
+                return `<span class="gender-f">${name}</span>`;
+            } else if (name.includes('[m]')) {
+                return `<span class="gender-m">${name}</span>`;
+            } else {
+                return `<span class="gender-unknown">${name}</span>`;
+            }
+        }
+        
+        let allCategories = [...new Set(events.map(e => e.category))];
+        let selectedCategories = new Set(allCategories);
+        let currentYear = 2026, currentMonth = 10;
+        let activeDates = [...new Set(events.map(e => e.date))].sort();
+        let currentDayIndex = 0;
+
+        function updatePulldown() {
+            const select = document.getElementById('userSelect');
+            const monthKey = `${currentYear}-${currentMonth.toString().padStart(2,'0')}`;
+            const members = membersByMonth[monthKey] || [];
+            const saved = localStorage.getItem('selectedUser');
+            select.innerHTML = '<option value="">選択してください...</option>';
+            members.forEach(m => {
+                let opt = document.createElement('option');
+                opt.value = m; opt.text = m;
+                if (m === saved) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function toggleAll(checked) {
+            selectedCategories = checked ? new Set(allCategories) : new Set();
+            document.querySelectorAll('#filterButtons input').forEach(cb => cb.checked = checked);
+            render();
+        }
+
+        function saveUser() { localStorage.setItem('selectedUser', document.getElementById('userSelect').value); render(); }
+
+        function renderModal(dateKey) {
+            const myName = document.getElementById('userSelect').value;
+            const dayEvents = events.filter(e => e.date === dateKey);
+            let html = `<div style="font-size:24px; font-weight:bold; margin-bottom:10px;">${dateKey} の全イベント</div>`;
+            
+            dayEvents.forEach(e => {
+                const isParticipating = myName && e.members.some(m => m.includes(myName));
+                const borderStyle = isParticipating ? "border: 3px solid #d00 !important; background-color: #fff9f9;" : "border: 1px solid #ddd;";
+                
+                const membersHtml = e.members.map(m => {
+                    let colored = getColoredName(m);
+                    if (myName && m.includes(myName)) return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span>`;
+                    return colored;
+                }).join(', ');
+
+                html += `<div style="${borderStyle} padding:10px; margin-bottom:10px; border-radius:5px;">
+                    <div style="font-size:24px;">${e.title}</div>
+                    <div style="font-size:22px; color:#c00; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time}</div>
+                    <div style="font-size:20px; color:#555;">場所: ${e.place} | ${e.capacity}</div>
+                    <div style="font-size:20px; color:#005500; font-weight:bold;">参加者: ${membersHtml}</div>
+                    <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
+                    <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
+                </div>`;
+            });
+            document.getElementById('modalBody').innerHTML = html;
+        }
+
+        function changeDay(n) {
+            currentDayIndex = Math.max(0, Math.min(currentDayIndex + n, activeDates.length - 1));
+            renderModal(activeDates[currentDayIndex]);
+        }
+        
+        function render() {
+            updatePulldown();
+            document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
+            const myName = document.getElementById('userSelect').value;
+
+            const body = document.getElementById('body'); body.innerHTML = '';
+            let firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
+            let lastDay = new Date(currentYear, currentMonth, 0).getDate();
+            let row = body.insertRow();
+            for(let i=0; i<firstDay; i++) row.insertCell();
+
+            for(let i=1; i<=lastDay; i++) {
+                if((firstDay + i - 1) % 7 === 0) row = body.insertRow();
+                let cell = row.insertCell();
+                let dateKey = `${currentYear}-${currentMonth.toString().padStart(2,'0')}-${i.toString().padStart(2,'0')}`;
+                
+                let day = new Date(currentYear, currentMonth - 1, i).getDay();
+                if (holidays.includes(dateKey)) cell.classList.add('hol');
+                else if (day === 0) cell.classList.add('sun');
+                else if (day === 6) cell.classList.add('sat');
+                
+                cell.innerHTML = `<strong>${i}</strong>`;
+                
+                events.filter(e => e.date === dateKey && selectedCategories.has(e.category)).forEach(e => {
+                    let ev = document.createElement('div');
+                    ev.className = 'event';
+                    ev.style.backgroundColor = e.bg_color;
+                    ev.style.color = e.text_color;
+                    if (myName && e.members.some(m => m.includes(myName))) ev.style.border = "2px solid #d00";
+                    ev.innerText = `${e.time} ${e.tag}`;
+                    ev.onclick = () => { currentDayIndex = activeDates.indexOf(dateKey); renderModal(dateKey); document.getElementById('modal').style.display = 'block'; };
+                    cell.appendChild(ev);
+                });
+            }
+
+            const listTitle = document.getElementById('eventListTitle');
+            const listBody = document.getElementById('eventListBody');
+            listTitle.innerText = `${currentYear}年${currentMonth}月のイベント一覧`;
+            listBody.innerHTML = '';
+
+            const monthlyEvents = events.filter(e => {
+                const [y, m, d] = e.date.split('-').map(Number);
+                return y === currentYear && m === currentMonth && selectedCategories.has(e.category);
+            });
+
+            if (monthlyEvents.length === 0) {
+                listBody.innerHTML = '<p style="color: #666; font-size: 16px;">この月に予定されているイベントはありません。</p>';
+            } else {
+                monthlyEvents.forEach(e => {
+                    const isParticipating = myName && e.members.some(m => m.includes(myName));
+                    const eventDiv = document.createElement('div');
+                    
+                    const borderStyle = isParticipating ? "border: 2px solid #d00; background-color: #fff9f9;" : "";
+                    eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:5px; font-size: 18px; border-radius: 5px; ${borderStyle}`;
+                    
+                    const membersHtml = e.members.map(m => {
+                        let colored = getColoredName(m);
+                        if (myName && m.includes(myName)) {
+                            return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span>`;
+                        }
+                        return colored;
+                    }).join(', ');
+
+                    eventDiv.innerHTML = `
+                        <div style="font-weight:bold;">${e.date_str} ${e.time}～ ${e.title}</div>
+                        <div style="color:#555;">場所: ${e.place} | 参加者: ${membersHtml}</div>
+                        <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
+                    `;
+                    listBody.appendChild(eventDiv);
+                });
+            }
+        }
+        
+        
+        const filterContainer = document.getElementById('filterButtons');
+        allCategories.forEach(cat => {
+            let label = document.createElement('label');
+            const style = colorMap[cat] ? `background:${colorMap[cat].bg}; color:${colorMap[cat].text}; padding:2px 5px; border-radius:4px;` : '';
+            label.innerHTML = `<span style="${style}"><input type="checkbox" checked value="${cat}"> ${cat}</span> `;
+            label.querySelector('input').onchange = (e) => { e.target.checked ? selectedCategories.add(cat) : selectedCategories.delete(cat); render(); };
+            filterContainer.appendChild(label);
+        });
+
+        function changeMonth(n) {
+            if (n === 0) {
+                currentYear = 2026;
+                currentMonth = 10;
+            } else {
+                currentMonth += n;
+                if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+                else if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+            }
+            render();
+        }
+
+        /*
+        function changeMonth(n) {
+            currentMonth += n;
+            if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+            else if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+            render();
+        }
+       */
+
+        render();
+    </script>
+</body>
+</html>
