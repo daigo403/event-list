@@ -10,7 +10,7 @@
         td { border: 1px solid #ccc; height: 120px; vertical-align: top; padding: 2px; position: relative; }
         .event { font-size: 14px; margin: 2px 0; padding: 4px; cursor: pointer; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         /* 終了済みイベント用スタイル */
-        .event.past-event { background-color: #e0e0e0 !important; color: #888888 !important; opacity: 0.65; border: 1px solid #bbb !important; }
+        .event.past-event { background-color: #d6d8db !important; color: #495057 !important; opacity: 0.8; border: 1px solid #adb5bd !important; }
         .nav { text-align: center; margin: 20px 0; }
         .nav button { font-size: 24px; padding: 10px 20px; cursor: pointer; }
         .sun { background: #fff0f0; color: #d00; }
@@ -18,7 +18,7 @@
         .hol { background: #fff5e6; color: #d60; }
         /* 本日コマの強調表示 */
         .today { border: 3px solid #1a73e8 !important; background-color: #e8f0fe !important; }
-        .today-badge { display: inline-block; background: #1a73e8; color: #fff; font-size: 11px; padding: 1px 4px; border-radius: 3px; margin-left: 4px; font-weight: normal; vertical-align: middle; }
+        .today-badge { display: inline-block; background: #1a73e8; color: #fff; font-size: 14px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
         #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;}
         .modal-content { background: white; margin: 10% auto; padding: 20px; width: 85%; border-radius: 10px; text-align: center; }
         .modal-content button { font-size: 24px; padding: 10px 20px; }
@@ -28,8 +28,9 @@
         .gender-f { color: #ff69b4 !important; font-weight: bold; } /* ピンク */
         .gender-m { color: #1e90ff !important; font-weight: bold; } /* 青 */
         .gender-unknown { color: #555555 !important; } /* 濃いグレー */
-        .past-list-item { background-color: #f8f9fa !important; border-color: #ddd !important; opacity: 0.65; }
-        .past-badge { display: inline-block; background: #888; color: #fff; font-size: 13px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+        .past-list-item { background-color: #e9ecef !important; border: 1px solid #adb5bd !important; color: #495057 !important; }
+        .today-list-item { border: 2px solid #1a73e8 !important; background-color: #f1f6ff !important; }
+        .past-badge { display: inline-block; background: #6c757d; color: #fff; font-size: 14px; padding: 2px 8px; border-radius: 4px; margin-left: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -70,7 +71,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-07(土) 21:58:00</div>
+    <div class="footer">更新日時: 2026-11-07(土) 22:01:42</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -83,7 +84,7 @@
         const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23", "2028-01-01", "2028-01-10", "2028-02-11", "2028-02-23", "2028-03-20", "2028-04-29", "2028-05-03", "2028-05-04", "2028-05-05", "2028-07-17", "2028-08-11", "2028-09-18", "2028-09-22", "2028-10-09", "2028-11-03", "2028-11-23"];
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-07";
-        const currentNow = new Date("2026-11-07T21:58:00");
+        const currentNow = new Date("2026-11-07T22:01:42");
         
         // --- 追加箇所 ---
         function getColoredName(name) {
@@ -141,7 +142,7 @@
                 
                 let borderStyle = isParticipating ? "border: 3px solid #d00 !important; background-color: #fff9f9;" : "border: 1px solid #ddd;";
                 if (past) {
-                    borderStyle = "border: 1px solid #ccc; background-color: #f5f5f5; opacity: 0.7;";
+                    borderStyle = "border: 1px solid #adb5bd; background-color: #e9ecef; opacity: 0.9;";
                 }
                 
                 const membersHtml = e.members.map(m => {
@@ -154,9 +155,9 @@
 
                 html += `<div style="${borderStyle} padding:10px; margin-bottom:10px; border-radius:5px;">
                     <div style="font-size:24px;">${e.title}${pastBadge}</div>
-                    <div style="font-size:22px; color:${past ? '#888' : '#c00'}; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time}</div>
+                    <div style="font-size:22px; color:${past ? '#495057' : '#c00'}; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time}</div>
                     <div style="font-size:20px; color:#555;">場所: ${e.place} | ${e.capacity}</div>
-                    <div style="font-size:20px; color:${past ? '#555' : '#005500'}; font-weight:bold;">参加者: ${membersHtml}</div>
+                    <div style="font-size:20px; color:${past ? '#495057' : '#005500'}; font-weight:bold;">参加者: ${membersHtml}</div>
                     <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
                     <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
                 </div>`;
@@ -233,12 +234,17 @@
                 monthlyEvents.forEach(e => {
                     const isParticipating = myName && e.members.some(m => m.includes(myName));
                     const past = isPastEvent(e);
+                    const isTodayEvent = (e.date === todayStr);
                     const eventDiv = document.createElement('div');
                     
                     let borderStyle = isParticipating ? "border: 2px solid #d00; background-color: #fff9f9;" : "border: 1px solid #e0e0e0; background-color: #fff;";
+                    
                     if (past) {
                         eventDiv.classList.add('past-list-item');
-                        borderStyle = "border: 1px solid #ccc; background-color: #f8f9fa;";
+                        borderStyle = "border: 1px solid #adb5bd; background-color: #e9ecef;";
+                    } else if (isTodayEvent) {
+                        eventDiv.classList.add('today-list-item');
+                        borderStyle = "border: 2px solid #1a73e8; background-color: #f1f6ff;";
                     }
 
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; ${borderStyle}`;
@@ -252,11 +258,12 @@
                     }).join(', ');
 
                     const pastBadge = past ? '<span class="past-badge">終了</span>' : '';
+                    const todayBadge = (!past && isTodayEvent) ? '<span class="today-badge">本日</span>' : '';
 
                     eventDiv.innerHTML = `
-                        <div style="font-weight:bold; color:${past ? '#777' : '#000'};">${e.date_str} ${e.time}～${e.end_time} ${e.title}${pastBadge}</div>
-                        <div style="color:${past ? '#888' : '#555'};">場所: ${e.place} | 参加者: ${membersHtml}</div>
-                        <a href="${e.url}" target="_blank" style="font-size:18px; color:${past ? '#888' : '#0066cc'};">詳細・申込はこちら</a>
+                        <div style="font-weight:bold; color:${past ? '#495057' : '#000'};">${e.date_str} ${e.time}～${e.end_time} ${e.title}${todayBadge}${pastBadge}</div>
+                        <div style="color:${past ? '#495057' : '#555'};">場所: ${e.place} | 参加者: ${membersHtml}</div>
+                        <a href="${e.url}" target="_blank" style="font-size:18px; color:${past ? '#495057' : '#0066cc'};">詳細・申込はこちら</a>
                     `;
                     listBody.appendChild(eventDiv);
                 });
