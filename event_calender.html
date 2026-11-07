@@ -10,7 +10,7 @@
         td { border: 1px solid #ccc; height: 120px; vertical-align: top; padding: 2px; position: relative; background-clip: padding-box; }
         .event { font-size: 14px; margin: 2px 0; padding: 4px; cursor: pointer; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         /* 終了済みイベント用スタイル */
-        .event.past-event { background-color: #f8f9fa !important; color: #6c757d !important; opacity: 0.9; border: 1px solid #ced4da !important; }
+        .event.past-event { background-color: #cbd5e1 !important; color: #495057 !important; opacity: 0.9; border: 1px solid #94a3b8 !important; }
         .nav { text-align: center; margin: 20px 0; }
         .nav button { font-size: 24px; padding: 10px 20px; cursor: pointer; }
         .sun { background: #fff0f0; color: #d00; }
@@ -31,10 +31,10 @@
         .gender-f { color: #ff69b4 !important; font-weight: bold; } /* ピンク */
         .gender-m { color: #1e90ff !important; font-weight: bold; } /* 青 */
         .gender-unknown { color: #555555 !important; } /* 濃いグレー */
-        .past-list-item { background-color: #f1f3f5 !important; border: 1px solid #ced4da !important; color: #495057 !important; }
+        .past-list-item { background-color: #cbd5e1 !important; border: 1px solid #94a3b8 !important; color: #334155 !important; }
         .today-list-item { border: 2px solid #1a73e8 !important; background-color: #f1f6ff !important; }
         .tomorrow-list-item { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; }
-        .today-past-list-item { border: 2px solid #1a73e8 !important; background-color: #f1f3f5 !important; }
+        .today-past-list-item { border: 2px solid #1a73e8 !important; background-color: #cbd5e1 !important; }
         .past-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 4px solid #dc2626; color: #dc2626; font-size: 48px; font-weight: bold; padding: 4px 20px; border-radius: 10px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; }
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
     </style>
@@ -77,7 +77,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-07(土) 22:43:03</div>
+    <div class="footer">更新日時: 2026-11-07(土) 22:44:36</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -91,7 +91,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-07";
         const tomorrowStr = "2026-11-08";
-        const currentNow = new Date("2026-11-07T22:43:03");
+        const currentNow = new Date("2026-11-07T22:44:36");
         
         // --- 追加箇所 ---
         function getColoredName(name, myName) {
@@ -155,7 +155,7 @@
                 
                 let borderStyle = isParticipating ? "border: 3px solid #d00 !important; background-color: #fff9f9;" : "border: 1px solid #ddd;";
                 if (past) {
-                    borderStyle = "border: 1px solid #ced4da; background-color: #f1f3f5;";
+                    borderStyle = "border: 1px solid #94a3b8; background-color: #cbd5e1;";
                 }
                 
                 const membersHtml = e.members.map(m => getColoredName(m, myName)).join(', ');
@@ -165,9 +165,9 @@
                 html += `<div style="${borderStyle} padding:10px; margin-bottom:10px; border-radius:5px; position:relative; overflow:hidden;">
                     ${pastStamp}
                     <div style="font-size:24px;">${e.title}</div>
-                    <div style="font-size:22px; color:${past ? '#6c757d' : '#c00'}; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time}</div>
+                    <div style="font-size:22px; color:${past ? '#334155' : '#c00'}; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time}</div>
                     <div style="font-size:20px; color:#555;">場所: ${e.place} | ${e.capacity}</div>
-                    <div style="font-size:20px; color:${past ? '#6c757d' : '#005500'}; font-weight:bold;">参加者: ${membersHtml}</div>
+                    <div style="font-size:20px; color:${past ? '#334155' : '#005500'}; font-weight:bold;">参加者: ${membersHtml}</div>
                     <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
                     <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
                 </div>`;
@@ -256,7 +256,7 @@
                     if (isTodayEvent && past) {
                         // 本日かつ終了の複合ケース
                         eventDiv.classList.add('today-past-list-item');
-                        borderStyle = "border: 2px solid #1a73e8; background-color: #f1f3f5;";
+                        borderStyle = "border: 2px solid #1a73e8; background-color: #cbd5e1;";
                     } else if (isTodayEvent) {
                         // 本日かつ未終了
                         eventDiv.classList.add('today-list-item');
@@ -264,7 +264,7 @@
                     } else if (past) {
                         // 過去イベント
                         eventDiv.classList.add('past-list-item');
-                        borderStyle = "border: 1px solid #ced4da; background-color: #f1f3f5;";
+                        borderStyle = "border: 1px solid #94a3b8; background-color: #cbd5e1;";
                     } else if (isTomorrowEvent) {
                         // 明日イベント
                         eventDiv.classList.add('tomorrow-list-item');
