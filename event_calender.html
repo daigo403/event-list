@@ -19,9 +19,9 @@
         /* 本日コマの強調表示 */
         .today { border: 3px solid #1a73e8 !important; background-color: #e8f0fe !important; z-index: 2; }
         .today-badge { display: inline-block; background: #1a73e8; color: #fff; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
-        /* 明日コマの強調表示 */
-        .tomorrow { border: 2px dashed #1a73e8 !important; background-color: #f1f6ff !important; }
-        .tomorrow-badge { display: inline-block; background: #4285f4; color: #fff; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
+        /* 明日コマの強調表示（赤基調・茶色寄り実線） */
+        .tomorrow { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; z-index: 2; }
+        .tomorrow-badge { display: inline-block; background: #b22222; color: #fff; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
         #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;}
         .modal-content { background: white; margin: 10% auto; padding: 20px; width: 85%; border-radius: 10px; text-align: center; }
         .modal-content button { font-size: 24px; padding: 10px 20px; }
@@ -33,7 +33,7 @@
         .gender-unknown { color: #555555 !important; } /* 濃いグレー */
         .past-list-item { background-color: #e9ecef !important; border: 1px solid #adb5bd !important; color: #495057 !important; }
         .today-list-item { border: 2px solid #1a73e8 !important; background-color: #f1f6ff !important; }
-        .tomorrow-list-item { border: 2px dashed #1a73e8 !important; background-color: #f8fbff !important; }
+        .tomorrow-list-item { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; }
         .today-past-list-item { border: 2px solid #1a73e8 !important; background-color: #e2e8f0 !important; }
         .past-badge { display: inline-block; background: #6c757d; color: #fff; font-size: 16px; padding: 3px 10px; border-radius: 4px; margin-left: 8px; font-weight: bold; }
     </style>
@@ -76,7 +76,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-07(土) 22:10:03</div>
+    <div class="footer">更新日時: 2026-11-07(土) 22:12:56</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -90,7 +90,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-07";
         const tomorrowStr = "2026-11-08";
-        const currentNow = new Date("2026-11-07T22:10:03");
+        const currentNow = new Date("2026-11-07T22:12:56");
         
         // --- 追加箇所 ---
         function getColoredName(name) {
@@ -261,7 +261,7 @@
                         borderStyle = "border: 2px solid #1a73e8; background-color: #f1f6ff;";
                     } else if (isTomorrowEvent) {
                         eventDiv.classList.add('tomorrow-list-item');
-                        borderStyle = "border: 2px dashed #1a73e8; background-color: #f8fbff;";
+                        borderStyle = "border: 2px solid #b22222; background-color: #fdf2f2;";
                     }
 
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; ${borderStyle}`;
