@@ -36,7 +36,7 @@
         .tomorrow-list-item { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; }
         .today-past-list-item { border: 2px solid #1a73e8 !important; background-color: #e2e8f0 !important; }
         .past-badge { display: inline-block; background: #6c757d; color: #fff; font-size: 16px; padding: 3px 10px; border-radius: 4px; margin-left: 8px; font-weight: bold; }
-        .my-name-badge { display: inline-block; background: #d97706; color: #fff; font-size: 13px; padding: 1px 5px; border-radius: 4px; margin-right: 4px; font-weight: bold; vertical-align: middle; }
+        .my-name-badge { display: inline-block; background: #d97706; color: #fff; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -77,7 +77,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-07(土) 22:26:27</div>
+    <div class="footer">更新日時: 2026-11-07(土) 22:28:22</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -91,7 +91,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-07";
         const tomorrowStr = "2026-11-08";
-        const currentNow = new Date("2026-11-07T22:26:27");
+        const currentNow = new Date("2026-11-07T22:28:22");
         
         // --- 追加箇所 ---
         function getColoredName(name, myName) {
