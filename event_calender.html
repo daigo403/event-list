@@ -36,6 +36,7 @@
         .tomorrow-list-item { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; }
         .today-past-list-item { border: 2px solid #1a73e8 !important; background-color: #e2e8f0 !important; }
         .past-badge { display: inline-block; background: #6c757d; color: #fff; font-size: 16px; padding: 3px 10px; border-radius: 4px; margin-left: 8px; font-weight: bold; }
+        .my-name-badge { display: inline-block; background: #b22222; color: #fff; font-size: 14px; padding: 1px 6px; border-radius: 4px; margin-left: 4px; font-weight: bold; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -76,7 +77,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-07(土) 22:12:56</div>
+    <div class="footer">更新日時: 2026-11-07(土) 22:21:54</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -90,17 +91,23 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-07";
         const tomorrowStr = "2026-11-08";
-        const currentNow = new Date("2026-11-07T22:12:56");
+        const currentNow = new Date("2026-11-07T22:21:54");
         
         // --- 追加箇所 ---
-        function getColoredName(name) {
+        function getColoredName(name, myName) {
+            let colored = "";
             if (name.includes('[f]')) {
-                return `<span class="gender-f">${name}</span>`;
+                colored = `<span class="gender-f">${name}</span>`;
             } else if (name.includes('[m]')) {
-                return `<span class="gender-m">${name}</span>`;
+                colored = `<span class="gender-m">${name}</span>`;
             } else {
-                return `<span class="gender-unknown">${name}</span>`;
+                colored = `<span class="gender-unknown">${name}</span>`;
             }
+
+            if (myName && name.includes(myName)) {
+                return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span><span class="my-name-badge">自分</span>`;
+            }
+            return colored;
         }
 
         // イベントが現在日時より過去かどうかの判定関数
@@ -151,11 +158,7 @@
                     borderStyle = "border: 1px solid #adb5bd; background-color: #e9ecef; opacity: 0.9;";
                 }
                 
-                const membersHtml = e.members.map(m => {
-                    let colored = getColoredName(m);
-                    if (myName && m.includes(myName)) return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span>`;
-                    return colored;
-                }).join(', ');
+                const membersHtml = e.members.map(m => getColoredName(m, myName)).join(', ');
 
                 const pastBadge = past ? '<span class="past-badge">終了</span>' : '';
 
@@ -266,13 +269,7 @@
 
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; ${borderStyle}`;
                     
-                    const membersHtml = e.members.map(m => {
-                        let colored = getColoredName(m);
-                        if (myName && m.includes(myName)) {
-                            return `<span style="font-weight:bold; text-decoration: underline; background: #ffff99;">${colored}</span>`;
-                        }
-                        return colored;
-                    }).join(', ');
+                    const membersHtml = e.members.map(m => getColoredName(m, myName)).join(', ');
 
                     const pastBadge = past ? '<span class="past-badge">終了</span>' : '';
                     let todayBadge = '';
