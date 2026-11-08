@@ -39,8 +39,8 @@
         /* 満員スタンプ用スタイル */
         .full-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #d97706; color: #d97706; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; }
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
-        /* カレンダー内の自分参加バッジ用スタイル */
-        .my-participate-badge { display: inline-block; background: #dc2626; color: #fff; font-size: 12px; padding: 2px 5px; border-radius: 3px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
+        /* カレンダー内の自分参加バッジ用スタイル（自分バッジと同一カラー） */
+        .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 12px; padding: 2px 5px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
     </style>
 </head>
 <body>
@@ -93,7 +93,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-08(日) 17:43:23</div>
+    <div class="footer">更新日時: 2026-11-08(日) 17:44:57</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -107,7 +107,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-08";
         const tomorrowStr = "2026-11-09";
-        const currentNow = new Date("2026-11-08T17:43:23");
+        const currentNow = new Date("2026-11-08T17:44:57");
         
         function getColoredName(name, myName) {
             let colored = "";
