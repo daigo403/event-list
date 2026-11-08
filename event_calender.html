@@ -79,7 +79,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-08(日) 13:25:30</div>
+    <div class="footer">更新日時: 2026-11-08(日) 13:27:35</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -93,7 +93,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-08";
         const tomorrowStr = "2026-11-09";
-        const currentNow = new Date("2026-11-08T13:25:30");
+        const currentNow = new Date("2026-11-08T13:27:35");
         
         function getColoredName(name, myName) {
             let colored = "";
@@ -222,7 +222,7 @@
                         if (myName && e.members.some(m => m.includes(myName))) ev.style.border = "2px solid #d00";
                     }
 
-                    ev.innerText = `${e.time} ${e.tag}`;
+G                    ev.innerText = `${e.time} ${e.tag}`;
                     ev.onclick = () => { currentDayIndex = activeDates.indexOf(dateKey); renderModal(dateKey); document.getElementById('modal').style.display = 'block'; };
                     cell.appendChild(ev);
                 });
@@ -280,12 +280,22 @@
                     }
 
                     let currentCount = e.members.length;
+                    
+                    // capacity文字列（例: "8名 / 8名 (空き：0名)"）から定員部分と空き部分をきれいに抽出する処理
+                    let capacityDisplay = e.capacity;
+                    if (e.capacity && e.capacity.includes('/')) {
+                        let parts = e.capacity.split('/');
+                        if (parts.length > 1) {
+                            let rightPart = parts[1].trim(); // "8名 (空き：0名)" など
+                            capacityDisplay = rightPart.replace('名', '名');
+                        }
+                    }
 
                     eventDiv.innerHTML = `
                         ${pastStamp}
                         ${fullStamp}
                         <div style="font-weight:bold; color:#000;">${todayBadge}${e.date_str} ${e.time}～${e.end_time} [${e.place}]<br>${e.title}</div>
-                        <div style="color:#555;">参加人数: ${currentCount}名 / 定員・空き情報: ${e.capacity}</div>
+                        <div style="color:#555;">参加人数: ${currentCount}名 / 定員：${capacityDisplay}</div>
                         <div style="color:#555;">参加者: ${membersHtml}</div>
                         <div style="color:#555; font-size:16px;">予約名義: ${e.reservation_name}</div>
                         <a href="${e.url}" target="_blank" style="font-size:18px; color:#0066cc;">詳細・申込はこちら</a>
