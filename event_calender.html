@@ -39,8 +39,8 @@
         /* 満員スタンプ用スタイル */
         .full-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #d97706; color: #d97706; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; }
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
-        /* カレンダー内の自分参加バッジ用スタイル（自分バッジと同一カラー） */
-        .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 12px; padding: 2px 5px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
+        /* 参加バッジ（自分バッジと同一カラー） */
+        .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
     </style>
 </head>
 <body>
@@ -93,7 +93,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-08(日) 17:44:57</div>
+    <div class="footer">更新日時: 2026-11-08(日) 17:47:01</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -107,7 +107,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-08";
         const tomorrowStr = "2026-11-09";
-        const currentNow = new Date("2026-11-08T17:44:57");
+        const currentNow = new Date("2026-11-08T17:47:01");
         
         function getColoredName(name, myName) {
             let colored = "";
@@ -234,7 +234,6 @@
                     cellEvents = cellEvents.filter(e => !e.title.includes('満'));
                 }
 
-                // フィルタ後のイベントがある場合、セル内に自分が参加しているものがあれば「参加」バッジを表示
                 if (cellEvents.length > 0 && myName) {
                     const hasMyEvent = cellEvents.some(e => e.members.some(m => m.includes(myName)));
                     if (hasMyEvent) {
@@ -312,17 +311,21 @@
                     const isFull = e.title.includes('満');
                     const fullStamp = (!past && isFull) ? '<div class="full-stamp">満員</div>' : '';
 
-                    let todayBadge = '';
+                    let badgeHtml = '';
                     if (isTodayEvent) {
-                        todayBadge = '<span class="today-badge" style="margin-left: 0; margin-right: 6px;">本日</span>';
+                        badgeHtml += '<span class="today-badge" style="margin-left: 0; margin-right: 6px;">本日</span>';
                     } else if (isTomorrowEvent) {
-                        todayBadge = '<span class="tomorrow-badge" style="margin-left: 0; margin-right: 6px;">明日</span>';
+                        badgeHtml += '<span class="tomorrow-badge" style="margin-left: 0; margin-right: 6px;">明日</span>';
+                    }
+
+                    if (isParticipating) {
+                        badgeHtml += '<span class="my-participate-badge">参加</span>';
                     }
 
                     eventDiv.innerHTML = `
                         ${pastStamp}
                         ${fullStamp}
-                        <div style="font-weight:bold; color:#000;">${todayBadge}${e.date_str} ${e.time}～${e.end_time} [${e.place}]<br>${e.title}</div>
+                        <div style="font-weight:bold; color:#000;">${badgeHtml}${e.date_str} ${e.time}～${e.end_time} [${e.place}]<br>${e.title}</div>
                         <div style="color:#555;">参加人数: ${e.capacity}</div>
                         <div style="color:#555;">参加者: ${membersHtml}</div>
                         <div style="color:#555; font-size:16px;">予約名義: ${e.reservation_name}</div>
