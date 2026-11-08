@@ -30,7 +30,7 @@
         .filter-area { margin: 15px 0; font-size: 18px; }
         .gender-f { color: #ff69b4 !important; font-weight: bold; } /* ピンク */
         .gender-m { color: #1e90ff !important; font-weight: bold; } /* 青 */
-        .gender-unknown { color: #555555 !important; } /* 濃いグレー */
+        .gender-unknown { color: #008000 !important; font-weight: bold; } /* 緑・太字（未登録・性別なし） */
         .past-list-item { background-color: #cbd5e1 !important; border: 1px solid #94a3b8 !important; color: #334155 !important; }
         .today-list-item { border: 2px solid #1a73e8 !important; background-color: #f1f6ff !important; }
         .tomorrow-list-item { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; }
@@ -79,7 +79,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-08(日) 13:38:20</div>
+    <div class="footer">更新日時: 2026-11-08(日) 13:43:48</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -93,7 +93,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-08";
         const tomorrowStr = "2026-11-09";
-        const currentNow = new Date("2026-11-08T13:38:20");
+        const currentNow = new Date("2026-11-08T13:43:48");
         
         function getColoredName(name, myName) {
             let colored = "";
