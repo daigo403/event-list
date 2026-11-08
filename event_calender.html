@@ -39,8 +39,8 @@
         /* 満員スタンプ用スタイル */
         .full-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #d97706; color: #d97706; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; }
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
-        /* カレンダー内の自分参加マーク用ドット */
-        .my-event-dot { display: inline-block; width: 8px; height: 8px; background-color: #d00; border-radius: 50%; margin-left: 4px; vertical-align: middle; }
+        /* カレンダー内の自分参加バッジ用スタイル */
+        .my-participate-badge { display: inline-block; background: #dc2626; color: #fff; font-size: 12px; padding: 2px 5px; border-radius: 3px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -51,16 +51,14 @@
                 <option value="">選択してください...</option>
             </select>
         </div>
-        <!-- 追加: 自分が参加するイベントのみ絞り込むチェックボックス -->
         <div>
             <label style="cursor: pointer; font-size: 18px; font-weight: bold;">
-                <input type="checkbox" id="myEventsOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 参加イベントのみ
+                <input type="checkbox" id="myEventsOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 自分が参加するイベントのみ
             </label>
         </div>
-        <!-- 追加: 空きありイベントのみ絞り込むチェックボックス -->
         <div>
             <label style="cursor: pointer; font-size: 18px; font-weight: bold;">
-                <input type="checkbox" id="availableOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 空きイベントのみ
+                <input type="checkbox" id="availableOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 空きありイベントのみ
             </label>
         </div>
     </div>
@@ -95,7 +93,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-08(日) 17:35:52</div>
+    <div class="footer">更新日時: 2026-11-08(日) 17:43:23</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -109,7 +107,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-08";
         const tomorrowStr = "2026-11-09";
-        const currentNow = new Date("2026-11-08T17:35:52");
+        const currentNow = new Date("2026-11-08T17:43:23");
         
         function getColoredName(name, myName) {
             let colored = "";
@@ -228,7 +226,6 @@
                     cell.innerHTML = `<strong>${i}</strong>`;
                 }
                 
-                // カレンダーコマ内のイベントフィルタリング
                 let cellEvents = events.filter(e => e.date === dateKey && selectedCategories.has(e.category));
                 if (myEventsOnly) {
                     cellEvents = cellEvents.filter(e => myName && e.members.some(m => m.includes(myName)));
@@ -237,11 +234,11 @@
                     cellEvents = cellEvents.filter(e => !e.title.includes('満'));
                 }
 
-                // フィルタ後のイベントがある場合、セル内に自分が参加しているものがあれば「自分マーク（赤いドット）」を表示
+                // フィルタ後のイベントがある場合、セル内に自分が参加しているものがあれば「参加」バッジを表示
                 if (cellEvents.length > 0 && myName) {
                     const hasMyEvent = cellEvents.some(e => e.members.some(m => m.includes(myName)));
                     if (hasMyEvent) {
-                        cell.innerHTML += `<span class="my-event-dot" title="参加予定イベントあり"></span>`;
+                        cell.innerHTML += `<span class="my-participate-badge">参加</span>`;
                     }
                 }
 
@@ -269,7 +266,6 @@
             listTitle.innerText = `${currentYear}年${currentMonth}月のイベント一覧`;
             listBody.innerHTML = '';
 
-            // 一覧用のイベントフィルタリング
             let monthlyEvents = events.filter(e => {
                 const [y, m, d] = e.date.split('-').map(Number);
                 return y === currentYear && m === currentMonth && selectedCategories.has(e.category);
