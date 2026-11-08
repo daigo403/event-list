@@ -79,7 +79,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-08(日) 13:20:49</div>
+    <div class="footer">更新日時: 2026-11-08(日) 13:25:30</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -93,7 +93,7 @@
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
         const todayStr = "2026-11-08";
         const tomorrowStr = "2026-11-09";
-        const currentNow = new Date("2026-11-08T13:20:49");
+        const currentNow = new Date("2026-11-08T13:25:30");
         
         function getColoredName(name, myName) {
             let colored = "";
@@ -279,16 +279,13 @@
                         todayBadge = '<span class="tomorrow-badge" style="margin-left: 0; margin-right: 6px;">明日</span>';
                     }
 
-                    let capacityNum = parseInt(e.capacity) || 0;
                     let currentCount = e.members.length;
-                    let freeCount = Math.max(0, capacityNum - currentCount);
-                    let capacityInfo = capacityNum > 0 ? ` (定員: ${capacityNum}人 / 空き: ${freeCount}人)` : ` (参加: ${currentCount}人)`;
 
                     eventDiv.innerHTML = `
                         ${pastStamp}
                         ${fullStamp}
                         <div style="font-weight:bold; color:#000;">${todayBadge}${e.date_str} ${e.time}～${e.end_time} [${e.place}]<br>${e.title}</div>
-                        <div style="color:#555;">参加人数: ${currentCount}人${capacityInfo}</div>
+                        <div style="color:#555;">参加人数: ${currentCount}名 / 定員・空き情報: ${e.capacity}</div>
                         <div style="color:#555;">参加者: ${membersHtml}</div>
                         <div style="color:#555; font-size:16px;">予約名義: ${e.reservation_name}</div>
                         <a href="${e.url}" target="_blank" style="font-size:18px; color:#0066cc;">詳細・申込はこちら</a>
