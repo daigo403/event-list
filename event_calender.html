@@ -113,7 +113,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-10(火) 08:26:10</div>
+    <div class="footer">更新日時: 2026-11-10(火) 08:36:57</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -125,9 +125,28 @@
         const membersByMonth = {"2026-11": ["Kenta T.[m]", "Yu Sumita[m]", "ichi02TA[m]", "kou[m]", "teru[m]", "あけちゃん[m]", "あやの[f]", "あら[m]", "うえたけ[m]", "おおた[m]", "おおとも[f]", "おおやん[m]", "おき[f]", "かな[f]", "きたたか[m]", "きよし[m]", "けん妻さん", "けー[f]", "さきえ[f]", "しゅんすけ[m]", "すずき[f]", "なお[m]", "なかはら[m]", "はる[f]", "ひこ[m]", "まつざき[f]", "みき[f]", "みやけひろき[m]", "やました[m]", "ゆかちー[f]", "ゆきか", "ゆー[m]", "よしなり[f]", "らせ[m]", "りお[f]", "りんた[m]", "わかこ[f]", "カスミ[f]", "コージ[m]", "ツシマ[m]", "ヒロ[m]", "ロマネ[m]", "中村さん体験参加", "住谷 一真[m]", "体験参加(神田みのりさん)", "体験参加(菊武さん、あらさん知人)", "和田伶央[m]", "牛久保晃平[m]", "竹内さん体験参加", "重田さん", "野上さん体験参加", "鈴木さん", "鈴木さん(仮)", "高橋なおきさん体験参加"]};
         const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23", "2028-01-01", "2028-01-10", "2028-02-11", "2028-02-23", "2028-03-20", "2028-04-29", "2028-05-03", "2028-05-04", "2028-05-05", "2028-07-17", "2028-08-11", "2028-09-18", "2028-09-22", "2028-10-09", "2028-11-03", "2028-11-23"];
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
-        const todayStr = "2026-11-10";
-        const tomorrowStr = "2026-11-11";
-        const currentNow = new Date("2026-11-10T08:26:10");
+
+        // --- 動的日付処理（閲覧時のリアルタイム取得） ---
+        const realNow = new Date();
+        let currentYear = realNow.getFullYear();
+        let currentMonth = realNow.getMonth() + 1;
+
+        function getTodayStr() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function getTomorrowStr() {
+            const d = new Date();
+            d.setDate(d.getDate() + 1);
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
 
         // URLマップ設定
         const placeUrlMap = {
@@ -261,14 +280,14 @@ https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
         function getJoinGuide1Text() {
             return `★今後のご参加に向けたご案内です↓
 
-テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及出欠管理を行っています。
+テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及び出欠管理を行っています。
 
 本文最後のURLからサークル加入申請を行なってください。その上で、参加可能な枠に参加登録を行ってください
 
 ※必読※
 ご加入前のご案内事項
 
-【1】社会人としての最低限のごマナーを守れない方はご退会頂くことがありますので、あらかじめご了承ください。
+【1】社会人としての最低限のマナーを守れない方はご退会頂くことがありますので、あらかじめご了承ください。
 例えば以下のようなことは禁止事項です。
 ・事前連絡なく遅刻、欠席する
 ・他サークルへの勧誘、宣伝
@@ -381,14 +400,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return colored;
         }
 
+        // 終了判定（動的：閲覧時点の時刻と比較）
         function isPastEvent(e) {
             const endDateTime = new Date(`${e.date}T${e.end_time}:00`);
-            return endDateTime < currentNow;
+            return endDateTime < new Date();
         }
         
         let allCategories = [...new Set(events.map(e => e.category))];
         let selectedCategories = new Set(allCategories);
-        let currentYear = 2026, currentMonth = 11;
         let activeDates = [...new Set(events.map(e => e.date))].sort();
         let currentDayIndex = 0;
 
@@ -473,6 +492,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const myEventsOnly = document.getElementById('myEventsOnly').checked;
             const availableOnly = document.getElementById('availableOnly').checked;
             const admin = isAdminUser();
+            const todayStr = getTodayStr();
+            const tomorrowStr = getTomorrowStr();
 
             const body = document.getElementById('body'); body.innerHTML = '';
             let firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
@@ -628,8 +649,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
         function changeMonth(n) {
             if (n === 0) {
-                currentYear = 2026;
-                currentMonth = 11;
+                // 「当月」ボタン押下時は実環境の現在月に戻す
+                const d = new Date();
+                currentYear = d.getFullYear();
+                currentMonth = d.getMonth() + 1;
             } else {
                 currentMonth += n;
                 if (currentMonth > 12) { currentMonth = 1; currentYear++; }
