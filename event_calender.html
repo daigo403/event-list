@@ -23,9 +23,11 @@
         .tomorrow { border: 2px solid #b22222 !important; z-index: 2; }
         .tomorrow-badge { display: inline-block; background: #b22222; color: #fff; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
         #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;}
-        .modal-content { background: white; margin: 10% auto; padding: 20px; width: 85%; border-radius: 10px; text-align: center; }
+        .modal-content { background: white; margin: 5% auto; padding: 20px; width: 85%; max-height: 85vh; overflow-y: auto; border-radius: 10px; text-align: center; }
         .modal-content button { font-size: 24px; padding: 10px 20px; }
-        .btn-lg { font-size: 20px; padding: 10px 20px; } /* ボタンサイズ拡大 */
+        .btn-lg { font-size: 20px; padding: 10px 20px; cursor: pointer; } /* ボタンサイズ拡大 */
+        .btn-copy { font-size: 16px; padding: 6px 12px; background-color: #0284c7; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; }
+        .btn-copy:hover { background-color: #0369a1; }
         .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
         .filter-area { margin: 15px 0; font-size: 18px; }
         .gender-f { color: #ff69b4 !important; font-weight: bold; } /* ピンク */
@@ -41,6 +43,13 @@
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
         /* 参加バッジ（自分バッジと同一カラー） */
         .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
+        
+        /* 管理者エリアスタイル */
+        .admin-panel { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 15px; margin: 15px 0; font-size: 18px; }
+        .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; }
+        .admin-btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .admin-btn { font-size: 16px; padding: 8px 14px; background-color: #16a34a; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .admin-btn:hover { background-color: #15803d; }
     </style>
 </head>
 <body>
@@ -60,6 +69,17 @@
             <label style="cursor: pointer; font-size: 18px; font-weight: bold;">
                 <input type="checkbox" id="availableOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 空きありイベントのみ
             </label>
+        </div>
+    </div>
+
+    <!-- 管理者機能エリア -->
+    <div id="adminArea" class="admin-panel" style="display: none;">
+        <h3>👑 管理者モード（定型文コピー機能）</h3>
+        <div class="admin-btn-group">
+            <button class="admin-btn" onclick="copyText(getMemberRegText('北区'))">a) 区民向け協力依頼（北区）</button>
+            <button class="admin-btn" onclick="copyText(getMemberRegText('板橋区'))">a) 区民向け協力依頼（板橋区）</button>
+            <button class="admin-btn" onclick="copyText(getOutDistrictText())">b) 区外向け協力依頼</button>
+            <button class="admin-btn" onclick="copyText(getJoinGuide1Text())">c) 加入案内1 (登録前案内)</button>
         </div>
     </div>
 
@@ -93,7 +113,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-09(月) 19:36:25</div>
+    <div class="footer">更新日時: 2026-11-10(火) 08:26:10</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -101,13 +121,249 @@
     </div>
 
     <script>
-        const events = [{"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】桐ケ丘_ E面ハード_2時間", "members": ["Kenta T.[m]", "けん妻さん", "住谷 一真[m]", "牛久保晃平[m]", "和田伶央[m]", "ヒロ[m]", "おおた[m]", "ツシマ[m]"], "url": "https://www.tennisbear.net/event/1671444/info", "place": "桐ケ丘体育館テニスコート", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "×(35)古永弘", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "11:00", "end_time": "13:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ AB面オムニ_2時間", "members": ["うえたけ[m]", "Kenta T.[m]", "きたたか[m]", "はる[f]", "らせ[m]", "おおやん[m]", "あけちゃん[m]", "teru[m]", "あら[m]", "りんた[m]", "竹内さん体験参加", "なお[m]", "しゅんすけ[m]"], "url": "https://www.tennisbear.net/event/1671446/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "×(25)高橋和也×(23)松田優", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】浮間公園_2時間", "members": ["ゆかちー[f]", "みやけひろき[m]", "けー[f]", "おおとも[f]", "カスミ[f]", "きたたか[m]"], "url": "https://www.tennisbear.net/event/1671664/info", "place": "浮間公園", "category": "中級練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "11:00", "end_time": "13:00", "title": "*満*🔵【中級W】浮間公園_2時間", "members": ["おおとも[f]", "カスミ[f]", "ゆかちー[f]", "みやけひろき[m]", "ゆきか", "きよし[m]"], "url": "https://www.tennisbear.net/event/1671668/info", "place": "浮間公園", "category": "中級W", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ BC面オムニ_2時間", "members": ["うえたけ[m]", "わかこ[f]", "きたたか[m]", "ゆー[m]", "おおとも[f]", "なかはら[m]", "あけちゃん[m]", "ゆかちー[f]", "teru[m]", "りんた[m]", "なお[m]", "やました[m]"], "url": "https://www.tennisbear.net/event/1671453/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "12名 / 12名 (空き：0名)", "reservation_name": "〇(36)前田和也〇(36)前田和也", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟠【通常練】桐ケ丘_ D面オムニ_2時間", "members": ["ロマネ[m]", "住谷 一真[m]", "牛久保晃平[m]", "和田伶央[m]", "すずき[f]", "中村さん体験参加", "野上さん体験参加"], "url": "https://www.tennisbear.net/event/1671451/info", "place": "桐ケ丘体育館テニスコート", "category": "通常練", "capacity": "7名 / 7名 (空き：0名)", "reservation_name": "◎(8)金野大悟", "tag": "満_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】浮間舟渡_ B面オムニ_2時間", "members": ["ichi02TA[m]", "きたたか[m]", "teru[m]", "高橋なおきさん体験参加", "鈴木さん"], "url": "https://www.tennisbear.net/event/1671460/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "5名 / 6名 (空き：1名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空5*🟠【通常練】浮間舟渡_ A面オムニ_2時間", "members": ["ロマネ[m]"], "url": "https://www.tennisbear.net/event/1671464/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "1名 / 6名 (空き：5名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空5_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*浮間舟渡_ BC面オムニ_2時間", "members": ["うえたけ[m]", "さきえ[f]", "ゆー[m]", "あけちゃん[m]", "teru[m]", "りんた[m]", "みやけひろき[m]", "やました[m]", "あら[m]", "おおとも[f]", "コージ[m]", "体験参加(菊武さん、あらさん知人)", "まつざき[f]"], "url": "https://www.tennisbear.net/event/1671468/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "◎(8)金野大悟△(5)牛久保", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】浮間舟渡_ D面オムニ_2時間", "members": ["なかはら[m]", "住谷 一真[m]", "牛久保晃平[m]", "和田伶央[m]", "よしなり[f]", "あやの[f]", "kou[m]", "体験参加(神田みのりさん)"], "url": "https://www.tennisbear.net/event/1671466/info", "place": "浮間舟渡庭球場", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "△(5)牛久保", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】*2面*浮間舟渡_ CD面オムニ_2時間", "members": ["Kenta T.[m]", "かな[f]", "みやけひろき[m]", "あら[m]", "みき[f]", "りお[f]", "重田さん", "ロマネ[m]", "Yu Sumita[m]", "おき[f]", "しゅんすけ[m]", "鈴木さん(仮)"], "url": "https://www.tennisbear.net/event/1671470/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "12名 / 13名 (空き：1名)", "reservation_name": "×(30)根井美咲×(20)加藤慎也", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "11:00", "end_time": "13:00", "title": "*空4*🔵【中級W】浮間公園_2時間", "members": ["Kenta T.[m]", "ひこ[m]"], "url": "https://www.tennisbear.net/event/1671670/info", "place": "浮間公園", "category": "中級W", "capacity": "2名 / 6名 (空き：4名)", "reservation_name": "不明", "tag": "空4_中級W", "bg_color": "#ccccff", "text_color": "#333399"}];
+        const events = [{"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】桐ケ丘_ E面ハード_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "", "name": "けん妻さん"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "107592", "name": "ヒロ[m]"}, {"userId": "92884", "name": "おおた[m]"}, {"userId": "886872", "name": "ツシマ[m]"}], "url": "https://www.tennisbear.net/event/1671444/info", "place": "桐ケ丘体育館テニスコート", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "×(35)古永弘", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "11:00", "end_time": "13:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ AB面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "108066", "name": "はる[f]"}, {"userId": "142242", "name": "らせ[m]"}, {"userId": "116237", "name": "おおやん[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "", "name": "竹内さん体験参加"}, {"userId": "13533", "name": "なお[m]"}, {"userId": "33418", "name": "しゅんすけ[m]"}], "url": "https://www.tennisbear.net/event/1671446/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "×(25)高橋和也×(23)松田優", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】浮間公園_2時間", "members": [{"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "126396", "name": "けー[f]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "108870", "name": "カスミ[f]"}, {"userId": "152195", "name": "きたたか[m]"}], "url": "https://www.tennisbear.net/event/1671664/info", "place": "浮間公園", "category": "中級練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "11:00", "end_time": "13:00", "title": "*満*🔵【中級W】浮間公園_2時間", "members": [{"userId": "32519", "name": "おおとも[f]"}, {"userId": "108870", "name": "カスミ[f]"}, {"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "95248", "name": "ゆきか"}, {"userId": "103913", "name": "きよし[m]"}], "url": "https://www.tennisbear.net/event/1671668/info", "place": "浮間公園", "category": "中級W", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ BC面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "878232", "name": "わかこ[f]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "867", "name": "ゆー[m]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "166264", "name": "なかはら[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "13533", "name": "なお[m]"}, {"userId": "267489", "name": "やました[m]"}], "url": "https://www.tennisbear.net/event/1671453/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "12名 / 12名 (空き：0名)", "reservation_name": "〇(36)前田和也〇(36)前田和也", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟠【通常練】桐ケ丘_ D面オムニ_2時間", "members": [{"userId": "82476", "name": "ロマネ[m]"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "46027", "name": "すずき[f]"}, {"userId": "", "name": "中村さん体験参加"}, {"userId": "", "name": "野上さん体験参加"}], "url": "https://www.tennisbear.net/event/1671451/info", "place": "桐ケ丘体育館テニスコート", "category": "通常練", "capacity": "7名 / 7名 (空き：0名)", "reservation_name": "◎(8)金野大悟", "tag": "満_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】浮間舟渡_ B面オムニ_2時間", "members": [{"userId": "156703", "name": "ichi02TA[m]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "", "name": "高橋なおきさん体験参加"}, {"userId": "", "name": "鈴木さん"}], "url": "https://www.tennisbear.net/event/1671460/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "5名 / 6名 (空き：1名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空5*🟠【通常練】浮間舟渡_ A面オムニ_2時間", "members": [{"userId": "82476", "name": "ロマネ[m]"}], "url": "https://www.tennisbear.net/event/1671464/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "1名 / 6名 (空き：5名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空5_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*浮間舟渡_ BC面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "207364", "name": "さきえ[f]"}, {"userId": "867", "name": "ゆー[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "267489", "name": "やました[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "170693", "name": "コージ[m]"}, {"userId": "", "name": "体験参加(菊武さん、あらさん知人)"}, {"userId": "1011060", "name": "まつざき[f]"}], "url": "https://www.tennisbear.net/event/1671468/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "◎(8)金野大悟△(5)牛久保", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】浮間舟渡_ D面オムニ_2時間", "members": [{"userId": "166264", "name": "なかはら[m]"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "1020007", "name": "よしなり[f]"}, {"userId": "1011193", "name": "あやの[f]"}, {"userId": "195649", "name": "kou[m]"}, {"userId": "", "name": "体験参加(神田みのりさん)"}], "url": "https://www.tennisbear.net/event/1671466/info", "place": "浮間舟渡庭球場", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "△(5)牛久保", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】*2面*浮間舟渡_ CD面オムニ_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "171539", "name": "かな[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "369394", "name": "みき[f]"}, {"userId": "66641", "name": "りお[f]"}, {"userId": "", "name": "重田さん"}, {"userId": "82476", "name": "ロマネ[m]"}, {"userId": "74860", "name": "Yu Sumita[m]"}, {"userId": "134542", "name": "おき[f]"}, {"userId": "33418", "name": "しゅんすけ[m]"}, {"userId": "", "name": "鈴木さん(仮)"}], "url": "https://www.tennisbear.net/event/1671470/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "12名 / 13名 (空き：1名)", "reservation_name": "×(30)根井美咲×(20)加藤慎也", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "11:00", "end_time": "13:00", "title": "*空4*🔵【中級W】浮間公園_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "177020", "name": "ひこ[m]"}], "url": "https://www.tennisbear.net/event/1671670/info", "place": "浮間公園", "category": "中級W", "capacity": "2名 / 6名 (空き：4名)", "reservation_name": "不明", "tag": "空4_中級W", "bg_color": "#ccccff", "text_color": "#333399"}];
         const membersByMonth = {"2026-11": ["Kenta T.[m]", "Yu Sumita[m]", "ichi02TA[m]", "kou[m]", "teru[m]", "あけちゃん[m]", "あやの[f]", "あら[m]", "うえたけ[m]", "おおた[m]", "おおとも[f]", "おおやん[m]", "おき[f]", "かな[f]", "きたたか[m]", "きよし[m]", "けん妻さん", "けー[f]", "さきえ[f]", "しゅんすけ[m]", "すずき[f]", "なお[m]", "なかはら[m]", "はる[f]", "ひこ[m]", "まつざき[f]", "みき[f]", "みやけひろき[m]", "やました[m]", "ゆかちー[f]", "ゆきか", "ゆー[m]", "よしなり[f]", "らせ[m]", "りお[f]", "りんた[m]", "わかこ[f]", "カスミ[f]", "コージ[m]", "ツシマ[m]", "ヒロ[m]", "ロマネ[m]", "中村さん体験参加", "住谷 一真[m]", "体験参加(神田みのりさん)", "体験参加(菊武さん、あらさん知人)", "和田伶央[m]", "牛久保晃平[m]", "竹内さん体験参加", "重田さん", "野上さん体験参加", "鈴木さん", "鈴木さん(仮)", "高橋なおきさん体験参加"]};
         const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23", "2028-01-01", "2028-01-10", "2028-02-11", "2028-02-23", "2028-03-20", "2028-04-29", "2028-05-03", "2028-05-04", "2028-05-05", "2028-07-17", "2028-08-11", "2028-09-18", "2028-09-22", "2028-10-09", "2028-11-03", "2028-11-23"];
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
-        const todayStr = "2026-11-09";
-        const tomorrowStr = "2026-11-10";
-        const currentNow = new Date("2026-11-09T19:36:25");
+        const todayStr = "2026-11-10";
+        const tomorrowStr = "2026-11-11";
+        const currentNow = new Date("2026-11-10T08:26:10");
+
+        // URLマップ設定
+        const placeUrlMap = {
+            "桐ケ丘庭球場": "https://www.google.com/maps/place/35%C2%B046'45.2%22N+139%C2%B042'39.5%22E/@35.7792267,139.7084088,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.7792267!4d139.7109837?entry=ttu&g_ep=EgoyMDI2MTEwNC4wIKXMDSoASAFQAw%3D%3D",
+            "浮間舟渡庭球場": "https://www.google.com/maps?q=35.790462478184416,139.69081696737413",
+            "新河岸川庭球場": "https://www.google.com/maps?q=35.787074,139.721275",
+            "浮間公園": "https://www.google.com/maps?cid=6359435785798986045&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAMYASAF",
+            "加賀庭球場": "https://www.shisetsu-tds.jp/tokyo-itabashi-kaga-tennis/access/"
+        };
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("クリップボードにコピーしました！");
+            }).catch(err => {
+                alert("コピーに失敗しました: " + err);
+            });
+        }
+
+        // 選択されたユーザーがUSERID "82476" に該当するか判定
+        function isAdminUser() {
+            const myName = document.getElementById('userSelect').value;
+            if (!myName) return false;
+            
+            for (let e of events) {
+                for (let m of e.members) {
+                    if (m.userId === "82476") {
+                        if (m.name === myName || m.name.includes(myName)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function generateTrialNotice(e) {
+            let placeUrl = "";
+            for (let key in placeUrlMap) {
+                if (e.place.includes(key)) {
+                    placeUrl = placeUrlMap[key];
+                    break;
+                }
+            }
+
+            let noticeSection = "";
+            if (e.place.includes("浮間舟渡")) {
+                noticeSection = `★注意事項
+近隣の浮間公園とは別のコートです。
+間違える方が多いため、初見の場合は事前に地図情報をよくご確認ください。
+
+`;
+            }
+
+            let organizer = e.members.length > 0 ? e.members[0].name : "未定";
+            let organizerClean = organizer.replace(/\[[mf]\]/g, "").trim();
+            if (organizer.includes('[m]')) organizerClean += "(男性)";
+            else if (organizer.includes('[f]')) organizerClean += "(女性)";
+
+            return `こんにちは、北区プランドールの金野(こんの)です。
+体験参加のご案内です。
+
+◾️日程
+${e.date_str} ${e.time}～${e.end_time}【${e.place}】
+${placeUrl}
+
+${noticeSection}◾️当日主催者
+${organizerClean}
+
+◾️集合のご案内
+現地集合、現地解散となります。
+到着しましたらこちらでメッセージください。
+
+◾️参加費
+参加費は600円予定です。
+当日主催者にお支払いください。
+※人数によって変動するため当日確定の金額をご連絡します。
+
+★ご注意事項★
+定員ありの練習会のため、
+前日•当日キャンセルは参加費を満額頂いています。予めご了承ください。
+
+◾️雨天について
+雨天中止の際は開始1時間前にこちらからご連絡しますが、
+明らかな雨天でも連絡がない場合は、連絡漏れの可能性もあるため、
+こちらでメッセージ頂けると助かります🙇
+なお、突然の雨により直前で中止になる場合もありますので、何卒ご了承ください。
+
+◾️持ち物について
+テニスができる服装、シューズ、ラケットだけあれば大丈夫です！
+
+◾️その他
+練習会を体験頂きつつ、不明点などあれば適宜ご質問頂ければ幸いです。
+
+正式加入ご希望の場合は、ご参加後、３日以内を目安に金野宛にご連絡ください。
+
+◆当日主催者の方へ
+集合時のフォロー、開始時の全体挨拶、参加費の受け取りをお願いします！`;
+        }
+
+        function getMemberRegText(ward) {
+            return `ご加入に向けて、一点事前のご確認です。
+${ward}の団体登録にご協力頂くことになります。
+
+団体登録のため手続きは全てこちらで代行する形になります。費用はかかりません。
+そこに向けて、次回ご参加の際に身分証コピーをご提供頂く形になります。
+以下、必要書類の詳細です。
+
+☀有効期限が2年以上先で、なるべく期限が長いもの(マイナンバーカードがベスト)
+☀ご自身の住所欄が${ward}になっている必要があります。
+☀電話番号も登録に必要なため、受領の際に教えていただきます
+☀サッカーや体育館などの${ward}スポーツ施設全般登録にも利用させて頂きます。
+
+問題ないでしょうか？
+問題なければ、ご加入に向けて詳細のご案内をさせて頂きます！`;
+        }
+
+        function getOutDistrictText() {
+            return `ご加入に向けて、一点事前のご確認です。
+都営カードの作成・ご提出をお願い致します。
+
+未作成の場合は、以下webサイト、「初めての方」より作成可能です。5分程度で完了します。
+https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
+
+作成後、ログインID、パスワードをご連絡頂きます。
+当方にて管理用にパスワード、メールアドレスは変更させて頂きます。
+
+問題ないでしょうか？
+問題なければ、ご加入に向けて詳細のご案内をさせて頂きます！`;
+        }
+
+        function getJoinGuide1Text() {
+            return `★今後のご参加に向けたご案内です↓
+
+テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及出欠管理を行っています。
+
+本文最後のURLからサークル加入申請を行なってください。その上で、参加可能な枠に参加登録を行ってください
+
+※必読※
+ご加入前のご案内事項
+
+【1】社会人としての最低限のごマナーを守れない方はご退会頂くことがありますので、あらかじめご了承ください。
+例えば以下のようなことは禁止事項です。
+・事前連絡なく遅刻、欠席する
+・他サークルへの勧誘、宣伝
+・サークル内での商売行為、宗教に関する勧誘等
+・テニスと関係ない異性へのナンパ行為
+
+
+【2】キャンセル規定は以下の通りです。
+●開催日から1週間以内でのキャンセル:
+グループラインにて、代わりに参加できる人を呼びかけてください。キャンセル料は必要ありません。
+※基本的にキャンセルはお控え頂きたい期間です
+
+●前日・当日キャンセル:
+上記に加え、キャンセル料として参加費満額お支払い頂きます。
+※基本的にキャンセルNGの期間です。但し、代わりに参加できる人が見つかれば参加費は不要です。
+
+
+
+【3】ご加入後は原則以下頻度のご参加をお願いします。
+◎男性:月3コマ前後のご参加
+◎女性:月1コマ以上のご参加
+※1コマ2時間です
+
+上記ご参加が出来ない方は、休会扱いとさせて頂くことがあります。
+ただし怪我・入院や長期出張、試験など、一時的に参加が難しい状況になりましたらご連絡頂ければ配慮します。
+
+
+
+【4】毎月15日頃に、翌月のスケジュールが公開、告知されます。
+スケジュール公開されましたら、遅くとも月末までには翌月分の参加登録をお願いします。
+
+(例）
+9月練習会のスケジュールは8/20頃に公開されますが、遅くとも8月中に最低1コマ、9月分の参加登録をしてください。
+
+
+【5】初めて行くコートの場合は必ず事前に場所などをご確認の上、間違えや遅刻がないようにお願いします。
+
+
+【6】練習会はある程度レベルを分けています。ご自身のレベルに合わせてご参加ください。
+レベル感の目安はサークルルールブックに記載があります。
+ルールブックはサークルライングループノートに掲載されていますので、グループご参加後にご確認ください。
+
+
+【7】参加費は以下の通りです。(満員の場合)
+2時間1コマ:【600円】
+※基礎練は【700円】です
+※参加人数や照明有無(ナイター枠)によって変動します。
+
+参加費の支払いは当日paypayでお願いしています。
+paypayID:
+daigo403
+
+※※重要※※
+【当日18時まで】に送金願います
+期限内に送金が間に合わなかった場合は参加費+100円とさせて頂きます。
+
+⭐️paypay利用不可の場合は事前に金野宛にご相談ください。
+
+
+【8】ボール運びや練習会進行、体験参加者への案内など、メンバーの皆様に協力をお願いしています。
+必要な際に都度ご依頼していますが、これに快くご協力頂けない方は退会頂きます。
+
+
+【9】雨天中止判断は原則開催30分前〜1時間前です。
+細かいルールはグループラインのルールブックに掲載しています
+
+【10】当サークルの幹事・代表は金野ですが、金野が練習会に参加することは稀です。
+何か困りごと、不明点あれば個人ライン頂ければご回答しますので、お気軽にご連絡ください♪
+
+
+
+************
+↑長文ですが、全て重要なことを書いてます。
+全て読まれてから先に進んでください。
+*************
+
+
+★以上全てご了承頂ければ、以下サークル管理ページよりサークル加入申請をお願いします。
+
+必ず以下2点の情報をコメントにて申請願います。
+１）Lineのユーザー名(申請時点）
+２）ご本名（ふりがな付）
+
+【サークル管理ページ】
+https://www.tennisbear.net/circle/2461/info
+
+なお、テニスベアユーザー登録がされていない場合は、テニスベアへのユーザー登録が必要となります。
+テニスベアはアプリ利用が大変便利なため、アプリのインストールをお願いします。
+
+Android：
+https://play.google.com/store/apps/details?id=net.tennisbear.tennisbearapp&hl=ja
+
+iPhone：
+https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tennisbear/id1463750385`;
+        }
         
         function getColoredName(name, myName) {
             let colored = "";
@@ -161,10 +417,11 @@
         function renderModal(dateKey) {
             const myName = document.getElementById('userSelect').value;
             const dayEvents = events.filter(e => e.date === dateKey);
+            const admin = isAdminUser();
             let html = `<div style="font-size:24px; font-weight:bold; margin-bottom:10px;">${dateKey} の全イベント</div>`;
             
-            dayEvents.forEach(e => {
-                const isParticipating = myName && e.members.some(m => m.includes(myName));
+            dayEvents.forEach((e) => {
+                const isParticipating = myName && e.members.some(m => m.name.includes(myName));
                 const past = isPastEvent(e);
                 
                 let borderStyle = isParticipating ? "border: 3px solid #d00 !important; background-color: #fff9f9;" : "border: 1px solid #ddd;";
@@ -172,8 +429,14 @@
                     borderStyle = "border: 1px solid #94a3b8; background-color: #cbd5e1;";
                 }
                 
-                const membersHtml = e.members.map(m => getColoredName(m, myName)).join(', ');
+                const membersHtml = e.members.map(m => getColoredName(m.name, myName)).join(', ');
                 const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
+
+                let copyBtnHtml = "";
+                if (admin) {
+                    const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
+                    copyBtnHtml = `<div><button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button></div>`;
+                }
 
                 html += `<div style="${borderStyle} padding:10px; margin-bottom:10px; border-radius:5px; position:relative; overflow:hidden;">
                     ${pastStamp}
@@ -183,6 +446,7 @@
                     <div style="font-size:20px; color:${past ? '#334155' : '#005500'}; font-weight:bold;">参加者: ${membersHtml}</div>
                     <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
                     <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
+                    ${copyBtnHtml}
                 </div>`;
             });
             document.getElementById('modalBody').innerHTML = html;
@@ -195,10 +459,20 @@
         
         function render() {
             updatePulldown();
+            
+            // 管理者エリアの表示制御
+            const adminArea = document.getElementById('adminArea');
+            if (isAdminUser()) {
+                adminArea.style.display = 'block';
+            } else {
+                adminArea.style.display = 'none';
+            }
+
             document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
             const myName = document.getElementById('userSelect').value;
             const myEventsOnly = document.getElementById('myEventsOnly').checked;
             const availableOnly = document.getElementById('availableOnly').checked;
+            const admin = isAdminUser();
 
             const body = document.getElementById('body'); body.innerHTML = '';
             let firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
@@ -228,14 +502,14 @@
                 
                 let cellEvents = events.filter(e => e.date === dateKey && selectedCategories.has(e.category));
                 if (myEventsOnly) {
-                    cellEvents = cellEvents.filter(e => myName && e.members.some(m => m.includes(myName)));
+                    cellEvents = cellEvents.filter(e => myName && e.members.some(m => m.name.includes(myName)));
                 }
                 if (availableOnly) {
                     cellEvents = cellEvents.filter(e => !e.title.includes('満'));
                 }
 
                 if (cellEvents.length > 0 && myName) {
-                    const hasMyEvent = cellEvents.some(e => e.members.some(m => m.includes(myName)));
+                    const hasMyEvent = cellEvents.some(e => e.members.some(m => m.name.includes(myName)));
                     if (hasMyEvent) {
                         cell.innerHTML += `<span class="my-participate-badge">参加</span>`;
                     }
@@ -251,7 +525,7 @@
                     } else {
                         ev.style.backgroundColor = e.bg_color;
                         ev.style.color = e.text_color;
-                        if (myName && e.members.some(m => m.includes(myName))) ev.style.border = "2px solid #d00";
+                        if (myName && e.members.some(m => m.name.includes(myName))) ev.style.border = "2px solid #d00";
                     }
 
                     ev.innerText = `${e.time} ${e.tag}`;
@@ -271,7 +545,7 @@
             });
 
             if (myEventsOnly) {
-                monthlyEvents = monthlyEvents.filter(e => myName && e.members.some(m => m.includes(myName)));
+                monthlyEvents = monthlyEvents.filter(e => myName && e.members.some(m => m.name.includes(myName)));
             }
             if (availableOnly) {
                 monthlyEvents = monthlyEvents.filter(e => !e.title.includes('満'));
@@ -281,7 +555,7 @@
                 listBody.innerHTML = '<p style="color: #666; font-size: 16px;">条件に該当するイベントはありません。</p>';
             } else {
                 monthlyEvents.forEach(e => {
-                    const isParticipating = myName && e.members.some(m => m.includes(myName));
+                    const isParticipating = myName && e.members.some(m => m.name.includes(myName));
                     const past = isPastEvent(e);
                     const isTodayEvent = (e.date === todayStr);
                     const isTomorrowEvent = (e.date === tomorrowStr);
@@ -305,7 +579,7 @@
 
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; position: relative; overflow: hidden; ${borderStyle}`;
                     
-                    const membersHtml = e.members.map(m => getColoredName(m, myName)).join(', ');
+                    const membersHtml = e.members.map(m => getColoredName(m.name, myName)).join(', ');
                     const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
                     
                     const isFull = e.title.includes('満');
@@ -322,6 +596,12 @@
                         badgeHtml += '<span class="my-participate-badge">参加</span>';
                     }
 
+                    let copyBtnHtml = "";
+                    if (admin) {
+                        const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
+                        copyBtnHtml = `<div style="margin-top: 8px;"><button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button></div>`;
+                    }
+
                     eventDiv.innerHTML = `
                         ${pastStamp}
                         ${fullStamp}
@@ -330,6 +610,7 @@
                         <div style="color:#555;">参加者: ${membersHtml}</div>
                         <div style="color:#555; font-size:16px;">予約名義: ${e.reservation_name}</div>
                         <a href="${e.url}" target="_blank" style="font-size:18px; color:#0066cc;">詳細・申込はこちら</a>
+                        ${copyBtnHtml}
                     `;
                     listBody.appendChild(eventDiv);
                 });
