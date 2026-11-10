@@ -54,7 +54,7 @@
     <div style="margin-bottom: 20px; font-size: 20px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
         <div>
             参加者を選択: 
-            <select id="userSelect" onchange="saveUser()" style="font-size: 20px; width: 220px; padding: 5px;">
+            <select id="userSelect" onchange="saveUser()" style="font-size: 26px; width: 280px; padding: 5px;">
                 <option value="">選択してください...</option>
             </select>
         </div>
@@ -77,10 +77,10 @@
             <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
         </h3>
         <div class="admin-btn-group">
-            <button class="admin-btn" onclick="copyText(getMemberRegText('北区'))">a) 区民向け協力依頼（北区）</button>
-            <button class="admin-btn" onclick="copyText(getMemberRegText('板橋区'))">a) 区民向け協力依頼（板橋区）</button>
-            <button class="admin-btn" onclick="copyText(getOutDistrictText())">b) 区外向け協力依頼</button>
-            <button class="admin-btn" onclick="copyText(getJoinGuide1Text())">c) 加入案内1 (登録前案内)</button>
+            <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '区民向け協力依頼（北区）')">a) 区民向け協力依頼（北区）</button>
+            <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('板橋区'), '区民向け協力依頼（板橋区）')">a) 区民向け協力依頼（板橋区）</button>
+            <button class="admin-btn" onclick="copyGeneralText(getOutDistrictText(), '区外向け協力依頼')">b) 区外向け協力依頼</button>
+            <button class="admin-btn" onclick="copyGeneralText(getJoinGuide1Text(), '加入案内1 (登録前案内)')">c) 加入案内1 (登録前案内)</button>
         </div>
     </div>
 
@@ -114,7 +114,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-10(火) 11:18:49</div>
+    <div class="footer">更新日時: 2026-11-10(火) 11:24:55</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -181,9 +181,28 @@
             return "";
         }
 
-        function copyText(text) {
+        // コピー処理（一般ボタン用）
+        function copyGeneralText(text, labelName) {
             navigator.clipboard.writeText(text).then(() => {
-                alert("クリップボードにコピーしました！");
+                alert(`【${labelName}】をクリップボードにコピーしました！`);
+            }).catch(err => {
+                alert("コピーに失敗しました: " + err);
+            });
+        }
+
+        // 日時・場所コピー専用
+        function copyDateTimePlace(text, eventInfoStr) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`【日時・場所コピー】\n対象: ${eventInfoStr}\n\nクリップボードにコピーしました！`);
+            }).catch(err => {
+                alert("コピーに失敗しました: " + err);
+            });
+        }
+
+        // 体験参加案内文コピー専用
+        function copyTrialNotice(text, eventInfoStr) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`【体験参加案内文コピー】\n対象: ${eventInfoStr}\n\nクリップボードにコピーしました！`);
             }).catch(err => {
                 alert("コピーに失敗しました: " + err);
             });
@@ -295,7 +314,7 @@ https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
         function getJoinGuide1Text() {
             return `★今後のご参加に向けたご案内です↓
 
-テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及び出欠管理を行っています。
+テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及出欠管理を行っています。
 
 本文最後のURLからサークル加入申請を行なってください。その上で、参加可能な枠に参加登録を行ってください
 
@@ -484,11 +503,12 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
 
                 const dtTextEscaped = generateDateTimePlaceText(e);
-                let dtCopyBtnHtml = `<div><button class="btn-copy-dt" onclick="copyText(\`${dtTextEscaped}\`)">📋 日時・場所コピー</button>`;
+                const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
+                let dtCopyBtnHtml = `<div><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
 
                 if (admin) {
                     const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
-                    dtCopyBtnHtml += `<button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button>`;
+                    dtCopyBtnHtml += `<button class="btn-copy" onclick="copyTrialNotice(\`${noticeTextEscaped}\`, \`${eventInfoLabel}\`)">📋 体験参加案内文コピー</button>`;
                 }
                 dtCopyBtnHtml += `</div>`;
 
@@ -657,11 +677,12 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     }
 
                     const dtTextEscaped = generateDateTimePlaceText(e);
-                    let dtCopyBtnHtml = `<div style="margin-top: 8px;"><button class="btn-copy-dt" onclick="copyText(\`${dtTextEscaped}\`)">📋 日時・場所コピー</button>`;
+                    const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
+                    let dtCopyBtnHtml = `<div style="margin-top: 8px;"><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
 
                     if (admin) {
                         const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
-                        dtCopyBtnHtml += `<button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button>`;
+                        dtCopyBtnHtml += `<button class="btn-copy" onclick="copyTrialNotice(\`${noticeTextEscaped}\`, \`${eventInfoLabel}\`)">📋 体験参加案内文コピー</button>`;
                     }
                     dtCopyBtnHtml += `</div>`;
 
