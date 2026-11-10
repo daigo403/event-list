@@ -60,12 +60,12 @@
         </div>
         <div>
             <label style="cursor: pointer; font-size: 18px; font-weight: bold;">
-                <input type="checkbox" id="myEventsOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 自分が参加するイベントのみ
+                <input type="checkbox" id="myEventsOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 参加イベントのみ
             </label>
         </div>
         <div>
             <label style="cursor: pointer; font-size: 18px; font-weight: bold;">
-                <input type="checkbox" id="availableOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 空きありイベントのみ
+                <input type="checkbox" id="availableOnly" onchange="render()" style="transform: scale(1.3); margin-right: 5px;"> 空きイベントのみ
             </label>
         </div>
     </div>
@@ -77,9 +77,9 @@
             <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
         </h3>
         <div class="admin-btn-group">
-            <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '区民向け協力依頼（北区）')">a) 区民向け協力依頼（北区）</button>
-            <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('板橋区'), '区民向け協力依頼（板橋区）')">a) 区民向け協力依頼（板橋区）</button>
-            <button class="admin-btn" onclick="copyGeneralText(getOutDistrictText(), '区外向け協力依頼')">b) 区外向け協力依頼</button>
+            <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '北区依頼')">a) 北区依頼</button>
+            <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('板橋区'), '板橋区依頼')">a) 板橋区依頼</button>
+            <button class="admin-btn" onclick="copyGeneralText(getOutDistrictText(), '都営依頼')">b) 都営依頼</button>
             <button class="admin-btn" onclick="copyGeneralText(getJoinGuide1Text(), '加入案内1 (登録前案内)')">c) 加入案内1 (登録前案内)</button>
         </div>
     </div>
@@ -114,7 +114,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-10(火) 11:24:55</div>
+    <div class="footer">更新日時: 2026-11-10(火) 11:27:17</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
