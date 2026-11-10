@@ -9,46 +9,39 @@
         th { background: #f0f0f0; padding: 5px 0; border: 1px solid #ccc; }
         td { border: 1px solid #ccc; height: 120px; vertical-align: top; padding: 2px; position: relative; background-clip: padding-box; }
         .event { font-size: 14px; margin: 2px 0; padding: 4px; cursor: pointer; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        /* 終了済みイベント用スタイル */
         .event.past-event { background-color: #cbd5e1 !important; color: #495057 !important; opacity: 0.9; border: 1px solid #94a3b8 !important; }
         .nav { text-align: center; margin: 20px 0; }
         .nav button { font-size: 24px; padding: 10px 20px; cursor: pointer; }
         .sun { background: #fff0f0; color: #d00; }
         .sat { background: #f0f8ff; color: #00d; }
         .hol { background: #fff5e6; color: #d60; }
-        /* 本日コマの強調表示（背景色変更なし・枠線のみ） */
         .today { border: 3px solid #1a73e8 !important; z-index: 2; }
         .today-badge { display: inline-block; background: #1a73e8; color: #fff; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
-        /* 明日コマの強調表示（背景色変更なし・枠線のみ） */
         .tomorrow { border: 2px solid #b22222 !important; z-index: 2; }
         .tomorrow-badge { display: inline-block; background: #b22222; color: #fff; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
         #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;}
         .modal-content { background: white; margin: 5% auto; padding: 20px; width: 85%; max-height: 85vh; overflow-y: auto; border-radius: 10px; text-align: center; }
         .modal-content button { font-size: 24px; padding: 10px 20px; }
-        .btn-lg { font-size: 20px; padding: 10px 20px; cursor: pointer; } /* ボタンサイズ拡大 */
+        .btn-lg { font-size: 20px; padding: 10px 20px; cursor: pointer; }
         .btn-copy { font-size: 16px; padding: 6px 12px; background-color: #0284c7; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; margin-right: 5px; }
         .btn-copy:hover { background-color: #0369a1; }
         .btn-copy-dt { font-size: 16px; padding: 6px 12px; background-color: #475569; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; }
         .btn-copy-dt:hover { background-color: #334155; }
         .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
         .filter-area { margin: 15px 0; font-size: 18px; }
-        .gender-f { color: #ff69b4 !important; font-weight: bold; } /* ピンク */
-        .gender-m { color: #1e90ff !important; font-weight: bold; } /* 青 */
-        .gender-unknown { color: #008000 !important; font-weight: bold; } /* 緑・太字（未登録・性別なし） */
+        .gender-f { color: #ff69b4 !important; font-weight: bold; }
+        .gender-m { color: #1e90ff !important; font-weight: bold; }
+        .gender-unknown { color: #008000 !important; font-weight: bold; }
         .past-list-item { background-color: #cbd5e1 !important; border: 1px solid #94a3b8 !important; color: #334155 !important; }
         .today-list-item { border: 2px solid #1a73e8 !important; background-color: #f1f6ff !important; }
         .tomorrow-list-item { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; }
         .today-past-list-item { border: 2px solid #1a73e8 !important; background-color: #cbd5e1 !important; }
         .past-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #dc2626; color: #dc2626; font-size: 62px; font-weight: bold; padding: 8px 30px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 8px; z-index: 10; }
-        /* 満員スタンプ用スタイル */
         .full-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #d97706; color: #d97706; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; }
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
-        /* 参加バッジ（自分バッジと同一カラー） */
         .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
-        /* 管理者バッジ */
         .admin-badge { display: inline-block; background: #d97706; color: #fff; font-size: 15px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #b45309; }
         
-        /* 管理者エリアスタイル */
         .admin-panel { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 15px; margin: 15px 0; font-size: 18px; }
         .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .admin-btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
@@ -121,7 +114,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-10(火) 10:59:50</div>
+    <div class="footer">更新日時: 2026-11-10(火) 11:12:44</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -129,12 +122,14 @@
     </div>
 
     <script>
+        // --- 定数定義 ---
+        const ADMIN_USER_ID = "82476";
+
         const events = [{"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】桐ケ丘_ E面ハード_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "", "name": "けん妻さん"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "107592", "name": "ヒロ[m]"}, {"userId": "92884", "name": "おおた[m]"}, {"userId": "886872", "name": "ツシマ[m]"}], "url": "https://www.tennisbear.net/event/1671444/info", "place": "桐ケ丘体育館テニスコート", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "×(35)古永弘", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "11:00", "end_time": "13:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ AB面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "108066", "name": "はる[f]"}, {"userId": "142242", "name": "らせ[m]"}, {"userId": "116237", "name": "おおやん[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "", "name": "竹内さん体験参加"}, {"userId": "13533", "name": "なお[m]"}, {"userId": "33418", "name": "しゅんすけ[m]"}], "url": "https://www.tennisbear.net/event/1671446/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "×(25)高橋和也×(23)松田優", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】浮間公園_2時間", "members": [{"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "126396", "name": "けー[f]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "108870", "name": "カスミ[f]"}, {"userId": "152195", "name": "きたたか[m]"}], "url": "https://www.tennisbear.net/event/1671664/info", "place": "浮間公園", "category": "中級練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "11:00", "end_time": "13:00", "title": "*満*🔵【中級W】浮間公園_2時間", "members": [{"userId": "32519", "name": "おおとも[f]"}, {"userId": "108870", "name": "カスミ[f]"}, {"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "95248", "name": "ゆきか"}, {"userId": "103913", "name": "きよし[m]"}], "url": "https://www.tennisbear.net/event/1671668/info", "place": "浮間公園", "category": "中級W", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ BC面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "878232", "name": "わかこ[f]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "867", "name": "ゆー[m]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "166264", "name": "なかはら[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "13533", "name": "なお[m]"}, {"userId": "267489", "name": "やました[m]"}], "url": "https://www.tennisbear.net/event/1671453/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "12名 / 12名 (空き：0名)", "reservation_name": "〇(36)前田和也〇(36)前田和也", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟠【通常練】桐ケ丘_ D面オムニ_2時間", "members": [{"userId": "82476", "name": "ロマネ[m]"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "46027", "name": "すずき[f]"}, {"userId": "", "name": "中村さん体験参加"}, {"userId": "", "name": "野上さん体験参加"}], "url": "https://www.tennisbear.net/event/1671451/info", "place": "桐ケ丘体育館テニスコート", "category": "通常練", "capacity": "7名 / 7名 (空き：0名)", "reservation_name": "◎(8)金野大悟", "tag": "満_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】浮間舟渡_ B面オムニ_2時間", "members": [{"userId": "156703", "name": "ichi02TA[m]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "", "name": "高橋なおきさん体験参加"}, {"userId": "", "name": "鈴木さん"}], "url": "https://www.tennisbear.net/event/1671460/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "5名 / 6名 (空き：1名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空5*🟠【通常練】浮間舟渡_ A面オムニ_2時間", "members": [{"userId": "82476", "name": "ロマネ[m]"}], "url": "https://www.tennisbear.net/event/1671464/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "1名 / 6名 (空き：5名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空5_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*浮間舟渡_ BC面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "207364", "name": "さきえ[f]"}, {"userId": "867", "name": "ゆー[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "267489", "name": "やました[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "170693", "name": "コージ[m]"}, {"userId": "", "name": "体験参加(菊武さん、あらさん知人)"}, {"userId": "1011060", "name": "まつざき[f]"}], "url": "https://www.tennisbear.net/event/1671468/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "◎(8)金野大悟△(5)牛久保", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】浮間舟渡_ D面オムニ_2時間", "members": [{"userId": "166264", "name": "なかはら[m]"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "1020007", "name": "よしなり[f]"}, {"userId": "1011193", "name": "あやの[f]"}, {"userId": "195649", "name": "kou[m]"}, {"userId": "", "name": "体験参加(神田みのりさん)"}], "url": "https://www.tennisbear.net/event/1671466/info", "place": "浮間舟渡庭球場", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "△(5)牛久保", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】*2面*浮間舟渡_ CD面オムニ_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "171539", "name": "かな[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "369394", "name": "みき[f]"}, {"userId": "66641", "name": "りお[f]"}, {"userId": "", "name": "重田さん"}, {"userId": "82476", "name": "ロマネ[m]"}, {"userId": "74860", "name": "Yu Sumita[m]"}, {"userId": "134542", "name": "おき[f]"}, {"userId": "33418", "name": "しゅんすけ[m]"}, {"userId": "", "name": "鈴木さん(仮)"}], "url": "https://www.tennisbear.net/event/1671470/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "12名 / 13名 (空き：1名)", "reservation_name": "×(30)根井美咲×(20)加藤慎也", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "11:00", "end_time": "13:00", "title": "*空4*🔵【中級W】浮間公園_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "177020", "name": "ひこ[m]"}], "url": "https://www.tennisbear.net/event/1671670/info", "place": "浮間公園", "category": "中級W", "capacity": "2名 / 6名 (空き：4名)", "reservation_name": "不明", "tag": "空4_中級W", "bg_color": "#ccccff", "text_color": "#333399"}];
-        const membersByMonth = {"2026-11": ["ロマネ[m]", "Kenta T.[m]", "Yu Sumita[m]", "ichi02TA[m]", "kou[m]", "teru[m]", "あけちゃん[m]", "あやの[f]", "あら[m]", "うえたけ[m]", "おおた[m]", "おおとも[f]", "おおやん[m]", "おき[f]", "かな[f]", "きたたか[m]", "きよし[m]", "けん妻さん", "けー[f]", "さきえ[f]", "しゅんすけ[m]", "すずき[f]", "なお[m]", "なかはら[m]", "はる[f]", "ひこ[m]", "まつざき[f]", "みき[f]", "みやけひろき[m]", "やました[m]", "ゆかちー[f]", "ゆきか", "ゆー[m]", "よしなり[f]", "らせ[m]", "りお[f]", "りんた[m]", "わかこ[f]", "カスミ[f]", "コージ[m]", "ツシマ[m]", "ヒロ[m]", "中村さん体験参加", "住谷 一真[m]", "体験参加(神田みのりさん)", "体験参加(菊武さん、あらさん知人)", "和田伶央[m]", "牛久保晃平[m]", "竹内さん体験参加", "重田さん", "野上さん体験参加", "鈴木さん", "鈴木さん(仮)", "高橋なおきさん体験参加"]};
+        const membersByMonth = {"2026-11": [{"userId": "82476", "name": "ロマネ[m]"}, {"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "74860", "name": "Yu Sumita[m]"}, {"userId": "156703", "name": "ichi02TA[m]"}, {"userId": "195649", "name": "kou[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "1011193", "name": "あやの[f]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "81756", "name": "うえたけ[m]"}, {"userId": "92884", "name": "おおた[m]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "116237", "name": "おおやん[m]"}, {"userId": "134542", "name": "おき[f]"}, {"userId": "171539", "name": "かな[f]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "103913", "name": "きよし[m]"}, {"userId": "126396", "name": "けー[f]"}, {"userId": "207364", "name": "さきえ[f]"}, {"userId": "33418", "name": "しゅんすけ[m]"}, {"userId": "46027", "name": "すずき[f]"}, {"userId": "13533", "name": "なお[m]"}, {"userId": "166264", "name": "なかはら[m]"}, {"userId": "108066", "name": "はる[f]"}, {"userId": "177020", "name": "ひこ[m]"}, {"userId": "1011060", "name": "まつざき[f]"}, {"userId": "369394", "name": "みき[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "267489", "name": "やました[m]"}, {"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "95248", "name": "ゆきか"}, {"userId": "867", "name": "ゆー[m]"}, {"userId": "1020007", "name": "よしなり[f]"}, {"userId": "142242", "name": "らせ[m]"}, {"userId": "66641", "name": "りお[f]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "878232", "name": "わかこ[f]"}, {"userId": "108870", "name": "カスミ[f]"}, {"userId": "170693", "name": "コージ[m]"}, {"userId": "886872", "name": "ツシマ[m]"}, {"userId": "107592", "name": "ヒロ[m]"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}]};
         const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23", "2028-01-01", "2028-01-10", "2028-02-11", "2028-02-23", "2028-03-20", "2028-04-29", "2028-05-03", "2028-05-04", "2028-05-05", "2028-07-17", "2028-08-11", "2028-09-18", "2028-09-22", "2028-10-09", "2028-11-03", "2028-11-23"];
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
 
-        // --- 動的日付処理（閲覧時のリアルタイム取得） ---
         const realNow = new Date();
         let currentYear = realNow.getFullYear();
         let currentMonth = realNow.getMonth() + 1;
@@ -169,7 +164,6 @@
             return `${y}-${m}-${day}${w} ${h}:${min}:${s}`;
         }
 
-        // URLマップ設定（部分一致キーワード対応）
         const placeUrlMap = {
             "桐ケ丘": "https://www.google.com/maps/place/35%C2%B046'45.2%22N+139%C2%B042'39.5%22E/@35.7792267,139.7084088,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.7792267!4d139.7109837?entry=ttu&g_ep=EgoyMDI2MTEwNC4wIKXMDSoASAFQAw%3D%3D",
             "浮間舟渡": "https://www.google.com/maps?q=35.790462478184416,139.69081696737413",
@@ -195,42 +189,29 @@
             });
         }
 
-        // 選択されたユーザーがUSERID "82476" (ロマネ) に該当するか判定
+        // --- ユーザーID定数（ADMIN_USER_ID）による管理者判定 ---
         function isAdminUser() {
-            const myName = document.getElementById('userSelect').value;
-            if (!myName) return false;
-            
-            for (let e of events) {
-                for (let m of e.members) {
-                    if (m.userId === "82476") {
-                        if (m.name === myName || m.name.includes(myName)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
+            const selectedUserId = document.getElementById('userSelect').value;
+            return selectedUserId === ADMIN_USER_ID;
         }
 
-        // 参加者リストの並び替え（USERID "82476" を常に最上位にする）
+        // --- 参加者リストの並び替え（ADMIN_USER_ID を常に最上位にする） ---
         function sortMembers(members) {
             return [...members].sort((a, b) => {
-                const aIsAdmin = (a.userId === "82476" || a.name.includes("ロマネ"));
-                const bIsAdmin = (b.userId === "82476" || b.name.includes("ロマネ"));
+                const aIsAdmin = (a.userId === ADMIN_USER_ID);
+                const bIsAdmin = (b.userId === ADMIN_USER_ID);
                 if (aIsAdmin && !bIsAdmin) return -1;
                 if (!aIsAdmin && bIsAdmin) return 1;
                 return 0;
             });
         }
 
-        // 日時・場所コピー用テキスト生成
         function generateDateTimePlaceText(e) {
             return `${e.date_str} ${e.time} ～ ${e.end_time}\n${e.place}`;
         }
 
         function generateTrialNotice(e) {
             let placeUrl = getPlaceUrl(e.place);
-
             let noticeSection = "";
             if (e.place.includes("浮間舟渡")) {
                 noticeSection = `★注意事項
@@ -420,7 +401,8 @@ iPhone：
 https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tennisbear/id1463750385`;
         }
         
-        function getColoredName(member, myName) {
+        // --- 名前の装飾と「自分」「管理者」判定（IDベース） ---
+        function getColoredName(member, myUserId) {
             let name = member.name;
             let colored = "";
             if (name.includes('[f]')) {
@@ -432,17 +414,16 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             }
 
             let adminBadge = "";
-            if (member.userId === "82476" || name.includes("ロマネ")) {
+            if (member.userId === ADMIN_USER_ID) {
                 adminBadge = `<span class="admin-badge">管理者</span>`;
             }
 
-            if (myName && name.includes(myName)) {
+            if (myUserId && member.userId === myUserId) {
                 return `${adminBadge}<span class="my-name-badge">★自分</span><span style="font-weight:bold; text-decoration: underline; background: #fef08a;">${colored}</span>`;
             }
             return adminBadge + colored;
         }
 
-        // 終了判定（動的：閲覧時点の時刻と比較）
         function isPastEvent(e) {
             const endDateTime = new Date(`${e.date}T${e.end_time}:00`);
             return endDateTime < new Date();
@@ -457,17 +438,20 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const select = document.getElementById('userSelect');
             const monthKey = `${currentYear}-${currentMonth.toString().padStart(2,'0')}`;
             const members = membersByMonth[monthKey] || [];
-            const saved = localStorage.getItem('selectedUser');
+            const savedUserId = localStorage.getItem('selectedUserId');
+            
             select.innerHTML = '<option value="">選択してください...</option>';
             members.forEach(m => {
                 let opt = document.createElement('option');
-                opt.value = m; 
-                if (m.includes("ロマネ")) {
-                    opt.text = "【管理者】 " + m;
+                opt.value = m.userId;  // 値（value）にユーザーIDを設定
+                
+                if (m.userId === ADMIN_USER_ID) {
+                    opt.text = "【管理者】 " + m.name;
                 } else {
-                    opt.text = m;
+                    opt.text = m.name;
                 }
-                if (m === saved) opt.selected = true;
+                
+                if (m.userId === savedUserId) opt.selected = true;
                 select.appendChild(opt);
             });
         }
@@ -478,16 +462,19 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             render();
         }
 
-        function saveUser() { localStorage.setItem('selectedUser', document.getElementById('userSelect').value); render(); }
+        function saveUser() { 
+            localStorage.setItem('selectedUserId', document.getElementById('userSelect').value); 
+            render(); 
+        }
 
         function renderModal(dateKey) {
-            const myName = document.getElementById('userSelect').value;
+            const myUserId = document.getElementById('userSelect').value;
             const dayEvents = events.filter(e => e.date === dateKey);
             const admin = isAdminUser();
             let html = `<div style="font-size:24px; font-weight:bold; margin-bottom:10px;">${dateKey} の全イベント</div>`;
             
             dayEvents.forEach((e) => {
-                const isParticipating = myName && e.members.some(m => m.name.includes(myName));
+                const isParticipating = myUserId && e.members.some(m => m.userId === myUserId);
                 const past = isPastEvent(e);
                 
                 let borderStyle = isParticipating ? "border: 3px solid #d00 !important; background-color: #fff9f9;" : "border: 1px solid #ddd;";
@@ -496,14 +483,12 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 }
                 
                 const sortedMems = sortMembers(e.members);
-                const membersHtml = sortedMems.map(m => getColoredName(m, myName)).join(', ');
+                const membersHtml = sortedMems.map(m => getColoredName(m, myUserId)).join(', ');
                 const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
 
-                // 日時・場所コピーボタン（全ユーザー表示）
                 const dtTextEscaped = generateDateTimePlaceText(e);
                 let dtCopyBtnHtml = `<div><button class="btn-copy-dt" onclick="copyText(\`${dtTextEscaped}\`)">📋 日時・場所コピー</button>`;
 
-                // 体験参加案内文コピーボタン（管理者のみ）
                 if (admin) {
                     const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
                     dtCopyBtnHtml += `<button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button>`;
@@ -532,7 +517,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            // 管理者エリアの表示制御および動的日時の更新
             const adminArea = document.getElementById('adminArea');
             const adminDisplayTime = document.getElementById('adminDisplayTime');
             if (isAdminUser()) {
@@ -545,7 +529,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             }
 
             document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
-            const myName = document.getElementById('userSelect').value;
+            const myUserId = document.getElementById('userSelect').value;
             const myEventsOnly = document.getElementById('myEventsOnly').checked;
             const availableOnly = document.getElementById('availableOnly').checked;
             const admin = isAdminUser();
@@ -580,14 +564,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 
                 let cellEvents = events.filter(e => e.date === dateKey && selectedCategories.has(e.category));
                 if (myEventsOnly) {
-                    cellEvents = cellEvents.filter(e => myName && e.members.some(m => m.name.includes(myName)));
+                    cellEvents = cellEvents.filter(e => myUserId && e.members.some(m => m.userId === myUserId));
                 }
                 if (availableOnly) {
                     cellEvents = cellEvents.filter(e => !e.title.includes('満'));
                 }
 
-                if (cellEvents.length > 0 && myName) {
-                    const hasMyEvent = cellEvents.some(e => e.members.some(m => m.name.includes(myName)));
+                if (cellEvents.length > 0 && myUserId) {
+                    const hasMyEvent = cellEvents.some(e => e.members.some(m => m.userId === myUserId));
                     if (hasMyEvent) {
                         cell.innerHTML += `<span class="my-participate-badge">参加</span>`;
                     }
@@ -603,7 +587,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     } else {
                         ev.style.backgroundColor = e.bg_color;
                         ev.style.color = e.text_color;
-                        if (myName && e.members.some(m => m.name.includes(myName))) ev.style.border = "2px solid #d00";
+                        if (myUserId && e.members.some(m => m.userId === myUserId)) ev.style.border = "2px solid #d00";
                     }
 
                     ev.innerText = `${e.time} ${e.tag}`;
@@ -623,7 +607,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             });
 
             if (myEventsOnly) {
-                monthlyEvents = monthlyEvents.filter(e => myName && e.members.some(m => m.name.includes(myName)));
+                monthlyEvents = monthlyEvents.filter(e => myUserId && e.members.some(m => m.userId === myUserId));
             }
             if (availableOnly) {
                 monthlyEvents = monthlyEvents.filter(e => !e.title.includes('満'));
@@ -633,7 +617,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 listBody.innerHTML = '<p style="color: #666; font-size: 16px;">条件に該当するイベントはありません。</p>';
             } else {
                 monthlyEvents.forEach(e => {
-                    const isParticipating = myName && e.members.some(m => m.name.includes(myName));
+                    const isParticipating = myUserId && e.members.some(m => m.userId === myUserId);
                     const past = isPastEvent(e);
                     const isTodayEvent = (e.date === todayStr);
                     const isTomorrowEvent = (e.date === tomorrowStr);
@@ -658,7 +642,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; position: relative; overflow: hidden; ${borderStyle}`;
                     
                     const sortedMems = sortMembers(e.members);
-                    const membersHtml = sortedMems.map(m => getColoredName(m, myName)).join(', ');
+                    const membersHtml = sortedMems.map(m => getColoredName(m, myUserId)).join(', ');
                     const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
                     
                     const isFull = e.title.includes('満');
@@ -675,11 +659,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         badgeHtml += '<span class="my-participate-badge">参加</span>';
                     }
 
-                    // 日時・場所コピーボタン（全ユーザー表示）
                     const dtTextEscaped = generateDateTimePlaceText(e);
                     let dtCopyBtnHtml = `<div style="margin-top: 8px;"><button class="btn-copy-dt" onclick="copyText(\`${dtTextEscaped}\`)">📋 日時・場所コピー</button>`;
 
-                    // 体験参加案内文コピーボタン（管理者のみ）
                     if (admin) {
                         const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
                         dtCopyBtnHtml += `<button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button>`;
