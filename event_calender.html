@@ -50,10 +50,11 @@
         
         /* 管理者エリアスタイル */
         .admin-panel { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 15px; margin: 15px 0; font-size: 18px; }
-        .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; }
+        .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .admin-btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
         .admin-btn { font-size: 16px; padding: 8px 14px; background-color: #16a34a; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .admin-btn:hover { background-color: #15803d; }
+        .admin-time { font-size: 14px; font-weight: normal; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -78,7 +79,10 @@
 
     <!-- 管理者機能エリア -->
     <div id="adminArea" class="admin-panel" style="display: none;">
-        <h3>👑 管理者モード（定型文コピー機能）</h3>
+        <h3>
+            <span>👑 管理者モード（定型文コピー機能）</span>
+            <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
+        </h3>
         <div class="admin-btn-group">
             <button class="admin-btn" onclick="copyText(getMemberRegText('北区'))">a) 区民向け協力依頼（北区）</button>
             <button class="admin-btn" onclick="copyText(getMemberRegText('板橋区'))">a) 区民向け協力依頼（板橋区）</button>
@@ -117,7 +121,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-10(火) 10:48:06</div>
+    <div class="footer">更新日時: 2026-11-10(火) 10:55:38</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -126,7 +130,7 @@
 
     <script>
         const events = [{"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】桐ケ丘_ E面ハード_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "", "name": "けん妻さん"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "107592", "name": "ヒロ[m]"}, {"userId": "92884", "name": "おおた[m]"}, {"userId": "886872", "name": "ツシマ[m]"}], "url": "https://www.tennisbear.net/event/1671444/info", "place": "桐ケ丘体育館テニスコート", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "×(35)古永弘", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-14", "date_str": "2026/11/14(土)", "time": "11:00", "end_time": "13:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ AB面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "108066", "name": "はる[f]"}, {"userId": "142242", "name": "らせ[m]"}, {"userId": "116237", "name": "おおやん[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "", "name": "竹内さん体験参加"}, {"userId": "13533", "name": "なお[m]"}, {"userId": "33418", "name": "しゅんすけ[m]"}], "url": "https://www.tennisbear.net/event/1671446/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "×(25)高橋和也×(23)松田優", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】浮間公園_2時間", "members": [{"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "126396", "name": "けー[f]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "108870", "name": "カスミ[f]"}, {"userId": "152195", "name": "きたたか[m]"}], "url": "https://www.tennisbear.net/event/1671664/info", "place": "浮間公園", "category": "中級練", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-15", "date_str": "2026/11/15(日)", "time": "11:00", "end_time": "13:00", "title": "*満*🔵【中級W】浮間公園_2時間", "members": [{"userId": "32519", "name": "おおとも[f]"}, {"userId": "108870", "name": "カスミ[f]"}, {"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "95248", "name": "ゆきか"}, {"userId": "103913", "name": "きよし[m]"}], "url": "https://www.tennisbear.net/event/1671668/info", "place": "浮間公園", "category": "中級W", "capacity": "6名 / 6名 (空き：0名)", "reservation_name": "不明", "tag": "満_中級W", "bg_color": "#ccccff", "text_color": "#333399"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*桐ケ丘_ BC面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "878232", "name": "わかこ[f]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "867", "name": "ゆー[m]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "166264", "name": "なかはら[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "41778", "name": "ゆかちー[f]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "13533", "name": "なお[m]"}, {"userId": "267489", "name": "やました[m]"}], "url": "https://www.tennisbear.net/event/1671453/info", "place": "桐ケ丘体育館テニスコート", "category": "中級練", "capacity": "12名 / 12名 (空き：0名)", "reservation_name": "〇(36)前田和也〇(36)前田和也", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-21", "date_str": "2026/11/21(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟠【通常練】桐ケ丘_ D面オムニ_2時間", "members": [{"userId": "82476", "name": "ロマネ[m]"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "46027", "name": "すずき[f]"}, {"userId": "", "name": "中村さん体験参加"}, {"userId": "", "name": "野上さん体験参加"}], "url": "https://www.tennisbear.net/event/1671451/info", "place": "桐ケ丘体育館テニスコート", "category": "通常練", "capacity": "7名 / 7名 (空き：0名)", "reservation_name": "◎(8)金野大悟", "tag": "満_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】浮間舟渡_ B面オムニ_2時間", "members": [{"userId": "156703", "name": "ichi02TA[m]"}, {"userId": "152195", "name": "きたたか[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "", "name": "高橋なおきさん体験参加"}, {"userId": "", "name": "鈴木さん"}], "url": "https://www.tennisbear.net/event/1671460/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "5名 / 6名 (空き：1名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-23", "date_str": "2026/11/23(月祝)", "time": "09:00", "end_time": "11:00", "title": "*空5*🟠【通常練】浮間舟渡_ A面オムニ_2時間", "members": [{"userId": "82476", "name": "ロマネ[m]"}], "url": "https://www.tennisbear.net/event/1671464/info", "place": "浮間舟渡庭球場", "category": "通常練", "capacity": "1名 / 6名 (空き：5名)", "reservation_name": "△(16)堀口つぐみ", "tag": "空5_通常練", "bg_color": "#ffcccc", "text_color": "#993333"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🟢【中級練】*2面*浮間舟渡_ BC面オムニ_2時間", "members": [{"userId": "81756", "name": "うえたけ[m]"}, {"userId": "207364", "name": "さきえ[f]"}, {"userId": "867", "name": "ゆー[m]"}, {"userId": "93822", "name": "あけちゃん[m]"}, {"userId": "882790", "name": "teru[m]"}, {"userId": "891017", "name": "りんた[m]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "267489", "name": "やました[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "32519", "name": "おおとも[f]"}, {"userId": "170693", "name": "コージ[m]"}, {"userId": "", "name": "体験参加(菊武さん、あらさん知人)"}, {"userId": "1011060", "name": "まつざき[f]"}], "url": "https://www.tennisbear.net/event/1671468/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "13名 / 13名 (空き：0名)", "reservation_name": "◎(8)金野大悟△(5)牛久保", "tag": "満_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-28", "date_str": "2026/11/28(土)", "time": "09:00", "end_time": "11:00", "title": "*満*🔰【基礎練】浮間舟渡_ D面オムニ_2時間", "members": [{"userId": "166264", "name": "なかはら[m]"}, {"userId": "967130", "name": "住谷 一真[m]"}, {"userId": "848523", "name": "牛久保晃平[m]"}, {"userId": "393656", "name": "和田伶央[m]"}, {"userId": "1020007", "name": "よしなり[f]"}, {"userId": "1011193", "name": "あやの[f]"}, {"userId": "195649", "name": "kou[m]"}, {"userId": "", "name": "体験参加(神田みのりさん)"}], "url": "https://www.tennisbear.net/event/1671466/info", "place": "浮間舟渡庭球場", "category": "基礎練", "capacity": "8名 / 8名 (空き：0名)", "reservation_name": "△(5)牛久保", "tag": "満_基礎練", "bg_color": "#ffe5cc", "text_color": "#cc6600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "09:00", "end_time": "11:00", "title": "*空1*🟢【中級練】*2面*浮間舟渡_ CD面オムニ_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "171539", "name": "かな[f]"}, {"userId": "112035", "name": "みやけひろき[m]"}, {"userId": "859430", "name": "あら[m]"}, {"userId": "369394", "name": "みき[f]"}, {"userId": "66641", "name": "りお[f]"}, {"userId": "", "name": "重田さん"}, {"userId": "82476", "name": "ロマネ[m]"}, {"userId": "74860", "name": "Yu Sumita[m]"}, {"userId": "134542", "name": "おき[f]"}, {"userId": "33418", "name": "しゅんすけ[m]"}, {"userId": "", "name": "鈴木さん(仮)"}], "url": "https://www.tennisbear.net/event/1671470/info", "place": "浮間舟渡庭球場", "category": "中級練", "capacity": "12名 / 13名 (空き：1名)", "reservation_name": "×(30)根井美咲×(20)加藤慎也", "tag": "空1_中級練", "bg_color": "#ccffcc", "text_color": "#006600"}, {"date": "2026-11-29", "date_str": "2026/11/29(日)", "time": "11:00", "end_time": "13:00", "title": "*空4*🔵【中級W】浮間公園_2時間", "members": [{"userId": "1010191", "name": "Kenta T.[m]"}, {"userId": "177020", "name": "ひこ[m]"}], "url": "https://www.tennisbear.net/event/1671670/info", "place": "浮間公園", "category": "中級W", "capacity": "2名 / 6名 (空き：4名)", "reservation_name": "不明", "tag": "空4_中級W", "bg_color": "#ccccff", "text_color": "#333399"}];
-        const membersByMonth = {"2026-11": ["Kenta T.[m]", "Yu Sumita[m]", "ichi02TA[m]", "kou[m]", "teru[m]", "あけちゃん[m]", "あやの[f]", "あら[m]", "うえたけ[m]", "おおた[m]", "おおとも[f]", "おおやん[m]", "おき[f]", "かな[f]", "きたたか[m]", "きよし[m]", "けん妻さん", "けー[f]", "さきえ[f]", "しゅんすけ[m]", "すずき[f]", "なお[m]", "なかはら[m]", "はる[f]", "ひこ[m]", "まつざき[f]", "みき[f]", "みやけひろき[m]", "やました[m]", "ゆかちー[f]", "ゆきか", "ゆー[m]", "よしなり[f]", "らせ[m]", "りお[f]", "りんた[m]", "わかこ[f]", "カスミ[f]", "コージ[m]", "ツシマ[m]", "ヒロ[m]", "ロマネ[m]", "中村さん体験参加", "住谷 一真[m]", "体験参加(神田みのりさん)", "体験参加(菊武さん、あらさん知人)", "和田伶央[m]", "牛久保晃平[m]", "竹内さん体験参加", "重田さん", "野上さん体験参加", "鈴木さん", "鈴木さん(仮)", "高橋なおきさん体験参加"]};
+        const membersByMonth = {"2026-11": [["82476", "ロマネ[m]"], ["1010191", "Kenta T.[m]"], ["74860", "Yu Sumita[m]"], ["156703", "ichi02TA[m]"], ["195649", "kou[m]"], ["882790", "teru[m]"], ["93822", "あけちゃん[m]"], ["1011193", "あやの[f]"], ["859430", "あら[m]"], ["81756", "うえたけ[m]"], ["92884", "おおた[m]"], ["32519", "おおとも[f]"], ["116237", "おおやん[m]"], ["134542", "おき[f]"], ["171539", "かな[f]"], ["152195", "きたたか[m]"], ["103913", "きよし[m]"], ["", "けん妻さん"], ["126396", "けー[f]"], ["207364", "さきえ[f]"], ["33418", "しゅんすけ[m]"], ["46027", "すずき[f]"], ["13533", "なお[m]"], ["166264", "なかはら[m]"], ["108066", "はる[f]"], ["177020", "ひこ[m]"], ["1011060", "まつざき[f]"], ["369394", "みき[f]"], ["112035", "みやけひろき[m]"], ["267489", "やました[m]"], ["41778", "ゆかちー[f]"], ["95248", "ゆきか"], ["867", "ゆー[m]"], ["1020007", "よしなり[f]"], ["142242", "らせ[m]"], ["66641", "りお[f]"], ["891017", "りんた[m]"], ["878232", "わかこ[f]"], ["108870", "カスミ[f]"], ["170693", "コージ[m]"], ["886872", "ツシマ[m]"], ["107592", "ヒロ[m]"], ["", "中村さん体験参加"], ["967130", "住谷 一真[m]"], ["", "体験参加(神田みのりさん)"], ["", "体験参加(菊武さん、あらさん知人)"], ["393656", "和田伶央[m]"], ["848523", "牛久保晃平[m]"], ["", "竹内さん体験参加"], ["", "重田さん"], ["", "野上さん体験参加"], ["", "鈴木さん"], ["", "鈴木さん(仮)"], ["", "高橋なおきさん体験参加"]]};
         const holidays = ["2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23", "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23", "2028-01-01", "2028-01-10", "2028-02-11", "2028-02-23", "2028-03-20", "2028-04-29", "2028-05-03", "2028-05-04", "2028-05-05", "2028-07-17", "2028-08-11", "2028-09-18", "2028-09-22", "2028-10-09", "2028-11-03", "2028-11-23"];
         const colorMap = {"通常練": {"bg": "#ffcccc", "text": "#993333"}, "基礎練": {"bg": "#ffe5cc", "text": "#cc6600"}, "中級W": {"bg": "#ccccff", "text": "#333399"}, "中級練": {"bg": "#ccffcc", "text": "#006600"}, "女子練": {"bg": "#ffccff", "text": "#993399"}, "基礎+": {"bg": "#e0ccff", "text": "#663399"}};
 
@@ -150,6 +154,19 @@
             const m = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             return `${y}-${m}-${day}`;
+        }
+
+        function getFormattedNow() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const weekdays = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
+            const w = weekdays[d.getDay()];
+            const h = String(d.getHours()).padStart(2, '0');
+            const min = String(d.getMinutes()).padStart(2, '0');
+            const s = String(d.getSeconds()).padStart(2, '0');
+            return `${y}-${m}-${day}${w} ${h}:${min}:${s}`;
         }
 
         // URLマップ設定（部分一致キーワード対応）
@@ -299,7 +316,7 @@ https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
         function getJoinGuide1Text() {
             return `★今後のご参加に向けたご案内です↓
 
-テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及出欠管理を行っています。
+テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及び出欠管理を行っています。
 
 本文最後のURLからサークル加入申請を行なってください。その上で、参加可能な枠に参加登録を行ってください
 
@@ -350,7 +367,7 @@ https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
 ルールブックはサークルライングループノートに掲載されていますので、グループご参加後にご確認ください。
 
 
-【7>参加費は以下の通りです。(満員の場合)
+【7】参加費は以下の通りです。(満員の場合)
 2時間1コマ:【600円】
 ※基礎練は【700円】です
 ※参加人数や照明有無(ナイター枠)によって変動します。
@@ -403,8 +420,7 @@ iPhone：
 https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tennisbear/id1463750385`;
         }
         
-        function getColoredName(member, myName) {
-            let name = member.name;
+        function getColoredName(name, myName) {
             let colored = "";
             if (name.includes('[f]')) {
                 colored = `<span class="gender-f">${name}</span>`;
@@ -415,7 +431,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             }
 
             let adminBadge = "";
-            if (member.userId === "82476" || name.includes("ロマネ")) {
+            if (name.includes("ロマネ")) {
                 adminBadge = `<span class="admin-badge">管理者</span>`;
             }
 
@@ -444,7 +460,12 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             select.innerHTML = '<option value="">選択してください...</option>';
             members.forEach(m => {
                 let opt = document.createElement('option');
-                opt.value = m; opt.text = m;
+                opt.value = m; 
+                if (m.includes("ロマネ")) {
+                    opt.text = "【管理者】 " + m;
+                } else {
+                    opt.text = m;
+                }
                 if (m === saved) opt.selected = true;
                 select.appendChild(opt);
             });
@@ -474,7 +495,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 }
                 
                 const sortedMems = sortMembers(e.members);
-                const membersHtml = sortedMems.map(m => getColoredName(m, myName)).join(', ');
+                const membersHtml = sortedMems.map(m => getColoredName(m.name, myName)).join(', ');
                 const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
 
                 // 日時・場所コピーボタン（全ユーザー表示）
@@ -510,10 +531,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            // 管理者エリアの表示制御
+            // 管理者エリアの表示制御および動的日時の更新
             const adminArea = document.getElementById('adminArea');
+            const adminDisplayTime = document.getElementById('adminDisplayTime');
             if (isAdminUser()) {
                 adminArea.style.display = 'block';
+                if (adminDisplayTime) {
+                    adminDisplayTime.innerText = "表示日時: " + getFormattedNow();
+                }
             } else {
                 adminArea.style.display = 'none';
             }
@@ -632,7 +657,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; position: relative; overflow: hidden; ${borderStyle}`;
                     
                     const sortedMems = sortMembers(e.members);
-                    const membersHtml = sortedMems.map(m => getColoredName(m, myName)).join(', ');
+                    const membersHtml = sortedMems.map(m => getColoredName(m.name, myName)).join(', ');
                     const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
                     
                     const isFull = e.title.includes('満');
