@@ -46,10 +46,11 @@
         
         /* 管理者エリアスタイル */
         .admin-panel { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 15px; margin: 15px 0; font-size: 18px; }
-        .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; }
+        .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .admin-btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
         .admin-btn { font-size: 16px; padding: 8px 14px; background-color: #16a34a; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .admin-btn:hover { background-color: #15803d; }
+        .admin-time { font-size: 14px; font-weight: normal; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -74,7 +75,10 @@
 
     <!-- 管理者機能エリア -->
     <div id="adminArea" class="admin-panel" style="display: none;">
-        <h3>👑 管理者モード（定型文コピー機能）</h3>
+        <h3>
+            <span>👑 管理者モード（定型文コピー機能）</span>
+            <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
+        </h3>
         <div class="admin-btn-group">
             <button class="admin-btn" onclick="copyText(getMemberRegText('北区'))">a) 区民向け協力依頼（北区）</button>
             <button class="admin-btn" onclick="copyText(getMemberRegText('板橋区'))">a) 区民向け協力依頼（板橋区）</button>
@@ -113,7 +117,6 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-10(火) 08:36:57</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -148,14 +151,36 @@
             return `${y}-${m}-${day}`;
         }
 
-        // URLマップ設定
+        function getFormattedNow() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const weekdays = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
+            const w = weekdays[d.getDay()];
+            const h = String(d.getHours()).padStart(2, '0');
+            const min = String(d.getMinutes()).padStart(2, '0');
+            const s = String(d.getSeconds()).padStart(2, '0');
+            return `${y}-${m}-${day}${w} ${h}:${min}:${s}`;
+        }
+
+        // URLマップ設定（部分一致キーワード対応）
         const placeUrlMap = {
-            "桐ケ丘庭球場": "https://www.google.com/maps/place/35%C2%B046'45.2%22N+139%C2%B042'39.5%22E/@35.7792267,139.7084088,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.7792267!4d139.7109837?entry=ttu&g_ep=EgoyMDI2MTEwNC4wIKXMDSoASAFQAw%3D%3D",
-            "浮間舟渡庭球場": "https://www.google.com/maps?q=35.790462478184416,139.69081696737413",
-            "新河岸川庭球場": "https://www.google.com/maps?q=35.787074,139.721275",
+            "桐ケ丘": "https://www.google.com/maps/place/35%C2%B046'45.2%22N+139%C2%B042'39.5%22E/@35.7792267,139.7084088,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.7792267!4d139.7109837?entry=ttu&g_ep=EgoyMDI2MTEwNC4wIKXMDSoASAFQAw%3D%3D",
+            "浮間舟渡": "https://www.google.com/maps?q=35.790462478184416,139.69081696737413",
+            "新河岸川": "https://www.google.com/maps?q=35.787074,139.721275",
             "浮間公園": "https://www.google.com/maps?cid=6359435785798986045&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAMYASAF",
-            "加賀庭球場": "https://www.shisetsu-tds.jp/tokyo-itabashi-kaga-tennis/access/"
+            "加賀": "https://www.shisetsu-tds.jp/tokyo-itabashi-kaga-tennis/access/"
         };
+
+        function getPlaceUrl(placeStr) {
+            for (let key in placeUrlMap) {
+                if (placeStr.includes(key)) {
+                    return placeUrlMap[key];
+                }
+            }
+            return "";
+        }
 
         function copyText(text) {
             navigator.clipboard.writeText(text).then(() => {
@@ -183,13 +208,7 @@
         }
 
         function generateTrialNotice(e) {
-            let placeUrl = "";
-            for (let key in placeUrlMap) {
-                if (e.place.includes(key)) {
-                    placeUrl = placeUrlMap[key];
-                    break;
-                }
-            }
+            let placeUrl = getPlaceUrl(e.place);
 
             let noticeSection = "";
             if (e.place.includes("浮間舟渡")) {
@@ -200,20 +219,16 @@
 `;
             }
 
-            let organizer = e.members.length > 0 ? e.members[0].name : "未定";
-            let organizerClean = organizer.replace(/\[[mf]\]/g, "").trim();
-            if (organizer.includes('[m]')) organizerClean += "(男性)";
-            else if (organizer.includes('[f]')) organizerClean += "(女性)";
-
             return `こんにちは、北区プランドールの金野(こんの)です。
 体験参加のご案内です。
 
 ◾️日程
-${e.date_str} ${e.time}～${e.end_time}【${e.place}】
+${e.date_str}
+${e.place}
 ${placeUrl}
 
 ${noticeSection}◾️当日主催者
-${organizerClean}
+○○さん
 
 ◾️集合のご案内
 現地集合、現地解散となります。
@@ -479,10 +494,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            // 管理者エリアの表示制御
+            // 管理者エリアの表示制御および表示日時の動的更新
             const adminArea = document.getElementById('adminArea');
+            const adminDisplayTime = document.getElementById('adminDisplayTime');
             if (isAdminUser()) {
                 adminArea.style.display = 'block';
+                if (adminDisplayTime) {
+                    adminDisplayTime.innerText = "表示日時: " + getFormattedNow();
+                }
             } else {
                 adminArea.style.display = 'none';
             }
@@ -649,7 +668,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
         function changeMonth(n) {
             if (n === 0) {
-                // 「当月」ボタン押下時は実環境の現在月に戻す
                 const d = new Date();
                 currentYear = d.getFullYear();
                 currentMonth = d.getMonth() + 1;
