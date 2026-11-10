@@ -26,8 +26,10 @@
         .modal-content { background: white; margin: 5% auto; padding: 20px; width: 85%; max-height: 85vh; overflow-y: auto; border-radius: 10px; text-align: center; }
         .modal-content button { font-size: 24px; padding: 10px 20px; }
         .btn-lg { font-size: 20px; padding: 10px 20px; cursor: pointer; } /* ボタンサイズ拡大 */
-        .btn-copy { font-size: 16px; padding: 6px 12px; background-color: #0284c7; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; }
+        .btn-copy { font-size: 16px; padding: 6px 12px; background-color: #0284c7; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; margin-right: 5px; }
         .btn-copy:hover { background-color: #0369a1; }
+        .btn-copy-dt { font-size: 16px; padding: 6px 12px; background-color: #475569; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; }
+        .btn-copy-dt:hover { background-color: #334155; }
         .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
         .filter-area { margin: 15px 0; font-size: 18px; }
         .gender-f { color: #ff69b4 !important; font-weight: bold; } /* ピンク */
@@ -43,14 +45,15 @@
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
         /* 参加バッジ（自分バッジと同一カラー） */
         .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
+        /* 管理者バッジ */
+        .admin-badge { display: inline-block; background: #d97706; color: #fff; font-size: 15px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #b45309; }
         
         /* 管理者エリアスタイル */
         .admin-panel { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 15px; margin: 15px 0; font-size: 18px; }
-        .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; }
         .admin-btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
         .admin-btn { font-size: 16px; padding: 8px 14px; background-color: #16a34a; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .admin-btn:hover { background-color: #15803d; }
-        .admin-time { font-size: 14px; font-weight: normal; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -75,10 +78,7 @@
 
     <!-- 管理者機能エリア -->
     <div id="adminArea" class="admin-panel" style="display: none;">
-        <h3>
-            <span>👑 管理者モード（定型文コピー機能）</span>
-            <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
-        </h3>
+        <h3>👑 管理者モード（定型文コピー機能）</h3>
         <div class="admin-btn-group">
             <button class="admin-btn" onclick="copyText(getMemberRegText('北区'))">a) 区民向け協力依頼（北区）</button>
             <button class="admin-btn" onclick="copyText(getMemberRegText('板橋区'))">a) 区民向け協力依頼（板橋区）</button>
@@ -117,6 +117,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
+    <div class="footer">更新日時: 2026-11-10(火) 10:48:06</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -151,19 +152,6 @@
             return `${y}-${m}-${day}`;
         }
 
-        function getFormattedNow() {
-            const d = new Date();
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            const weekdays = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
-            const w = weekdays[d.getDay()];
-            const h = String(d.getHours()).padStart(2, '0');
-            const min = String(d.getMinutes()).padStart(2, '0');
-            const s = String(d.getSeconds()).padStart(2, '0');
-            return `${y}-${m}-${day}${w} ${h}:${min}:${s}`;
-        }
-
         // URLマップ設定（部分一致キーワード対応）
         const placeUrlMap = {
             "桐ケ丘": "https://www.google.com/maps/place/35%C2%B046'45.2%22N+139%C2%B042'39.5%22E/@35.7792267,139.7084088,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.7792267!4d139.7109837?entry=ttu&g_ep=EgoyMDI2MTEwNC4wIKXMDSoASAFQAw%3D%3D",
@@ -190,7 +178,7 @@
             });
         }
 
-        // 選択されたユーザーがUSERID "82476" に該当するか判定
+        // 選択されたユーザーがUSERID "82476" (ロマネ) に該当するか判定
         function isAdminUser() {
             const myName = document.getElementById('userSelect').value;
             if (!myName) return false;
@@ -205,6 +193,22 @@
                 }
             }
             return false;
+        }
+
+        // 参加者リストの並び替え（USERID "82476" を常に最上位にする）
+        function sortMembers(members) {
+            return [...members].sort((a, b) => {
+                const aIsAdmin = (a.userId === "82476" || a.name.includes("ロマネ"));
+                const bIsAdmin = (b.userId === "82476" || b.name.includes("ロマネ"));
+                if (aIsAdmin && !bIsAdmin) return -1;
+                if (!aIsAdmin && bIsAdmin) return 1;
+                return 0;
+            });
+        }
+
+        // 日時・場所コピー用テキスト生成
+        function generateDateTimePlaceText(e) {
+            return `${e.date_str} ${e.time} ～ ${e.end_time}\n${e.place}`;
         }
 
         function generateTrialNotice(e) {
@@ -223,7 +227,7 @@
 体験参加のご案内です。
 
 ◾️日程
-${e.date_str}
+${e.date_str} ${e.time} ～ ${e.end_time}
 ${e.place}
 ${placeUrl}
 
@@ -295,7 +299,7 @@ https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
         function getJoinGuide1Text() {
             return `★今後のご参加に向けたご案内です↓
 
-テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及び出欠管理を行っています。
+テニスベアという、無料のテニスイベント運営サービスを利用して、練習会日程公開及出欠管理を行っています。
 
 本文最後のURLからサークル加入申請を行なってください。その上で、参加可能な枠に参加登録を行ってください
 
@@ -346,7 +350,7 @@ https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
 ルールブックはサークルライングループノートに掲載されていますので、グループご参加後にご確認ください。
 
 
-【7】参加費は以下の通りです。(満員の場合)
+【7>参加費は以下の通りです。(満員の場合)
 2時間1コマ:【600円】
 ※基礎練は【700円】です
 ※参加人数や照明有無(ナイター枠)によって変動します。
@@ -399,7 +403,8 @@ iPhone：
 https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tennisbear/id1463750385`;
         }
         
-        function getColoredName(name, myName) {
+        function getColoredName(member, myName) {
+            let name = member.name;
             let colored = "";
             if (name.includes('[f]')) {
                 colored = `<span class="gender-f">${name}</span>`;
@@ -409,10 +414,15 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 colored = `<span class="gender-unknown">${name}</span>`;
             }
 
-            if (myName && name.includes(myName)) {
-                return `<span class="my-name-badge">★自分</span><span style="font-weight:bold; text-decoration: underline; background: #fef08a;">${colored}</span>`;
+            let adminBadge = "";
+            if (member.userId === "82476" || name.includes("ロマネ")) {
+                adminBadge = `<span class="admin-badge">管理者</span>`;
             }
-            return colored;
+
+            if (myName && name.includes(myName)) {
+                return `${adminBadge}<span class="my-name-badge">★自分</span><span style="font-weight:bold; text-decoration: underline; background: #fef08a;">${colored}</span>`;
+            }
+            return adminBadge + colored;
         }
 
         // 終了判定（動的：閲覧時点の時刻と比較）
@@ -463,14 +473,20 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     borderStyle = "border: 1px solid #94a3b8; background-color: #cbd5e1;";
                 }
                 
-                const membersHtml = e.members.map(m => getColoredName(m.name, myName)).join(', ');
+                const sortedMems = sortMembers(e.members);
+                const membersHtml = sortedMems.map(m => getColoredName(m, myName)).join(', ');
                 const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
 
-                let copyBtnHtml = "";
+                // 日時・場所コピーボタン（全ユーザー表示）
+                const dtTextEscaped = generateDateTimePlaceText(e);
+                let dtCopyBtnHtml = `<div><button class="btn-copy-dt" onclick="copyText(\`${dtTextEscaped}\`)">📋 日時・場所コピー</button>`;
+
+                // 体験参加案内文コピーボタン（管理者のみ）
                 if (admin) {
                     const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
-                    copyBtnHtml = `<div><button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button></div>`;
+                    dtCopyBtnHtml += `<button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button>`;
                 }
+                dtCopyBtnHtml += `</div>`;
 
                 html += `<div style="${borderStyle} padding:10px; margin-bottom:10px; border-radius:5px; position:relative; overflow:hidden;">
                     ${pastStamp}
@@ -480,7 +496,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     <div style="font-size:20px; color:${past ? '#334155' : '#005500'}; font-weight:bold;">参加者: ${membersHtml}</div>
                     <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
                     <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
-                    ${copyBtnHtml}
+                    ${dtCopyBtnHtml}
                 </div>`;
             });
             document.getElementById('modalBody').innerHTML = html;
@@ -494,14 +510,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            // 管理者エリアの表示制御および表示日時の動的更新
+            // 管理者エリアの表示制御
             const adminArea = document.getElementById('adminArea');
-            const adminDisplayTime = document.getElementById('adminDisplayTime');
             if (isAdminUser()) {
                 adminArea.style.display = 'block';
-                if (adminDisplayTime) {
-                    adminDisplayTime.innerText = "表示日時: " + getFormattedNow();
-                }
             } else {
                 adminArea.style.display = 'none';
             }
@@ -619,7 +631,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; position: relative; overflow: hidden; ${borderStyle}`;
                     
-                    const membersHtml = e.members.map(m => getColoredName(m.name, myName)).join(', ');
+                    const sortedMems = sortMembers(e.members);
+                    const membersHtml = sortedMems.map(m => getColoredName(m, myName)).join(', ');
                     const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
                     
                     const isFull = e.title.includes('満');
@@ -636,11 +649,16 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         badgeHtml += '<span class="my-participate-badge">参加</span>';
                     }
 
-                    let copyBtnHtml = "";
+                    // 日時・場所コピーボタン（全ユーザー表示）
+                    const dtTextEscaped = generateDateTimePlaceText(e);
+                    let dtCopyBtnHtml = `<div style="margin-top: 8px;"><button class="btn-copy-dt" onclick="copyText(\`${dtTextEscaped}\`)">📋 日時・場所コピー</button>`;
+
+                    // 体験参加案内文コピーボタン（管理者のみ）
                     if (admin) {
                         const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
-                        copyBtnHtml = `<div style="margin-top: 8px;"><button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button></div>`;
+                        dtCopyBtnHtml += `<button class="btn-copy" onclick="copyText(\`${noticeTextEscaped}\`)">📋 体験参加案内文コピー</button>`;
                     }
+                    dtCopyBtnHtml += `</div>`;
 
                     eventDiv.innerHTML = `
                         ${pastStamp}
@@ -650,7 +668,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         <div style="color:#555;">参加者: ${membersHtml}</div>
                         <div style="color:#555; font-size:16px;">予約名義: ${e.reservation_name}</div>
                         <a href="${e.url}" target="_blank" style="font-size:18px; color:#0066cc;">詳細・申込はこちら</a>
-                        ${copyBtnHtml}
+                        ${dtCopyBtnHtml}
                     `;
                     listBody.appendChild(eventDiv);
                 });
