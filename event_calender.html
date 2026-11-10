@@ -27,6 +27,28 @@
         .btn-copy:hover { background-color: #0369a1; }
         .btn-copy-dt { font-size: 16px; padding: 6px 12px; background-color: #475569; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; }
         .btn-copy-dt:hover { background-color: #334155; }
+        
+        /* モダンな詳細・申込ボタン（約1.3倍サイズ） */
+        .btn-detail {
+            display: inline-block;
+            font-size: 23px;
+            font-weight: bold;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            transition: all 0.2s ease;
+            margin: 8px 0;
+            text-align: center;
+        }
+        .btn-detail:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 6px 8px rgba(37, 99, 235, 0.3);
+            transform: translateY(-2px);
+        }
+
         .footer { margin-top: 30px; font-size: 16px; color: #666; text-align: center; }
         .filter-area { margin: 15px 0; font-size: 18px; }
         .gender-f { color: #ff69b4 !important; font-weight: bold; }
@@ -114,7 +136,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-10(火) 14:47:59</div>
+    <div class="footer">更新日時: 2026-11-10(火) 15:01:22</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -504,7 +526,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                 const dtTextEscaped = generateDateTimePlaceText(e);
                 const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
-                let dtCopyBtnHtml = `<div><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
+                let dtCopyBtnHtml = `<div style="margin-top: 10px;"><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
 
                 if (admin) {
                     const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
@@ -512,14 +534,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 }
                 dtCopyBtnHtml += `</div>`;
 
-                html += `<div style="${borderStyle} padding:10px; margin-bottom:10px; border-radius:5px; position:relative; overflow:hidden;">
+                html += `<div style="${borderStyle} padding:12px; margin-bottom:12px; border-radius:8px; position:relative; overflow:hidden;">
                     ${pastStamp}
                     <div style="font-size:24px;">${e.title}</div>
                     <div style="font-size:22px; color:${past ? '#334155' : '#c00'}; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time} [${e.place}]</div>
                     <div style="color:#555; font-size:20px;">参加人数: ${e.capacity}</div>
                     <div style="font-size:20px; color:${past ? '#334155' : '#005500'}; font-weight:bold;">参加者: ${membersHtml}</div>
                     <div style="font-size:18px; ">予約名義: ${e.reservation_name}</div>
-                    <a href="${e.url}" target="_blank" style="font-size:18px;">詳細・申込はこちら</a>
+                    <div style="margin-top: 6px;"><a href="${e.url}" target="_blank" class="btn-detail">詳細・申込はこちら</a></div>
                     ${dtCopyBtnHtml}
                 </div>`;
             });
@@ -656,7 +678,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         borderStyle = "border: 2px solid #b22222; background-color: #fdf2f2;";
                     }
 
-                    eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:10px; margin-bottom:10px; font-size: 18px; border-radius: 5px; position: relative; overflow: hidden; ${borderStyle}`;
+                    eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:12px; margin-bottom:12px; font-size: 18px; border-radius: 8px; position: relative; overflow: hidden; ${borderStyle}`;
                     
                     const sortedMems = sortMembers(e.members);
                     const membersHtml = sortedMems.map(m => getColoredName(m, myUserId)).join(', ');
@@ -678,7 +700,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                     const dtTextEscaped = generateDateTimePlaceText(e);
                     const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
-                    let dtCopyBtnHtml = `<div style="margin-top: 8px;"><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
+                    let dtCopyBtnHtml = `<div style="margin-top: 10px;"><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
 
                     if (admin) {
                         const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
@@ -693,7 +715,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         <div style="color:#555;">参加人数: ${e.capacity}</div>
                         <div style="color:#555;">参加者: ${membersHtml}</div>
                         <div style="color:#555; font-size:16px;">予約名義: ${e.reservation_name}</div>
-                        <a href="${e.url}" target="_blank" style="font-size:18px; color:#0066cc;">詳細・申込はこちら</a>
+                        <div style="margin-top: 6px;"><a href="${e.url}" target="_blank" class="btn-detail">詳細・申込はこちら</a></div>
                         ${dtCopyBtnHtml}
                     `;
                     listBody.appendChild(eventDiv);
