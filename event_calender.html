@@ -25,8 +25,10 @@
         .btn-lg { font-size: 20px; padding: 10px 20px; cursor: pointer; }
         .btn-copy { font-size: 16px; padding: 6px 12px; background-color: #0284c7; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; margin-right: 5px; }
         .btn-copy:hover { background-color: #0369a1; }
-        .btn-copy-dt { font-size: 16px; padding: 6px 12px; background-color: #475569; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; }
+        .btn-copy-dt { font-size: 16px; padding: 6px 12px; background-color: #475569; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; margin-right: 5px; }
         .btn-copy-dt:hover { background-color: #334155; }
+        .btn-copy-url { font-size: 16px; padding: 6px 12px; background-color: #0891b2; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; margin-right: 5px; }
+        .btn-copy-url:hover { background-color: #0e7490; }
         
         /* モダンな詳細・申込ボタン（約1.3倍サイズ） */
         .btn-detail {
@@ -70,9 +72,24 @@
         .admin-btn { font-size: 16px; padding: 8px 14px; background-color: #16a34a; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .admin-btn:hover { background-color: #15803d; }
         .admin-time { font-size: 14px; font-weight: normal; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 4px; }
+        
+        .warning-banner { display: none; background-color: #fef2f2; border: 3px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-size: 22px; font-weight: bold; text-align: center; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2); }
+        .btn-link { display: inline-block; font-size: 18px; font-weight: bold; padding: 8px 16px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 6px; margin-right: 10px; margin-bottom: 10px; }
+        .btn-link:hover { background-color: #1d4ed8; }
     </style>
 </head>
 <body>
+    <!-- 60分経過警告用バナー -->
+    <div id="warningBanner" class="warning-banner">
+        ⚠️ 最終更新日時から60分以上経過しています。テニスベアからの情報取得が失敗している可能性が高いです。
+    </div>
+
+    <!-- ナビゲーションリンクエリア -->
+    <div style="margin-bottom: 15px;">
+        <a href="https://www.tennisbear.net/circle/2461/events" target="_blank" class="btn-link">🎾 テニスベア練習会一覧</a>
+        <a href="https://www.tennisbear.net/my-page/notice" target="_blank" id="noticeLink" class="btn-link" style="background-color: #d97706; display: none;">🔔 お知らせページ (管理者)</a>
+    </div>
+
     <div style="margin-bottom: 20px; font-size: 20px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
         <div>
             参加者を選択: 
@@ -102,7 +119,9 @@
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '北区依頼')">a) 北区依頼</button>
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('板橋区'), '板橋区依頼')">b) 板橋区依頼</button>
             <button class="admin-btn" onclick="copyGeneralText(getOutDistrictText(), '都営依頼')">c) 都営依頼</button>
-            <button class="admin-btn" onclick="copyGeneralText(getJoinGuide1Text(), '加入案内1 (登録前案内)')">d) 加入案内1 (登録前案内)</button>
+            <button class="admin-btn" onclick="copyGeneralText(getJoinGuide1Text(), '登録前案内')">d) 登録前案内</button>
+            <button class="admin-btn" onclick="copyGeneralText(getJoinGuideMessage1Text(), '加入案内1 (加入後グループLINE案内)')">e) 加入案内1</button>
+            <button class="admin-btn" onclick="copyGeneralText(getJoinGuideMessage2Text(), '加入案内2 (日程・人数ルール案内)')">f) 加入案内2</button>
         </div>
     </div>
 
@@ -136,7 +155,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-11(水) 21:21:38</div>
+    <div class="footer">更新日時: 2026-11-11(水) 21:24:26</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -225,6 +244,15 @@
         function copyTrialNotice(text, eventInfoStr) {
             navigator.clipboard.writeText(text).then(() => {
                 alert(`【体験参加案内文コピー】\n対象: ${eventInfoStr}\n\nクリップボードにコピーしました！`);
+            }).catch(err => {
+                alert("コピーに失敗しました: " + err);
+            });
+        }
+
+        // イベントURLコピー専用
+        function copyEventUrl(url, eventInfoStr) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert(`【イベントURLコピー】\n対象: ${eventInfoStr}\n\nURLをクリップボードにコピーしました！`);
             }).catch(err => {
                 alert("コピーに失敗しました: " + err);
             });
@@ -358,7 +386,7 @@ https://kouen.sports.metro.tokyo.lg.jp/web/index.jsp
 
 ●前日・当日キャンセル:
 上記に加え、キャンセル料として参加費満額お支払い頂きます。
-※基本的にキャンセルNGの期間です。但し、代わりに参加できる人が見つかれば参加費は不要です。
+※基本的にキャンセルNGの期間です。但し、代わりに参加できる人が見つかればキャンセル料は不要です。
 
 
 
@@ -438,6 +466,50 @@ https://play.google.com/store/apps/details?id=net.tennisbear.tennisbearapp&hl=ja
 
 iPhone：
 https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tennisbear/id1463750385`;
+        }
+
+        function getJoinGuideMessage1Text() {
+            return `正式加入という形になりますので、グループラインに招待します。
+
+二つあるので両方ご参加ください。
+テニスボールアイコンの方がメインです。
+
+人数多いため挨拶は不要です。
+基本的に事務連絡を流す場ですので、
+必ず通知内容は全てご確認ください。
+
+メインのグループのノートにルールブックが掲載されています。
+お手隙の際にご一読ください。
+
+なお、ノートに掲載したご案内事項のうち、特に、
+【キャンセル規定】
+【参加費の送金方法】
+については今後しばしば発生することかと思いますので、
+見られていない場合は必ずご一読願います。
+
+
+当サークル、人数はそれなりに多く、毎回必ず同じ人がいるとは限りません。
+練習会の主催者も毎回異なることが多いです。
+そのため練習会では猟しばらく初対面の人が多くてやりにくさがあるかもしれません。
+また、練習会後は基本的に解散が多く，飲み会なども多くはありません。
+
+ただ、皆さま優しい人ばかりですので、
+練習会の中で積極的にコミュニケーションを取って頂けると、今後もご参加しやすくなるかとは思います！`;
+        }
+
+        function getJoinGuideMessage2Text() {
+            return `今後は私から個別に練習会日程をご案内することは基本的にありませんので、
+テニスベアより空いている枠をご自身で探して頂き、参加登録をお願いします。
+
+ライングループの周知事項は、お手数ですが見落としないようご確認願います。
+
+最後に、重要事項のご連絡です。
+ご招待したライングループのうち、テニスボールアイコンの方がメインとなりますが、
+こちらは定期的に参加される方のみを対象としたグループです。
+
+1〜2か月ご参加がない場合はグループから削除する可能性がありますので予めご了承ください。
+
+何か困り事があれば金野宛にお気軽にご相談ください！`;
         }
         
         function getColoredName(member, myUserId) {
@@ -526,11 +598,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                 const dtTextEscaped = generateDateTimePlaceText(e);
                 const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
-                let dtCopyBtnHtml = `<div style="margin-top: 10px;"><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
+                
+                let dtCopyBtnHtml = `<div style="margin-top: 10px;">`;
+                dtCopyBtnHtml += `<button class="btn-copy-url" onclick="copyEventUrl('${e.url}', \`${eventInfoLabel}\`)">🔗 イベントURLコピー</button>`;
+                dtCopyBtnHtml += `<button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
 
                 if (admin) {
                     const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
-                    dtCopyBtnHtml += `<button class="btn-copy" onclick="copyTrialNotice(\`${noticeTextEscaped}\`, \`${eventInfoLabel}\`)">📋 体験参加案内文コピー</button>`;
+                    dtCopyBtnHtml += ` <button class="btn-copy" onclick="copyTrialNotice(\`${noticeTextEscaped}\`, \`${eventInfoLabel}\`)">📋 体験参加案内文コピー</button>`;
                 }
                 dtCopyBtnHtml += `</div>`;
 
@@ -556,15 +631,35 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
+            // 最終更新日時からの経過時間チェック（60分以上で警告表示）
+            const generatedAtStr = "2026-11-11(水) 21:24:26";
+            const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
+            const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
+            const nowTime = new Date();
+            const diffMinutes = (nowTime - genTime) / (1000 * 60);
+            
+            const warningBanner = document.getElementById('warningBanner');
+            if (warningBanner) {
+                if (diffMinutes >= 60) {
+                    warningBanner.style.display = 'block';
+                } else {
+                    warningBanner.style.display = 'none';
+                }
+            }
+
             const adminArea = document.getElementById('adminArea');
             const adminDisplayTime = document.getElementById('adminDisplayTime');
+            const noticeLink = document.getElementById('noticeLink');
+
             if (isAdminUser()) {
                 adminArea.style.display = 'block';
+                if (noticeLink) noticeLink.style.display = 'inline-block';
                 if (adminDisplayTime) {
                     adminDisplayTime.innerText = "表示日時: " + getFormattedNow();
                 }
             } else {
                 adminArea.style.display = 'none';
+                if (noticeLink) noticeLink.style.display = 'none';
             }
 
             document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
@@ -700,11 +795,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                     const dtTextEscaped = generateDateTimePlaceText(e);
                     const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
-                    let dtCopyBtnHtml = `<div style="margin-top: 10px;"><button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
+                    
+                    let dtCopyBtnHtml = `<div style="margin-top: 10px;">`;
+                    dtCopyBtnHtml += `<button class="btn-copy-url" onclick="copyEventUrl('${e.url}', \`${eventInfoLabel}\`)">🔗 イベントURLコピー</button>`;
+                    dtCopyBtnHtml += `<button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
 
                     if (admin) {
                         const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
-                        dtCopyBtnHtml += `<button class="btn-copy" onclick="copyTrialNotice(\`${noticeTextEscaped}\`, \`${eventInfoLabel}\`)">📋 体験参加案内文コピー</button>`;
+                        dtCopyBtnHtml += ` <button class="btn-copy" onclick="copyTrialNotice(\`${noticeTextEscaped}\`, \`${eventInfoLabel}\`)">📋 体験参加案内文コピー</button>`;
                     }
                     dtCopyBtnHtml += `</div>`;
 
