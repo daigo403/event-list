@@ -156,7 +156,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-15(日) 07:06:27</div>
+    <div class="footer">更新日時: 2026-11-15(日) 07:09:09</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -451,7 +451,7 @@ daigo403
 【9】雨天中止判断は原則開催30分前〜1時間前です。
 細かいルールはグループラインのルールブックに掲載しています
 
-【10】当サークルの幹事・代表は金野ですが、金野が練習会することは稀です。
+【10】当サークルの幹事・代表は金野ですが、金野が練習会に参加することは稀です。
 何か困りごと、不明点あれば個人ライン頂ければご回答しますので、お気軽にご連絡ください♪
 
 
@@ -535,7 +535,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 colored = `<span class="gender-unknown">${name}</span>`;
             }
             
-            # userIdが存在する場合はマイページへのリンクを生成し、下線を表示する
+            // userIdが存在する場合はマイページへのリンクを生成し、下線を表示する
             if (member.userId) {
                 colored = `<a href="https://www.tennisbear.net/user/${member.userId}/info" target="_blank" style="color: inherit; text-decoration: underline;">${colored}</a>`;
             }
@@ -649,7 +649,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             
             // 最終更新日時からの経過時間チェック（60分以上で警告表示）
-            const generatedAtStr = "2026-11-15(日) 07:06:27";
+            const generatedAtStr = "2026-11-15(日) 07:09:09";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
