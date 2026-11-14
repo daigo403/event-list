@@ -116,6 +116,7 @@
             <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
         </h3>
         <div class="admin-btn-group">
+            <button class="admin-btn" onclick="copyGeneralText(getTrialFirstContactText(), '体験初回連絡')">g) 体験初回連絡</button>
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '北区依頼')">a) 北区依頼</button>
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('板橋区'), '板橋区依頼')">b) 板橋区依頼</button>
             <button class="admin-btn" onclick="copyGeneralText(getOutDistrictText(), '都営依頼')">c) 都営依頼</button>
@@ -155,7 +156,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-15(日) 06:37:12</div>
+    <div class="footer">更新日時: 2026-11-15(日) 07:06:27</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -330,6 +331,18 @@ ${noticeSection}◾️当日主催者
 集合時のフォロー、開始時の全体挨拶、参加費の受け取りをお願いします！`;
         }
 
+        function getTrialFirstContactText() {
+            return `ご連絡ありがとうございます。
+幹事の金野(こんの)と申します。
+
+まずは体験参加という形でレベル感や雰囲気を確認頂ければと思います！
+体験参加ご希望の場合は、お手数ですが以下URLよりLineの登録をいただき、金野宛にご連絡ください。日程候補などご連絡致します。
+https://line.me/ti/p/f5X4F96jhM
+
+その際、お申し込み事項①〜⑤をご連絡願います。
+コピペで結構です。`;
+        }
+
         function getMemberRegText(ward) {
             return `ご加入に向けて、一点事前のご確認です。
 ${ward}の団体登録にご協力頂くことになります。
@@ -438,7 +451,7 @@ daigo403
 【9】雨天中止判断は原則開催30分前〜1時間前です。
 細かいルールはグループラインのルールブックに掲載しています
 
-【10】当サークルの幹事・代表は金野ですが、金野が練習会に参加することは稀です。
+【10】当サークルの幹事・代表は金野ですが、金野が練習会することは稀です。
 何か困りごと、不明点あれば個人ライン頂ければご回答しますので、お気軽にご連絡ください♪
 
 
@@ -522,7 +535,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 colored = `<span class="gender-unknown">${name}</span>`;
             }
             
-            // userIdが存在する場合はマイページへのリンクを生成し、下線を表示する
+            # userIdが存在する場合はマイページへのリンクを生成し、下線を表示する
             if (member.userId) {
                 colored = `<a href="https://www.tennisbear.net/user/${member.userId}/info" target="_blank" style="color: inherit; text-decoration: underline;">${colored}</a>`;
             }
@@ -636,7 +649,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             
             // 最終更新日時からの経過時間チェック（60分以上で警告表示）
-            const generatedAtStr = "2026-11-15(日) 06:37:12";
+            const generatedAtStr = "2026-11-15(日) 07:06:27";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
