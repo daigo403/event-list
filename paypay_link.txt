@@ -1,1 +1,1 @@
-test_URL
+https://raw.githubusercontent.com/daigo403/event-list/master/paypay_link.txt
