@@ -1,11 +1,53 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script>
-        location.href = "https:\/\/paypay.onelink.me\/EUKm?pid=QRCode\u0026link_key=https%3A%2F%2Fqr.paypay.ne.jp%2Fp2p01_0j0nPVhjLvphj3y6\u0026af_dp=paypay%3A%2F%2Fpayment\u0026af_ios_url=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_android_url=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_web_dp=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_force_deeplink=true";
-    </script>
-    <noscript>
-        <meta http-equiv="refresh" content="0; URL=https://paypay.onelink.me/EUKm?pid=QRCode&amp;link_key=https%3A%2F%2Fqr.paypay.ne.jp%2Fp2p01_0j0nPVhjLvphj3y6&amp;af_dp=paypay%3A%2F%2Fpayment&amp;af_ios_url=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_android_url=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_web_dp=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_force_deeplink=true" />
-    </noscript>
-</head>
-</html>
+{
+  "content" : {
+    "_links" : {
+      "git" : "https:\/\/api.github.com\/repos\/daigo403\/event-list\/git\/blobs\/0ceddaa158ea403dbeaecca3875e5323bd764499",
+      "html" : "https:\/\/github.com\/daigo403\/event-list\/blob\/master\/paypay_link.txt",
+      "self" : "https:\/\/api.github.com\/repos\/daigo403\/event-list\/contents\/paypay_link.txt?ref=master"
+    },
+    "git_url" : "https:\/\/api.github.com\/repos\/daigo403\/event-list\/git\/blobs\/0ceddaa158ea403dbeaecca3875e5323bd764499",
+    "html_url" : "https:\/\/github.com\/daigo403\/event-list\/blob\/master\/paypay_link.txt",
+    "download_url" : "https:\/\/raw.githubusercontent.com\/daigo403\/event-list\/master\/paypay_link.txt",
+    "size" : 906,
+    "sha" : "0ceddaa158ea403dbeaecca3875e5323bd764499",
+    "path" : "paypay_link.txt",
+    "type" : "file",
+    "name" : "paypay_link.txt",
+    "url" : "https:\/\/api.github.com\/repos\/daigo403\/event-list\/contents\/paypay_link.txt?ref=master"
+  },
+  "commit" : {
+    "author" : {
+      "name" : "daigo403",
+      "email" : "133650132+daigo403@users.noreply.github.com",
+      "date" : "2026-11-15T14:58:33Z"
+    },
+    "committer" : {
+      "name" : "daigo403",
+      "email" : "133650132+daigo403@users.noreply.github.com",
+      "date" : "2026-11-15T14:58:33Z"
+    },
+    "html_url" : "https:\/\/github.com\/daigo403\/event-list\/commit\/bf4c587f534df0c5971421703e17b7f2c7759c75",
+    "tree" : {
+      "sha" : "013d4228fe6a49bc18db07553fc71570326e0e41",
+      "url" : "https:\/\/api.github.com\/repos\/daigo403\/event-list\/git\/trees\/013d4228fe6a49bc18db07553fc71570326e0e41"
+    },
+    "message" : "Update paypay_link.txt",
+    "sha" : "bf4c587f534df0c5971421703e17b7f2c7759c75",
+    "node_id" : "C_kwDOR4D96NoAKGJmNGM1ODdmNTM0ZGYwYzU5NzE0MjE3MDNlMTdiN2YyYzc3NTljNzU",
+    "parents" : [
+      {
+        "sha" : "b6bc174430a6c98c6b213358fc84921bc2417137",
+        "url" : "https:\/\/api.github.com\/repos\/daigo403\/event-list\/git\/commits\/b6bc174430a6c98c6b213358fc84921bc2417137",
+        "html_url" : "https:\/\/github.com\/daigo403\/event-list\/commit\/b6bc174430a6c98c6b213358fc84921bc2417137"
+      }
+    ],
+    "verification" : {
+      "payload" : null,
+      "signature" : null,
+      "reason" : "unsigned",
+      "verified" : false,
+      "verified_at" : null
+    },
+    "url" : "https:\/\/api.github.com\/repos\/daigo403\/event-list\/git\/commits\/bf4c587f534df0c5971421703e17b7f2c7759c75"
+  }
+}
