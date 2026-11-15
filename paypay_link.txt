@@ -1,22 +1,5 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script>
-        location.href = "https:\/\/paypay.onelink.me\/EUKm?pid=QRCode\u0026link_key=https%3A%2F%2Fqr.paypay.ne.jp%2Fp2p01_0j0nPVhjLvphj3y6\u0026af_dp=paypay%3A%2F%2Fpayment\u0026af_ios_url=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_android_url=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_web_dp=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_force_deeplink=true";
-    </script>
-    <noscript>
-        <meta http-equiv="refresh" content="0; URL=https://paypay.onelink.me/EUKm?pid=QRCode&amp;link_key=https%3A%2F%2Fqr.paypay.ne.jp%2Fp2p01_0j0nPVhjLvphj3y6&amp;af_dp=paypay%3A%2F%2Fpayment&amp;af_ios_url=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_android_url=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_web_dp=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_force_deeplink=true" />
-    </noscript>
-</head>
-</html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script>
-        location.href = "https:\/\/paypay.onelink.me\/EUKm?pid=QRCode\u0026link_key=https%3A%2F%2Fqr.paypay.ne.jp%2Fp2p01_0j0nPVhjLvphj3y6\u0026af_dp=paypay%3A%2F%2Fpayment\u0026af_ios_url=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_android_url=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_web_dp=https%3A%2F%2Fpaypay.ne.jp%2F\u0026af_force_deeplink=true";
-    </script>
-    <noscript>
-        <meta http-equiv="refresh" content="0; URL=https://paypay.onelink.me/EUKm?pid=QRCode&amp;link_key=https%3A%2F%2Fqr.paypay.ne.jp%2Fp2p01_0j0nPVhjLvphj3y6&amp;af_dp=paypay%3A%2F%2Fpayment&amp;af_ios_url=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_android_url=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_web_dp=https%3A%2F%2Fpaypay.ne.jp%2F&amp;af_force_deeplink=true" />
-    </noscript>
-</head>
-</html>
+{
+  "message" : "content is not valid Base64",
+  "status" : "422",
+  "documentation_url" : "https:\/\/docs.github.com\/rest\/repos\/contents#create-or-update-file-contents"
+}
