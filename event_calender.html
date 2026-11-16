@@ -154,6 +154,12 @@
             <span>👑 管理者モード（定型文コピー機能）</span>
             <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
         </h3>
+        <!-- GitHub上 PayPayリンク内容 と 最終更新日時の文字サイズを表示日時と同じ(.admin-time)に調整して小さくする -->
+        <div style="margin-bottom: 12px; color: #166534; background: #dcfce7; padding: 8px 12px; border-radius: 6px; word-break: break-all;">
+            <span class="admin-time" style="background: transparent; padding: 0; font-weight: bold;">📱 GitHub上 PayPayリンク内容:</span> <span id="githubPaypayContent" class="admin-time" style="font-family: monospace; font-weight: bold;">取得中...</span><br>
+            <span class="admin-time" style="background: transparent; padding: 0; font-weight: bold;">🕒 最終更新日時:</span> <span id="githubPaypayLastMod" class="admin-time">取得中...</span> 
+            <span class="admin-time" style="background: transparent; padding: 0;">(現在日時との差分:</span> <span id="githubPaypayDiff" class="admin-time" style="font-weight: bold;">計算中...</span><span class="admin-time" style="background: transparent; padding: 0;">)</span>
+        </div>
         <div class="admin-btn-group">
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '北区依頼')">a) 北区依頼</button>
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('板橋区'), '板橋区依頼')">b) 板橋区依頼</button>
@@ -190,7 +196,8 @@
             <div style="font-size: 16px; color: #334155; line-height: 1.5;">
                 下のボタンからPayPayアプリを起動し、<br>コピーしたIDを貼り付けて送金してください。
             </div>
-            <a href="https://qr.paypay.ne.jp/p2p01_Fnauxo09U7XJ3MXn" class="btn-open-paypay">📱 PayPayアプリを開く</a>
+            <!-- 動的取得したURLをセットするID -->
+            <a href="paypay://" id="paypayAppLink" class="btn-open-paypay">📱 PayPayアプリを開く</a>
             <button class="btn-close-paypay" onclick="document.getElementById('paypayModal').style.display='none'">閉じる</button>
         </div>
     </div>
@@ -210,7 +217,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-16(月) 23:07:14</div>
+    <div class="footer">更新日時: 2026-11-16(月) 23:08:41</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -230,6 +237,95 @@
         const realNow = new Date();
         let currentYear = realNow.getFullYear();
         let currentMonth = realNow.getMonth() + 1;
+
+        // =========================================================================
+        // GitHubから paypay_link.txt の中身と最終更新日時を動的取得し、送金ボタンのリンクも更新
+        // =========================================================================
+        async function fetchGitHubPayPayInfo() {
+            const contentEl = document.getElementById('githubPaypayContent');
+            const lastModEl = document.getElementById('githubPaypayLastMod');
+            const diffEl = document.getElementById('githubPaypayDiff');
+            const paypayLinkEl = document.getElementById('paypayAppLink');
+
+            // 1. GitHub Pages から paypay_link.txt の中身を取得して送金ボタン等に動的セット
+            try {
+                const pagesUrl = "https://daigo403.github.io/event-list/paypay_link.txt?t=" + new Date().getTime();
+                const res = await fetch(pagesUrl);
+                if (res.ok) {
+                    const text = (await res.text()).trim();
+                    if (contentEl) contentEl.innerText = text || "(空)";
+                    if (text && text.toLowerCase().includes("paypay") && paypayLinkEl) {
+                        paypayLinkEl.href = text;
+                    }
+                } else {
+                    if (contentEl) contentEl.innerText = "取得失敗 (HTTP " + res.status + ")";
+                }
+            } catch (e) {
+                console.error("PayPayリンク内容の取得エラー:", e);
+                if (contentEl) contentEl.innerText = "取得エラー";
+            }
+
+            // 2. GitHub APIから paypay_link.txt の最終更新日時（コミット日時）を取得
+            try {
+                const apiUrl = "https://api.github.com/repos/daigo403/event-list/commits?path=paypay_link.txt&per_page=1";
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    const commitDateStr = data[0].commit.committer.date;
+                    const updatedDate = new Date(commitDateStr);
+
+                    // 日時フォーマット整形
+                    const y = updatedDate.getFullYear();
+                    const m = String(updatedDate.getMonth() + 1).padStart(2, '0');
+                    const d = String(updatedDate.getDate()).padStart(2, '0');
+                    const h = String(updatedDate.getHours()).padStart(2, '0');
+                    const min = String(updatedDate.getMinutes()).padStart(2, '0');
+                    const s = String(updatedDate.getSeconds()).padStart(2, '0');
+                    const formattedDateStr = `${y}-${m}-${d} ${h}:${min}:${s}`;
+
+                    if (lastModEl) lastModEl.innerText = formattedDateStr;
+
+                    // 差分計算（○時間前、○日前など）
+                    updateRelativeTimeDisplay(updatedDate, diffEl);
+                } else {
+                    if (lastModEl) lastModEl.innerText = "更新履歴なし";
+                    if (diffEl) diffEl.innerText = "-";
+                }
+            } catch (e) {
+                console.error("PayPayリンクの更新日時取得エラー:", e);
+                if (lastModEl) lastModEl.innerText = "取得失敗";
+                if (diffEl) diffEl.innerText = "取得失敗";
+            }
+        }
+
+        function updateRelativeTimeDisplay(updatedDate, targetElement) {
+            const now = new Date();
+            const diffMs = now - updatedDate;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+
+            let relativeStr = "";
+            if (diffDay > 0) {
+                relativeStr = `${diffDay}日前`;
+            } else if (diffHour > 0) {
+                relativeStr = `${diffHour}時間前`;
+            } else if (diffMin > 0) {
+                relativeStr = `${diffMin}分前`;
+            } else {
+                relativeStr = "たった今";
+            }
+
+            if (targetElement) {
+                targetElement.innerText = relativeStr;
+            }
+        }
+
+        // ページ読み込み時に実行
+        fetchGitHubPayPayInfo();
+        // =========================================================================
 
         function getTodayStr() {
             const d = new Date();
@@ -719,7 +815,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             
             // 最終更新日時からの経過時間チェック（60分以上で警告表示）
-            const generatedAtStr = "2026-11-16(月) 23:07:14";
+            const generatedAtStr = "2026-11-16(月) 23:08:41";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
