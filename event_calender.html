@@ -216,7 +216,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-16(月) 21:56:22</div>
+    <div class="footer">更新日時: 2026-11-16(月) 22:00:12</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -245,10 +245,10 @@
             const lastModEl = document.getElementById('githubPaypayLastMod');
             const diffEl = document.getElementById('githubPaypayDiff');
 
-            // 1. GitHubのraw URLから paypay_link.txt の中身を取得
+            // 1. 公開中の GitHub Pages から paypay_link.txt の中身を取得
             try {
-                const rawUrl = "https://raw.githubusercontent.com/daigo403/event-list/main/paypay_link.txt?t=" + new Date().getTime();
-                const res = await fetch(rawUrl);
+                const pagesUrl = "https://daigo403.github.io/event-list/paypay_link.txt?t=" + new Date().getTime();
+                const res = await fetch(pagesUrl);
                 if (res.ok) {
                     const text = (await res.text()).trim();
                     if (contentEl) contentEl.innerText = text || "(空)";
@@ -810,7 +810,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             
             // 最終更新日時からの経過時間チェック（60分以上で警告表示）
-            const generatedAtStr = "2026-11-16(月) 21:56:22";
+            const generatedAtStr = "2026-11-16(月) 22:00:12";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
