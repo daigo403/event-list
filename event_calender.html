@@ -112,6 +112,9 @@
         .admin-btn:hover { background-color: #15803d; }
         .admin-time { font-size: 14px; font-weight: normal; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 4px; }
         
+        /* スマホでの勝手な文字拡大（フォントインフレーション）防止用 */
+        .admin-text-fix { font-size: 14px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
         .warning-banner { display: none; background-color: #fef2f2; border: 3px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-size: 22px; font-weight: bold; text-align: center; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2); }
         .btn-link { display: inline-block; font-size: 18px; font-weight: bold; padding: 8px 16px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 6px; margin-right: 10px; margin-bottom: 10px; }
         .btn-link:hover { background-color: #1d4ed8; }
@@ -154,11 +157,11 @@
             <span>👑 管理者モード（定型文コピー機能）</span>
             <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
         </h3>
-        <!-- GitHub上 PayPayリンク内容 と 最終更新日時の文字サイズを表示日時と同じ(.admin-time)に調整して小さくする -->
-        <div style="margin-bottom: 12px; color: #166534; background: #dcfce7; padding: 8px 12px; border-radius: 6px; word-break: break-all;">
-            <span class="admin-time" style="background: transparent; padding: 0; font-weight: bold;">📱 GitHub上 PayPayリンク内容:</span> <span id="githubPaypayContent" class="admin-time" style="font-family: monospace; font-weight: bold;">取得中...</span><br>
-            <span class="admin-time" style="background: transparent; padding: 0; font-weight: bold;">🕒 最終更新日時:</span> <span id="githubPaypayLastMod" class="admin-time">取得中...</span> 
-            <span class="admin-time" style="background: transparent; padding: 0;">(現在日時との差分:</span> <span id="githubPaypayDiff" class="admin-time" style="font-weight: bold;">計算中...</span><span class="admin-time" style="background: transparent; padding: 0;">)</span>
+        <!-- スマホでの文字勝手拡大防止クラス(.admin-text-fix)を適用 -->
+        <div class="admin-text-fix" style="margin-bottom: 12px; color: #166534; background: #dcfce7; padding: 8px 12px; border-radius: 6px; word-break: break-all;">
+            <span style="font-weight: bold;">📱 GitHub上 PayPayリンク内容:</span> <span id="githubPaypayContent" style="font-family: monospace; font-weight: bold;">取得中...</span><br>
+            <span style="font-weight: bold;">🕒 最終更新日時:</span> <span id="githubPaypayLastMod">取得中...</span> 
+            <span>(現在日時との差分:</span> <span id="githubPaypayDiff" style="font-weight: bold;">計算中...</span><span>)</span>
         </div>
         <div class="admin-btn-group">
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '北区依頼')">a) 北区依頼</button>
@@ -217,7 +220,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-16(月) 23:08:41</div>
+    <div class="footer">更新日時: 2026-11-16(月) 23:15:30</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -815,7 +818,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             
             // 最終更新日時からの経過時間チェック（60分以上で警告表示）
-            const generatedAtStr = "2026-11-16(月) 23:08:41";
+            const generatedAtStr = "2026-11-16(月) 23:15:30";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
