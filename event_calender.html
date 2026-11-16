@@ -190,7 +190,8 @@
             <div style="font-size: 16px; color: #334155; line-height: 1.5;">
                 下のボタンからPayPayアプリを起動し、<br>コピーしたIDを貼り付けて送金してください。
             </div>
-            <a href="https://qr.paypay.ne.jp/p2p01_lakElf97haPCH48c" class="btn-open-paypay">📱 PayPayアプリを開く</a>
+            <!-- ★ id="paypayAppLink" を付与して動的変更に対応 -->
+            <a href="paypay://" id="paypayAppLink" class="btn-open-paypay">📱 PayPayアプリを開く</a>
             <button class="btn-close-paypay" onclick="document.getElementById('paypayModal').style.display='none'">閉じる</button>
         </div>
     </div>
@@ -210,7 +211,10 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-16(月) 20:06:54</div>
+    <div class="footer">
+        更新日時: 2026-11-16(月) 21:39:08 
+        (PayPayリンク更新: <span id="relativeTimeDisplay">取得中...</span>)
+    </div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -230,6 +234,75 @@
         const realNow = new Date();
         let currentYear = realNow.getFullYear();
         let currentMonth = realNow.getMonth() + 1;
+
+        // =========================================================================
+        // ★【動的取得】GitHubから paypay_link.txt の最新URLと更新日時を同時に取得
+        // =========================================================================
+        async function fetchPayPayData() {
+            const el = document.getElementById('relativeTimeDisplay');
+            const linkEl = document.getElementById('paypayAppLink');
+            
+            // 1. paypay_link.txt の中身（URL）を動的取得
+            try {
+                const rawUrl = "https://raw.githubusercontent.com/daigo403/event-list/main/paypay_link.txt?t=" + new Date().getTime();
+                const textRes = await fetch(rawUrl);
+                if (textRes.ok) {
+                    const fetchedUrl = (await textRes.text()).trim();
+                    if (fetchedUrl && fetchedUrl.toLowerCase().includes("paypay") && linkEl) {
+                        linkEl.href = fetchedUrl;
+                    }
+                }
+            } catch (e) {
+                console.error("PayPayリンクURLの取得エラー:", e);
+            }
+
+            // 2. 最終更新日時（コミット日時）を動的取得
+            try {
+                const apiUrl = "https://api.github.com/repos/daigo403/event-list/commits?path=paypay_link.txt&per_page=1";
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    const commitDateStr = data[0].commit.committer.date;
+                    const updatedDate = new Date(commitDateStr);
+                    updateRelativeTimeDisplay(updatedDate);
+                } else {
+                    el.innerText = "更新履歴なし";
+                }
+            } catch (e) {
+                console.error("PayPayリンクの更新日時取得エラー:", e);
+                el.innerText = "取得失敗";
+            }
+        }
+
+        function updateRelativeTimeDisplay(updatedDate) {
+            const now = new Date();
+            const diffMs = now - updatedDate;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+
+            let relativeStr = "";
+            if (diffDay > 0) {
+                relativeStr = `${diffDay}日前`;
+            } else if (diffHour > 0) {
+                relativeStr = `${diffHour}時間前`;
+            } else if (diffMin > 0) {
+                relativeStr = `${diffMin}分前`;
+            } else {
+                relativeStr = "たった今";
+            }
+
+            const el = document.getElementById('relativeTimeDisplay');
+            if (el) {
+                el.innerText = relativeStr;
+            }
+        }
+
+        // ページ読み込み時に実行
+        fetchPayPayData();
+        // =========================================================================
 
         function getTodayStr() {
             const d = new Date();
@@ -581,7 +654,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return `今後は私から個別に練習会日程をご案内することは基本的にありませんので、
 テニスベアより空いている枠をご自身で探して頂き、参加登録をお願いします。
 
-ライングループの周知事項は、お手数ですが見落としないようご確認願います。
+ライングループの周知事項は、お手数ですが見落としたりしないようご確認願います。
 
 最後に、重要事項のご連絡です。
 ご招待したライングループのうち、テニスボールアイコンの方がメインとなりますが、
@@ -602,7 +675,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 colored = `<span class="gender-unknown">${name}</span>`;
             }
             
-            // userIdが存在する場合はマイページへのリンクを生成し、下線を表示する
             if (member.userId) {
                 colored = `<a href="https://www.tennisbear.net/user/${member.userId}/info" target="_blank" style="color: inherit; text-decoration: underline;">${colored}</a>`;
             }
@@ -718,8 +790,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            // 最終更新日時からの経過時間チェック（60分以上で警告表示）
-            const generatedAtStr = "2026-11-16(月) 20:06:54";
+            const generatedAtStr = "2026-11-16(月) 21:39:08";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
