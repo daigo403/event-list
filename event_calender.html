@@ -107,10 +107,6 @@
         .my-application-badge { display: inline-block; background: #38bdf8; color: #0369a1; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #0284c7; }
         .admin-badge { display: inline-block; background: #d97706; color: #fff; font-size: 15px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #b45309; }
         
-        /* 申請中・キャンセル待ちエリアの目立つ囲みデザイン */
-        .status-box-waitlist { background-color: #fffbeb; border-left: 5px solid #d97706; padding: 6px 10px; margin: 6px 0; border-radius: 4px; }
-        .status-box-application { background-color: #f0f9ff; border-left: 5px solid #0284c7; padding: 6px 10px; margin: 6px 0; border-radius: 4px; }
-
         .admin-panel { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 15px; margin: 15px 0; font-size: 18px; }
         .admin-panel h3 { margin-top: 0; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .admin-btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
@@ -226,7 +222,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-17(火) 23:27:22</div>
+    <div class="footer">更新日時: 2026-11-17(火) 23:29:18</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -247,16 +243,16 @@
         let currentYear = realNow.getFullYear();
         let currentMonth = realNow.getMonth() + 1;
 
-        # =========================================================================
-        # GitHubから paypay_link.txt の中身と最終更新日時を動的取得し、送金ボタンのリンクも更新
-        # =========================================================================
+        // =========================================================================
+        // GitHubから paypay_link.txt の中身と最終更新日時を動的取得し、送金ボタンのリンクも更新
+        // =========================================================================
         async function fetchGitHubPayPayInfo() {
             const contentEl = document.getElementById('githubPaypayContent');
             const lastModEl = document.getElementById('githubPaypayLastMod');
             const diffEl = document.getElementById('githubPaypayDiff');
             const paypayLinkEl = document.getElementById('paypayAppLink');
 
-            # 1. GitHub Pages から paypay_link.txt の中身を取得して送金ボタン等に動的セット
+            // 1. GitHub Pages から paypay_link.txt の中身を取得して送金ボタン等に動的セット
             try {
                 const pagesUrl = "https://daigo403.github.io/event-list/paypay_link.txt?t=" + new Date().getTime();
                 const res = await fetch(pagesUrl);
@@ -274,7 +270,7 @@
                 if (contentEl) contentEl.innerText = "取得エラー";
             }
 
-            # 2. GitHub APIから paypay_link.txt の最終更新日時（コミット日時）を取得
+            // 2. GitHub APIから paypay_link.txt の最終更新日時（コミット日時）を取得
             try {
                 const apiUrl = "https://api.github.com/repos/daigo403/event-list/commits?path=paypay_link.txt&per_page=1";
                 const response = await fetch(apiUrl);
@@ -284,7 +280,7 @@
                     const commitDateStr = data[0].commit.committer.date;
                     const updatedDate = new Date(commitDateStr);
 
-                    # 日時フォーマット整形
+                    // 日時フォーマット整形
                     const y = updatedDate.getFullYear();
                     const m = String(updatedDate.getMonth() + 1).padStart(2, '0');
                     const d = String(updatedDate.getDate()).padStart(2, '0');
@@ -295,7 +291,7 @@
 
                     if (lastModEl) lastModEl.innerText = formattedDateStr;
 
-                    # 差分計算（○時間前、○日前など）
+                    // 差分計算（○時間前、○日前など）
                     updateRelativeTimeDisplay(updatedDate, diffEl);
                 } else {
                     if (lastModEl) lastModEl.innerText = "更新履歴なし";
@@ -332,9 +328,9 @@
             }
         }
 
-        # ページ読み込み時に実行
+        // ページ読み込み時に実行
         fetchGitHubPayPayInfo();
-        # =========================================================================
+        // =========================================================================
 
         function getTodayStr() {
             const d = new Date();
@@ -383,7 +379,7 @@
             return "";
         }
 
-        # PayPay送金用アクション（IDをコピー＆カスタムポップアップ表示）
+        // PayPay送金用アクション（IDをコピー＆カスタムポップアップ表示）
         function paypaySendMoney() {
             const showModal = () => {
                 document.getElementById('paypayModal').style.display = 'block';
@@ -395,7 +391,7 @@
             }
         }
 
-        # コピー処理（一般ボタン用）
+        // コピー処理（一般ボタン用）
         function copyGeneralText(text, labelName) {
             navigator.clipboard.writeText(text).then(() => {
                 alert(`【${labelName}】をクリップボードにコピーしました！`);
@@ -404,7 +400,7 @@
             });
         }
 
-        # 日時・場所コピー専用
+        // 日時・場所コピー専用
         function copyDateTimePlace(text, eventInfoStr) {
             navigator.clipboard.writeText(text).then(() => {
                 alert(`【日時・場所コピー】\n対象: ${eventInfoStr}\n\nクリップボードにコピーしました！`);
@@ -413,7 +409,7 @@
             });
         }
 
-        # 体験参加案内文コピー専用
+        // 体験参加案内文コピー専用
         function copyTrialNotice(text, eventInfoStr) {
             navigator.clipboard.writeText(text).then(() => {
                 alert(`【体験参加案内文コピー】\n対象: ${eventInfoStr}\n\nクリップボードにコピーしました！`);
@@ -422,7 +418,7 @@
             });
         }
 
-        # イベントURLコピー専用
+        // イベントURLコピー専用
         function copyEventUrl(url, eventInfoStr) {
             navigator.clipboard.writeText(url).then(() => {
                 alert(`【イベントURLコピー】\n対象: ${eventInfoStr}\n\nURLをクリップボードにコピーしました！`);
@@ -786,13 +782,13 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 let waitlistHtml = '';
                 if (waitlist.length > 0) {
                     const waitlistMembersHtml = waitlist.map(m => getColoredName(m, myUserId)).join(', ');
-                    waitlistHtml = `<div class="status-box-waitlist" style="font-size:20px; color:${past ? '#334155' : '#b45309'}; font-weight:bold;">キャンセル待ち: ${waitlistMembersHtml}</div>`;
+                    waitlistHtml = `<div style="font-size:20px; color:${past ? '#334155' : '#b45309'}; font-weight:bold;">キャンセル待ち: ${waitlistMembersHtml}</div>`;
                 }
 
                 let applicantsHtml = '';
                 if (applicants.length > 0) {
                     const applicantsMembersHtml = applicants.map(m => getColoredName(m, myUserId)).join(', ');
-                    applicantsHtml = `<div class="status-box-application" style="font-size:20px; color:${past ? '#334155' : '#0284c7'}; font-weight:bold;">申請中: ${applicantsMembersHtml}</div>`;
+                    applicantsHtml = `<div style="font-size:20px; color:${past ? '#334155' : '#0284c7'}; font-weight:bold;">申請中: ${applicantsMembersHtml}</div>`;
                 }
                 
                 let borderStyle = (isParticipating || isWaitlisting || isApplying) ? "border: 3px solid #d00 !important; background-color: #fff9f9;" : "border: 1px solid #ddd;";
@@ -801,12 +797,22 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 }
                 
                 const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
-                const isFull = e.title.includes('満');
-                const fullStamp = (!past && isFull) ? '<div class="full-stamp">満員</div>' : '';
+
+                const dtTextEscaped = generateDateTimePlaceText(e);
+                const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
+                
+                let dtCopyBtnHtml = `<div style="margin-top: 10px;">`;
+                dtCopyBtnHtml += `<button class="btn-copy-url" onclick="copyEventUrl('${e.url}', \`${eventInfoLabel}\`)">🔗 イベントURLコピー</button>`;
+                dtCopyBtnHtml += `<button class="btn-copy-dt" onclick="copyDateTimePlace(\`${dtTextEscaped}\`, \`${eventInfoLabel}\`)">📋 日時・場所コピー</button>`;
+
+                if (admin) {
+                    const noticeTextEscaped = generateTrialNotice(e).replace(/`/g, '\`').replace(/\$/g, '\$');
+                    dtCopyBtnHtml += ` <button class="btn-copy" onclick="copyTrialNotice(\`${noticeTextEscaped}\`, \`${eventInfoLabel}\`)">📋 体験参加案内文コピー</button>`;
+                }
+                dtCopyBtnHtml += `</div>`;
 
                 html += `<div style="${borderStyle} padding:12px; margin-bottom:12px; border-radius:8px; position:relative; overflow:hidden;">
                     ${pastStamp}
-                    ${fullStamp}
                     <div style="font-size:24px;">${e.title}</div>
                     <div style="font-size:22px; color:${past ? '#334155' : '#c00'}; font-weight:bold;"> ${e.date_str} ${e.time} ～ ${e.end_time} [${e.place}]</div>
                     <div style="color:#555; font-size:20px;">参加人数: ${e.capacity}</div>
@@ -832,7 +838,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            const generatedAtStr = "2026-11-17(火) 23:27:22";
+            const generatedAtStr = "2026-11-17(火) 23:29:18";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
@@ -998,13 +1004,13 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     let waitlistHtml = '';
                     if (waitlist.length > 0) {
                         const waitlistMembersHtml = waitlist.map(m => getColoredName(m, myUserId)).join(', ');
-                        waitlistHtml = `<div class="status-box-waitlist" style="color:#b45309;">キャンセル待ち: ${waitlistMembersHtml}</div>`;
+                        waitlistHtml = `<div style="color:#b45309;">キャンセル待ち: ${waitlistMembersHtml}</div>`;
                     }
 
                     let applicantsHtml = '';
                     if (applicants.length > 0) {
                         const applicantsMembersHtml = applicants.map(m => getColoredName(m, myUserId)).join(', ');
-                        applicantsHtml = `<div class="status-box-application" style="color:#0284c7;">申請中: ${applicantsMembersHtml}</div>`;
+                        applicantsHtml = `<div style="color:#0284c7;">申請中: ${applicantsMembersHtml}</div>`;
                     }
 
                     const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
