@@ -34,6 +34,13 @@
         .history-event-link { color: #2563eb; text-decoration: underline; cursor: pointer; font-weight: bold; }
         .history-event-link:hover { color: #1d4ed8; }
         
+        /* NEWバッジ */
+        .new-badge { display: inline-block; background-color: #ef4444; color: white; font-size: 12px; font-weight: bold; padding: 1px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+
+        /* 履歴ボタンの未読件数バッジ */
+        .btn-history-container { position: relative; display: inline-block; }
+        .history-unread-badge { position: absolute; top: -8px; right: -8px; background-color: #ef4444; color: white; font-size: 14px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 2px solid white; display: none; }
+
         /* PayPay送金用カスタムポップアップ */
         #paypayModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 2000; }
         .paypay-modal-content { background: white; margin: 15% auto; padding: 25px; width: 85%; max-width: 500px; border-radius: 12px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
@@ -152,9 +159,10 @@
             <a href="https://www.tennisbear.net/circle/2461/events" target="_blank" class="btn-link">🎾 テニスベア練習会一覧</a>
             <a href="https://www.tennisbear.net/my-page/notice" target="_blank" id="noticeLink" class="btn-link" style="background-color: #d97706; display: none;">🔔 お知らせページ (管理者)</a>
         </div>
-        <!-- 申込履歴ボタン -->
-        <div>
+        <!-- 申込履歴ボタン（未読バッジ付きコンテナ） -->
+        <div class="btn-history-container">
             <button class="btn-history-open" onclick="openHistoryModal()">📋 申込・キャンセル履歴</button>
+            <span id="historyUnreadBadge" class="history-unread-badge">0</span>
         </div>
     </div>
 
@@ -219,11 +227,11 @@
     </div>
 
     <!-- 申込履歴モーダル -->
-    <div id="historyModal" onclick="if(event.target === this) this.style.display='none';">
+    <div id="historyModal" onclick="if(event.target === this) closeHistoryModal();">
         <div class="history-modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
                 <h2 style="margin: 0; font-size: 24px; color: #1e293b;">📋 申込・キャンセル履歴</h2>
-                <button onclick="document.getElementById('historyModal').style.display='none'" style="font-size: 16px; padding: 6px 14px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
+                <button onclick="closeHistoryModal()" style="font-size: 18px; padding: 8px 18px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
             </div>
             <div id="historyModalBody">
                 <!-- 動的生成 -->
@@ -260,7 +268,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-17(火) 23:58:11</div>
+    <div class="footer">更新日時: 2026-11-18(水) 01:08:59</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -862,9 +870,74 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         }
 
         // =========================================================================
-        // 📋 申込・キャンセル履歴モーダル関連の関数
+        // 📋 申込・キャンセル履歴関連（未読管理・NEW表示・バッジ機能付き）
         // =========================================================================
+        function getLastReadHistoryTime() {
+            return localStorage.getItem('lastReadHistoryTime') || '2000-01-01 00:00';
+        }
+
+        function calculateUnreadHistories() {
+            const lastReadStr = getLastReadHistoryTime();
+            const lastReadTime = new Date(lastReadStr.replace(/-/g, '/')).getTime();
+            let unreadCount = 0;
+
+            events.forEach(e => {
+                e.members.forEach(m => {
+                    if (['○[参加]', '△[キャンセル待ち]', '▼[申請中]', '×[キャンセル]'].includes(m.status)) {
+                        let appliedAtStr = m.applied_at || "";
+                        if (appliedAtStr) {
+                            let itemTime = new Date(appliedAtStr.replace(/-/g, '/')).getTime();
+                            if (!isNaN(itemTime) && itemTime > lastReadTime) {
+                                unreadCount++;
+                            }
+                        }
+                    }
+                });
+            });
+            return unreadCount;
+        }
+
+        function updateHistoryBadge() {
+            const badgeEl = document.getElementById('historyUnreadBadge');
+            if (!badgeEl) return;
+            const count = calculateUnreadHistories();
+            if (count > 0) {
+                badgeEl.innerText = count > 99 ? '99+' : count;
+                badgeEl.style.display = 'inline-block';
+            } else {
+                badgeEl.style.display = 'none';
+            }
+        }
+
         function openHistoryModal() {
+            // 🛠️ 全履歴の中で最も新しい申込日時を取得し、それより1分後の未来の時間を既読として保存する
+            let maxTime = new Date().getTime();
+            events.forEach(e => {
+                e.members.forEach(m => {
+                    if (m.applied_at) {
+                        let t = new Date(m.applied_at.replace(/-/g, '/')).getTime();
+                        if (!isNaN(t) && t > maxTime) {
+                            maxTime = t;
+                        }
+                    }
+                });
+            });
+            // 最も新しい履歴よりも確実に先の時間（+1分）を既読にすることで、再読み込み時のズレを防ぐ
+            const safeReadTime = new Date(maxTime + 60000);
+            const y = safeReadTime.getFullYear();
+            const m = String(safeReadTime.getMonth() + 1).padStart(2, '0');
+            const d = String(safeReadTime.getDate()).padStart(2, '0');
+            const h = String(safeReadTime.getHours()).padStart(2, '0');
+            const min = String(safeReadTime.getMinutes()).padStart(2, '0');
+            const s = String(safeReadTime.getSeconds()).padStart(2, '0');
+            localStorage.setItem('lastReadHistoryTime', `${y}/${m}/${d} ${h}:${min}:${s}`);
+
+            // バッジを即座に強制非表示にする
+            const badgeEl = document.getElementById('historyUnreadBadge');
+            if (badgeEl) {
+                badgeEl.style.display = 'none';
+            }
+
             const myUserId = document.getElementById('userSelect').value;
             const historyBody = document.getElementById('historyModalBody');
             
@@ -872,7 +945,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
             events.forEach(e => {
                 e.members.forEach(m => {
-                    // 参加、キャンセル待ち、申請中、およびキャンセル済みステータスを対象とする
                     if (['○[参加]', '△[キャンセル待ち]', '▼[申請中]', '×[キャンセル]'].includes(m.status)) {
                         let actionText = "に、参加申込しました✋";
                         if (m.status === '△[キャンセル待ち]') {
@@ -886,11 +958,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         let cleanName = m.name.replace(/\[[fm]\]/g, '').trim();
                         let initial = cleanName.charAt(0) || '🎾';
 
-                        // 8列目（m.applied_at）の実際のタイムスタンプ文字列を使用（例: "2026/10/12 18:03"）
                         let appliedAtStr = m.applied_at || "";
                         let sortTime = 0;
                         if (appliedAtStr) {
-                            // 日付文字列をパース可能な形式（YYYY/MM/DD HH:mm）に正規化して数値化
                             sortTime = new Date(appliedAtStr.replace(/-/g, '/')).getTime();
                         }
 
@@ -904,7 +974,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                             eventDateStr: e.date_str,
                             eventTime: e.time,
                             appliedAtStr: appliedAtStr,
-                            sortTime: isNaN(sortTime) ? 0 : sortTime
+                            sortTime: isNaN(sortTime) ? 0 : sortTime,
+                            isNew: false 
                         });
                     }
                 });
@@ -919,6 +990,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 let html = '';
                 allHistories.forEach(item => {
                     let coloredNameHtml = getColoredName({name: item.name, userId: item.userId}, myUserId);
+                    let newBadgeHtml = item.isNew ? '<span class="new-badge">NEW</span>' : '';
                     
                     html += `
                         <div class="history-item">
@@ -930,6 +1002,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                                         ${item.eventDateStr} ${item.eventTime}- ${item.eventTitle}
                                     </span>
                                     ${item.actionText}
+                                    ${newBadgeHtml}
                                 </div>
                                 <div class="history-time">申込日時: ${item.appliedAtStr}</div>
                             </div>
@@ -942,9 +1015,17 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             document.getElementById('historyModal').style.display = 'block';
         }
 
+        function closeHistoryModal() {
+            document.getElementById('historyModal').style.display = 'none';
+            const badgeEl = document.getElementById('historyUnreadBadge');
+            if (badgeEl) {
+                badgeEl.style.display = 'none';
+            }
+        }
+
         // イベント名クリック時にモーダルを閉じ、カレンダー下部のイベント一覧の該当箇所までスクロール・ハイライトする
         function jumpToEvent(dateKey) {
-            document.getElementById('historyModal').style.display = 'none';
+            closeHistoryModal();
 
             const parts = dateKey.split('-');
             if (parts.length === 3) {
@@ -967,8 +1048,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         
         function render() {
             updatePulldown();
+            updateHistoryBadge(); // 描画更新時に未読バッジも最新化
             
-            const generatedAtStr = "2026-11-17(火) 23:58:11";
+            const generatedAtStr = "2026-11-18(水) 01:08:59";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
