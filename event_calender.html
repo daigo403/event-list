@@ -41,13 +41,13 @@
         .btn-history-container { position: relative; display: inline-block; }
         .history-unread-badge { position: absolute; top: -8px; right: -8px; background-color: #ef4444; color: white; font-size: 14px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 2px solid white; display: none; }
 
-        /* イベントジャンプ時の強調ハイライト（次のジャンプや更新まで永続） */
+        /* イベントジャンプ時の強調ハイライト（9px・常時脈動アニメーション付き） */
+        @keyframes highlightPulse {
+            0%, 100% { background-color: #e0f2fe !important; border: 9px solid #2563eb !important; box-shadow: 0 0 20px rgba(37, 99, 235, 0.7); transform: scale(1.02); }
+            50% { background-color: #bae6fd !important; border: 9px solid #1d4ed8 !important; box-shadow: 0 0 10px rgba(37, 99, 235, 0.4); transform: scale(1.01); }
+        }
         .event-highlight {
-            background-color: #e0f2fe !important;
-            border: 18px solid #2563eb !important;
-            box-shadow: 0 0 40px rgba(37, 99, 235, 0.9);
-            transform: scale(1.02);
-            transition: all 0.3s ease;
+            animation: highlightPulse 2s ease-in-out infinite;
             z-index: 20;
         }
 
@@ -278,7 +278,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-18(水) 10:18:16</div>
+    <div class="footer">更新日時: 2026-11-18(水) 10:21:07</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1074,7 +1074,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             updateHistoryBadge();
             
-            const generatedAtStr = "2026-11-18(水) 10:18:16";
+            const generatedAtStr = "2026-11-18(水) 10:21:07";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
