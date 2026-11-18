@@ -41,14 +41,13 @@
         .btn-history-container { position: relative; display: inline-block; }
         .history-unread-badge { position: absolute; top: -8px; right: -8px; background-color: #ef4444; color: white; font-size: 14px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 2px solid white; display: none; }
 
-        /* イベントジャンプ時の強調ハイライトアニメーション */
-        @keyframes highlightFlash {
-            0%, 20%, 40%, 60%, 80% { background-color: #e0f2fe !important; border: 18px solid #2563eb !important; box-shadow: 0 0 40px rgba(37, 99, 235, 0.9); transform: scale(1.02); }
-            10%, 30%, 50%, 70% { background-color: #bae6fd !important; border: 18px solid #1d4ed8 !important; box-shadow: 0 0 25px rgba(37, 99, 235, 0.7); transform: scale(1.01); }
-            100% { transform: scale(1); }
-        }
+        /* イベントジャンプ時の強調ハイライト（次のジャンプや更新まで永続） */
         .event-highlight {
-            animation: highlightFlash 20s ease-out;
+            background-color: #e0f2fe !important;
+            border: 18px solid #2563eb !important;
+            box-shadow: 0 0 40px rgba(37, 99, 235, 0.9);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
             z-index: 20;
         }
 
@@ -279,7 +278,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-18(水) 10:11:25</div>
+    <div class="footer">更新日時: 2026-11-18(水) 10:18:16</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1041,6 +1040,11 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 render();
             }
 
+            // 既にハイライトされている他のイベントがあれば、先に解除する
+            document.querySelectorAll('.event-highlight').forEach(el => {
+                el.classList.remove('event-highlight');
+            });
+
             const eventCards = document.querySelectorAll('.event-list-item');
             let targetCard = null;
             eventCards.forEach(card => {
@@ -1051,14 +1055,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
             if (targetCard) {
                 targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                setTimeout(() => {
-                    targetCard.classList.remove('event-highlight');
-                    void targetCard.offsetWidth;
-                    targetCard.classList.add('event-highlight');
-                    setTimeout(() => {
-                        targetCard.classList.remove('event-highlight');
-                    }, 20000);
-                }, 400);
+                targetCard.classList.add('event-highlight');
             } else {
                 const listArea = document.getElementById('eventListArea');
                 if (listArea) {
@@ -1077,7 +1074,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             updateHistoryBadge();
             
-            const generatedAtStr = "2026-11-18(水) 10:11:25";
+            const generatedAtStr = "2026-11-18(水) 10:18:16";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
