@@ -43,8 +43,8 @@
 
         /* イベントジャンプ時の強調ハイライトアニメーション */
         @keyframes highlightFlash {
-            0%, 20%, 40%, 60%, 80% { background-color: #e0f2fe !important; border: 6px solid #2563eb !important; box-shadow: 0 0 25px rgba(37, 99, 235, 0.7); transform: scale(1.02); }
-            10%, 30%, 50%, 70% { background-color: #bae6fd !important; border: 6px solid #1d4ed8 !important; box-shadow: 0 0 15px rgba(37, 99, 235, 0.5); transform: scale(1.01); }
+            0%, 20%, 40%, 60%, 80% { background-color: #e0f2fe !important; border: 9px solid #2563eb !important; box-shadow: 0 0 30px rgba(37, 99, 235, 0.8); transform: scale(1.02); }
+            10%, 30%, 50%, 70% { background-color: #bae6fd !important; border: 9px solid #1d4ed8 !important; box-shadow: 0 0 18px rgba(37, 99, 235, 0.6); transform: scale(1.01); }
             100% { transform: scale(1); }
         }
         .event-highlight {
@@ -279,7 +279,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-18(水) 10:09:21</div>
+    <div class="footer">更新日時: 2026-11-18(水) 10:10:00</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1077,7 +1077,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             updateHistoryBadge();
             
-            const generatedAtStr = "2026-11-18(水) 10:09:21";
+            const generatedAtStr = "2026-11-18(水) 10:10:00";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
