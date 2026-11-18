@@ -89,6 +89,23 @@
             flex-wrap: wrap;
             margin: 8px 0;
         }
+        
+        /* モバイルでのレンダー残りを防ぐための調整 */
+        .btn-link {
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 16px;
+            background-color: #2563eb;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            -webkit-appearance: none; /* スマホでの独自描画を防止 */
+            background-clip: padding-box; /* 境界線のゴミ残りを防止 */
+        }
+        .btn-link:hover { background-color: #1d4ed8; }
 
         /* モダンな詳細・申込ボタン（約1.3倍サイズ） */
         .btn-detail {
@@ -291,7 +308,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-18(水) 10:27:58</div>
+    <div class="footer">更新日時: 2026-11-18(水) 10:32:04</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1087,7 +1104,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             updatePulldown();
             updateHistoryBadge();
             
-            const generatedAtStr = "2026-11-18(水) 10:27:58";
+            const generatedAtStr = "2026-11-18(水) 10:32:04";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
@@ -1109,15 +1126,27 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
             if (isAdminUser()) {
                 adminArea.style.display = 'block';
-                if (noticeLink) noticeLink.style.display = 'inline-block';
-                if (historyContainer) historyContainer.style.display = 'inline-block';
+                if (noticeLink) {
+                    noticeLink.style.display = 'inline-block';
+                    noticeLink.style.visibility = 'visible';
+                }
+                if (historyContainer) {
+                    historyContainer.style.display = 'inline-block';
+                    historyContainer.style.visibility = 'visible';
+                }
                 if (adminDisplayTime) {
                     adminDisplayTime.innerText = "表示日時: " + getFormattedNow();
                 }
             } else {
                 adminArea.style.display = 'none';
-                if (noticeLink) noticeLink.style.display = 'none';
-                if (historyContainer) historyContainer.style.display = 'none';
+                if (noticeLink) {
+                    noticeLink.style.display = 'none';
+                    noticeLink.style.visibility = 'hidden';
+                }
+                if (historyContainer) {
+                    historyContainer.style.display = 'none';
+                    historyContainer.style.visibility = 'hidden';
+                }
             }
 
             document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
