@@ -41,6 +41,17 @@
         .btn-history-container { position: relative; display: inline-block; }
         .history-unread-badge { position: absolute; top: -8px; right: -8px; background-color: #ef4444; color: white; font-size: 14px; font-weight: bold; padding: 2px 8px; border-radius: 12px; border: 2px solid white; display: none; }
 
+        /* イベントジャンプ時の強調ハイライトアニメーション */
+        @keyframes highlightFlash {
+            0%, 20%, 40%, 60%, 80% { background-color: #fef08a !important; border: 4px solid #ef4444 !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.7); transform: scale(1.02); }
+            10%, 30%, 50%, 70% { background-color: #fde047 !important; border: 4px solid #dc2626 !important; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); transform: scale(1.01); }
+            100% { transform: scale(1); }
+        }
+        .event-highlight {
+            animation: highlightFlash 10s ease-out;
+            z-index: 20;
+        }
+
         /* PayPay送金用カスタムポップアップ */
         #paypayModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 2000; }
         .paypay-modal-content { background: white; margin: 15% auto; padding: 25px; width: 85%; max-width: 500px; border-radius: 12px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
@@ -159,8 +170,8 @@
             <a href="https://www.tennisbear.net/circle/2461/events" target="_blank" class="btn-link">🎾 テニスベア練習会一覧</a>
             <a href="https://www.tennisbear.net/my-page/notice" target="_blank" id="noticeLink" class="btn-link" style="background-color: #d97706; display: none;">🔔 お知らせページ (管理者)</a>
         </div>
-        <!-- 申込履歴ボタン（未読バッジ付きコンテナ） -->
-        <div class="btn-history-container">
+        <!-- 申込履歴ボタン（未読バッジ付きコンテナ：管理者モード時のみ表示） -->
+        <div id="historyContainer" class="btn-history-container" style="display: none;">
             <button class="btn-history-open" onclick="openHistoryModal()">📋 申込・キャンセル履歴</button>
             <span id="historyUnreadBadge" class="history-unread-badge">0</span>
         </div>
@@ -268,7 +279,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-18(水) 09:38:41</div>
+    <div class="footer">更新日時: 2026-11-18(水) 10:03:25</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -910,7 +921,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         }
 
         function openHistoryModal() {
-            // 🛠️ 全履歴の中で最も新しい申込日時を取得し、それより1分後の未来の時間を既読として保存する
             let maxTime = new Date().getTime();
             events.forEach(e => {
                 e.members.forEach(m => {
@@ -922,7 +932,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     }
                 });
             });
-            // 最も新しい履歴よりも確実に先の時間（+1分）を既読にすることで、再読み込み時のズレを防ぐ
             const safeReadTime = new Date(maxTime + 60000);
             const y = safeReadTime.getFullYear();
             const m = String(safeReadTime.getMonth() + 1).padStart(2, '0');
@@ -932,7 +941,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const s = String(safeReadTime.getSeconds()).padStart(2, '0');
             localStorage.setItem('lastReadHistoryTime', `${y}/${m}/${d} ${h}:${min}:${s}`);
 
-            // バッジを即座に強制非表示にする
             const badgeEl = document.getElementById('historyUnreadBadge');
             if (badgeEl) {
                 badgeEl.style.display = 'none';
@@ -981,7 +989,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 });
             });
 
-            // 🛠️ 8列目の申込日時（キャンセル日時）の降順（新しい順）でソート
             allHistories.sort((a, b) => b.sortTime - a.sortTime);
 
             if (allHistories.length === 0) {
@@ -998,7 +1005,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                             <div class="history-body">
                                 <div class="history-text">
                                     <span style="font-weight: bold;">${coloredNameHtml}</span> が、
-                                    <span class="history-event-link" onclick="jumpToEvent('${item.eventDate}')">
+                                    <span class="history-event-link" onclick="jumpToEvent('${item.eventDate}', '${item.eventTime}', '${item.eventTitle}')">
                                         ${item.eventDateStr} ${item.eventTime}- ${item.eventTitle}
                                     </span>
                                     ${item.actionText}
@@ -1023,8 +1030,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             }
         }
 
-        // イベント名クリック時にモーダルを閉じ、カレンダー下部のイベント一覧の該当箇所までスクロール・ハイライトする
-        function jumpToEvent(dateKey) {
+        // 申込履歴から該当イベントにジャンプ＆ハイライトする処理
+        function jumpToEvent(dateKey, targetTime, targetTitle) {
             closeHistoryModal();
 
             const parts = dateKey.split('-');
@@ -1034,9 +1041,29 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 render();
             }
 
-            const listArea = document.getElementById('eventListArea');
-            if (listArea) {
-                listArea.scrollIntoView({ behavior: 'smooth' });
+            const eventCards = document.querySelectorAll('.event-list-item');
+            let targetCard = null;
+            eventCards.forEach(card => {
+                if (card.dataset.date === dateKey && card.dataset.time === targetTime && card.dataset.title === targetTitle) {
+                    targetCard = card;
+                }
+            });
+
+            if (targetCard) {
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    targetCard.classList.remove('event-highlight');
+                    void targetCard.offsetWidth;
+                    targetCard.classList.add('event-highlight');
+                    setTimeout(() => {
+                        targetCard.classList.remove('event-highlight');
+                    }, 10000);
+                }, 400);
+            } else {
+                const listArea = document.getElementById('eventListArea');
+                if (listArea) {
+                    listArea.scrollIntoView({ behavior: 'smooth' });
+                }
             }
         }
         // =========================================================================
@@ -1048,9 +1075,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         
         function render() {
             updatePulldown();
-            updateHistoryBadge(); // 描画更新時に未読バッジも最新化
+            updateHistoryBadge();
             
-            const generatedAtStr = "2026-11-18(水) 09:38:41";
+            const generatedAtStr = "2026-11-18(水) 10:03:25";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
@@ -1068,16 +1095,19 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const adminArea = document.getElementById('adminArea');
             const adminDisplayTime = document.getElementById('adminDisplayTime');
             const noticeLink = document.getElementById('noticeLink');
+            const historyContainer = document.getElementById('historyContainer');
 
             if (isAdminUser()) {
                 adminArea.style.display = 'block';
                 if (noticeLink) noticeLink.style.display = 'inline-block';
+                if (historyContainer) historyContainer.style.display = 'inline-block';
                 if (adminDisplayTime) {
                     adminDisplayTime.innerText = "表示日時: " + getFormattedNow();
                 }
             } else {
                 adminArea.style.display = 'none';
                 if (noticeLink) noticeLink.style.display = 'none';
+                if (historyContainer) historyContainer.style.display = 'none';
             }
 
             document.getElementById('label').innerText = currentYear + "年" + currentMonth + "月";
@@ -1210,6 +1240,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         borderStyle = "border: 2px solid #b22222; background-color: #fdf2f2;";
                     }
 
+                    eventDiv.className = "event-list-item";
+                    eventDiv.dataset.date = e.date;
+                    eventDiv.dataset.time = e.time;
+                    eventDiv.dataset.title = e.title;
                     eventDiv.style.cssText = `border-bottom:2px solid #ccc; padding:12px; margin-bottom:12px; font-size: 18px; border-radius: 8px; position: relative; overflow: hidden; ${borderStyle}`;
                     
                     const participantsHtml = participants.map(m => getColoredName(m, myUserId)).join(', ');
