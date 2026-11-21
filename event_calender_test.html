@@ -19,7 +19,7 @@
         .today { border: 3px solid #b22222 !important; z-index: 2; }
         .today-badge { display: inline-block; background: #b22222; color: #fff; font-size: 16px; padding: 0px 0px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
         .tomorrow { border: 2px solid #1a73e8 !important; z-index: 2; }
-        .tomorrow-badge { display: inline-block; background: #1a73e8; color: #fff; font-size: 16px; padding: 1px 4px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
+        .tomorrow-badge { display: inline-block; background: #1a73e8; color: #fff; font-size: 16px; padding: 0px 0px; border-radius: 4px; margin-left: 6px; font-weight: bold; vertical-align: middle; }
         #modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000;}
         .modal-content { background: white; margin: 5% auto; padding: 20px; width: 85%; max-height: 85vh; overflow-y: auto; border-radius: 10px; text-align: center; }
         .modal-content button { font-size: 24px; padding: 10px 20px; }
@@ -157,9 +157,9 @@
         .past-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #dc2626; color: #dc2626; font-size: 62px; font-weight: bold; padding: 8px 30px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 8px; z-index: 10; }
         .full-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #d97706; color: #d97706; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; }
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
-        .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 1px 4px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
-        .my-waitlist-badge { display: inline-block; background: #fb923c; color: #7c2d12; font-size: 16px; padding: 1px 4px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #c2410c; }
-        .my-application-badge { display: inline-block; background: #38bdf8; color: #0369a1; font-size: 16px; padding: 1px 4px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #0284c7; }
+        .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 0px 0px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
+        .my-waitlist-badge { display: inline-block; background: #fb923c; color: #7c2d12; font-size: 16px; padding: 0px 0px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #c2410c; }
+        .my-application-badge { display: inline-block; background: #38bdf8; color: #0369a1; font-size: 16px; padding: 0px 0px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #0284c7; }
         .admin-badge { display: inline-block; background: #d97706; color: #fff; font-size: 15px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #b45309; }
         
         /* 申請中・キャンセル待ちエリアの目立つ囲みデザイン */
@@ -308,7 +308,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-21(土) 13:02:02</div>
+    <div class="footer">更新日時: 2026-11-21(土) 13:02:46</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1087,7 +1087,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            const generatedAtStr = "2026-11-21(土) 13:02:02";
+            const generatedAtStr = "2026-11-21(土) 13:02:46";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
