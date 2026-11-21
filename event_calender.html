@@ -74,6 +74,47 @@
             z-index: 20;
         }
 
+        /* ジャンプ先イベントの上下大きい指差し（各1個・画面タップで消える） */
+        .jump-pointer-single {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            pointer-events: none;
+            user-select: none;
+            position: relative;
+            z-index: 30;
+        }
+        .jump-pointer-single.top-pointer {
+            margin-bottom: 4px;
+        }
+        .jump-pointer-single.bottom-pointer {
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+        .pointer-finger-lg {
+            display: inline-block;
+            font-size: 64px;
+            line-height: 1;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+            pointer-events: none;
+        }
+        .pointer-finger-lg.down {
+            animation: fingerBigWiggleDown 0.7s ease-in-out infinite;
+        }
+        .pointer-finger-lg.up {
+            animation: fingerBigWiggleUp 0.7s ease-in-out infinite;
+        }
+
+        @keyframes fingerBigWiggleDown {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(12px) scale(1.08); }
+        }
+        @keyframes fingerBigWiggleUp {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-12px) scale(1.08); }
+        }
+
         /* PayPay送金用カスタムポップアップ */
         #paypayModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 2000; }
         .paypay-modal-content { background: white; margin: 15% auto; padding: 25px; width: 85%; max-width: 500px; border-radius: 12px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
@@ -316,7 +357,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-21(土) 13:23:01</div>
+    <div class="footer">更新日時: 2026-11-21(土) 14:33:56</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1051,9 +1092,53 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             document.getElementById('historyModal').style.display = 'none';
         }
 
+        // 指差しガイド・ハイライトの解除管理（画面のどこかをタップしたら消える）
+        let dismissJumpGuideListener = null;
+        let dismissJumpGuideTimer = null;
+
+        function clearJumpPointersAndHighlight() {
+            if (dismissJumpGuideTimer) {
+                clearTimeout(dismissJumpGuideTimer);
+                dismissJumpGuideTimer = null;
+            }
+            if (dismissJumpGuideListener) {
+                document.removeEventListener('pointerdown', dismissJumpGuideListener);
+                dismissJumpGuideListener = null;
+            }
+            document.querySelectorAll('.jump-pointer-single').forEach(el => el.remove());
+            document.querySelectorAll('.event-highlight').forEach(el => {
+                el.classList.remove('event-highlight');
+            });
+        }
+
+        function createBigFinger(positionClass, directionClass, emoji) {
+            const div = document.createElement('div');
+            div.className = `jump-pointer-single ${positionClass}`;
+            const span = document.createElement('span');
+            span.className = `pointer-finger-lg ${directionClass}`;
+            span.textContent = emoji;
+            div.appendChild(span);
+            return div;
+        }
+
+        function attachJumpPointers(targetCard) {
+            const topPointer = createBigFinger('top-pointer', 'down', '👇');
+            const bottomPointer = createBigFinger('bottom-pointer', 'up', '👆');
+            targetCard.parentNode.insertBefore(topPointer, targetCard);
+            targetCard.parentNode.insertBefore(bottomPointer, targetCard.nextSibling);
+
+            dismissJumpGuideListener = () => {
+                clearJumpPointersAndHighlight();
+            };
+            dismissJumpGuideTimer = setTimeout(() => {
+                document.addEventListener('pointerdown', dismissJumpGuideListener, { once: true });
+            }, 150);
+        }
+
         // 申込履歴から該当イベントにジャンプ＆ハイライトする処理
         function jumpToEvent(dateKey, targetTime, targetTitle) {
             closeHistoryModal();
+            clearJumpPointersAndHighlight();
 
             const parts = dateKey.split('-');
             if (parts.length === 3) {
@@ -1061,11 +1146,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 currentMonth = parseInt(parts[1], 10);
                 render();
             }
-
-            // 既にハイライトされている他のイベントがあれば、先に解除する
-            document.querySelectorAll('.event-highlight').forEach(el => {
-                el.classList.remove('event-highlight');
-            });
 
             const eventCards = document.querySelectorAll('.event-list-item');
             let targetCard = null;
@@ -1076,8 +1156,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             });
 
             if (targetCard) {
-                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 targetCard.classList.add('event-highlight');
+                attachJumpPointers(targetCard);
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 const listArea = document.getElementById('eventListArea');
                 if (listArea) {
@@ -1093,9 +1174,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         }
         
         function render() {
+            clearJumpPointersAndHighlight();
             updatePulldown();
             
-            const generatedAtStr = "2026-11-21(土) 13:23:01";
+            const generatedAtStr = "2026-11-21(土) 14:33:56";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
