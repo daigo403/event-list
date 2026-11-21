@@ -41,8 +41,8 @@
         .history-modal-content { background: white; margin: 5% auto; padding: 25px; width: 85%; max-width: 750px; max-height: 85vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .history-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; font-size: 14px; }
         .history-item { display: flex; align-items: flex-start; border-bottom: 1px solid #e2e8f0; padding: 14px; margin-bottom: 8px; border-radius: 8px; font-size: 18px; transition: background-color 0.15s ease, box-shadow 0.15s ease; }
-        .history-avatar-col { display: flex; flex-direction: column; align-items: center; width: 56px; margin-right: 15px; flex-shrink: 0; }
-        .history-avatar { width: 50px; height: 50px; border-radius: 50%; background: #cbd5e1; color: #1e293b; border: 2px solid #94a3b8; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; overflow: hidden; box-sizing: border-box; }
+        .history-avatar-col { display: flex; flex-direction: column; align-items: center; width: 58px; margin-right: 15px; flex-shrink: 0; }
+        .history-avatar { width: 52px; height: 52px; border-radius: 50%; background: #cbd5e1; color: #1e293b; border: 2px solid #94a3b8; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 17px; line-height: 1.1; white-space: nowrap; overflow: hidden; box-sizing: border-box; }
         .history-avatar-m { background: #dbeafe; color: #1d4ed8; border: 2px solid #3b82f6; }
         .history-avatar-f { background: #fce7f3; color: #be185d; border: 2px solid #ec4899; }
         .history-action-badge { display: inline-block; font-size: 12px; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-top: 6px; line-height: 1.2; text-align: center; white-space: nowrap; }
@@ -56,7 +56,7 @@
         .history-event-link { color: #2563eb; text-decoration: underline; cursor: pointer; font-weight: bold; }
         .history-event-link:hover { color: #1d4ed8; }
 
-        /* ジャンプ元履歴カードの強調（画面タップで解除） */
+        /* ジャンプ元履歴カードの強調（履歴モーダル内＆ジャンプ先メイン画面） */
         .history-jump-source {
             outline: 4px solid #7c3aed !important;
             background-color: #f5f3ff !important;
@@ -72,6 +72,40 @@
             border-radius: 4px;
             margin-left: 6px;
             vertical-align: middle;
+        }
+        .jump-source-banner {
+            background-color: #f5f3ff;
+            border: 3px solid #7c3aed;
+            border-left: 8px solid #7c3aed;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.18);
+            pointer-events: none;
+            user-select: none;
+            position: relative;
+            z-index: 25;
+        }
+        .jump-source-banner-header {
+            font-size: 13px;
+            font-weight: bold;
+            color: #6d28d9;
+            margin-bottom: 4px;
+            letter-spacing: 0.03em;
+        }
+        .jump-source-banner-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e293b;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .jump-source-banner-time {
+            font-size: 14px;
+            color: #5b21b6;
+            margin-top: 4px;
+            font-weight: bold;
         }
 
         /* 申込日の3段階強調表示（今日・昨日・一昨日） */
@@ -383,7 +417,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-21(土) 19:00:18</div>
+    <div class="footer">更新日時: 2026-11-21(土) 19:08:42</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -993,7 +1027,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function parseAppliedDateTime(appliedAtStr) {
             if (!appliedAtStr) return null;
             const trimmed = appliedAtStr.trim();
-            // "YYYY-MM-DD HH:MM:SS" / "YYYY/MM/DD HH:MM" / "YYYY-MM-DD" などに対応
             const normalized = trimmed.replace(/\//g, '-').replace(' ', 'T');
             const parsed = new Date(normalized);
             if (!isNaN(parsed.getTime())) return parsed;
@@ -1070,6 +1103,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return { label: "履歴", cls: "history-action-join" };
         }
 
+        let currentHistories = [];
+
         function openHistoryModal() {
             const myUserId = document.getElementById('userSelect').value;
             const historyBody = document.getElementById('historyModalBody');
@@ -1089,7 +1124,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         }
 
                         let cleanName = m.name.replace(/\[[fm]\]/g, '').trim();
-                        let initial = cleanName.charAt(0) || '🎾';
+                        let initial = cleanName.slice(0, 2) || '🎾';
 
                         let appliedAtStr = m.applied_at || "";
                         const parsedDate = parseAppliedDateTime(appliedAtStr);
@@ -1121,6 +1156,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             });
 
             allHistories.sort((a, b) => b.sortTime - a.sortTime);
+            currentHistories = allHistories;
 
             if (allHistories.length === 0) {
                 historyBody.innerHTML = '<p style="text-align: center; color: #64748b; font-size: 18px; padding: 20px;">履歴データがありません。</p>';
@@ -1181,10 +1217,11 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             document.getElementById('historyModal').style.display = 'none';
         }
 
-        // 指差しガイド・ハイライトの解除管理（画面のどこかをタップしたら消える）
+        // 指差しガイド・ハイライト・ジャンプ元表示の解除管理（画面のどこかをタップしたら消える）
         let dismissJumpGuideListener = null;
         let dismissJumpGuideTimer = null;
         let activeHistorySourceIdx = null;
+        let activeHistorySourceData = null;
 
         function applyHistorySourceHighlight() {
             document.querySelectorAll('.history-jump-source').forEach(el => {
@@ -1208,6 +1245,30 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             }
         }
 
+        function createJumpSourceBanner(historyItem) {
+            const banner = document.createElement('div');
+            banner.className = 'jump-source-banner';
+
+            const header = document.createElement('div');
+            header.className = 'jump-source-banner-header';
+            header.textContent = '📌 ジャンプ元の履歴';
+
+            const text = document.createElement('div');
+            text.className = 'jump-source-banner-text';
+            text.textContent = `${historyItem.name} が、 ${historyItem.eventDateStr} ${historyItem.eventTime}- ${historyItem.eventTitle} ${historyItem.actionText}`;
+
+            banner.appendChild(header);
+            banner.appendChild(text);
+
+            if (historyItem.appliedAtStr) {
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'jump-source-banner-time';
+                timeDiv.textContent = `申込日時: ${historyItem.appliedAtStr}${historyItem.elapsedSuffix}`;
+                banner.appendChild(timeDiv);
+            }
+            return banner;
+        }
+
         function clearJumpPointersAndHighlight() {
             if (dismissJumpGuideTimer) {
                 clearTimeout(dismissJumpGuideTimer);
@@ -1218,7 +1279,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 dismissJumpGuideListener = null;
             }
             activeHistorySourceIdx = null;
+            activeHistorySourceData = null;
             document.querySelectorAll('.jump-pointer-single').forEach(el => el.remove());
+            document.querySelectorAll('.jump-source-banner').forEach(el => el.remove());
             document.querySelectorAll('.event-highlight').forEach(el => {
                 el.classList.remove('event-highlight');
             });
@@ -1235,12 +1298,17 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return div;
         }
 
-        function attachJumpPointers(targetCard, historyIdx) {
+        function attachJumpPointers(targetCard, historyIdx, historyItem) {
             const topPointer = createBigFinger('top-pointer', 'down', '👇');
             const bottomPointer = createBigFinger('bottom-pointer', 'up', '👆');
             targetCard.parentNode.insertBefore(topPointer, targetCard);
+            if (historyItem) {
+                const banner = createJumpSourceBanner(historyItem);
+                targetCard.parentNode.insertBefore(banner, topPointer);
+            }
             targetCard.parentNode.insertBefore(bottomPointer, targetCard.nextSibling);
             activeHistorySourceIdx = historyIdx;
+            activeHistorySourceData = historyItem || null;
             applyHistorySourceHighlight();
 
             dismissJumpGuideListener = () => {
@@ -1253,6 +1321,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
         // 申込履歴から該当イベントにジャンプ＆ハイライトする処理
         function jumpToEvent(dateKey, targetTime, targetTitle, historyIdx = null) {
+            const historyItem = (historyIdx !== null && currentHistories[historyIdx]) ? currentHistories[historyIdx] : null;
             closeHistoryModal();
             clearJumpPointersAndHighlight();
 
@@ -1273,13 +1342,17 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
             if (targetCard) {
                 targetCard.classList.add('event-highlight');
-                attachJumpPointers(targetCard, historyIdx);
+                attachJumpPointers(targetCard, historyIdx, historyItem);
                 targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 activeHistorySourceIdx = historyIdx;
+                activeHistorySourceData = historyItem;
                 applyHistorySourceHighlight();
                 const listArea = document.getElementById('eventListArea');
                 if (listArea) {
+                    if (historyItem) {
+                        listArea.insertBefore(createJumpSourceBanner(historyItem), listArea.firstChild);
+                    }
                     listArea.scrollIntoView({ behavior: 'smooth' });
                 }
             }
@@ -1295,7 +1368,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
             
-            const generatedAtStr = "2026-11-21(土) 19:00:18";
+            const generatedAtStr = "2026-11-21(土) 19:08:42";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
