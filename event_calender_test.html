@@ -159,7 +159,7 @@
         .my-name-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
         .my-participate-badge { display: inline-block; background: #facc15; color: #713f12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #ca8a04; }
         .my-waitlist-badge { display: inline-block; background: #fb923c; color: #7c2d12; font-size: 16px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #c2410c; }
-        .my-application-badge { display: inline-block; background: #38bdf8; color: #0369a1; font-size: 8px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #0284c7; }
+        .my-application-badge { display: inline-block; background: #38bdf8; color: #0369a1; font-size: 1px; padding: 3px 8px; border-radius: 4px; margin-left: 0; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #0284c7; }
         .admin-badge { display: inline-block; background: #d97706; color: #fff; font-size: 15px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: bold; vertical-align: middle; border: 1px solid #b45309; }
         
         /* 申請中・キャンセル待ちエリアの目立つ囲みデザイン */
@@ -308,7 +308,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-21(土) 12:52:44</div>
+    <div class="footer">更新日時: 2026-11-21(土) 12:53:14</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1087,7 +1087,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function render() {
             updatePulldown();
             
-            const generatedAtStr = "2026-11-21(土) 12:52:44";
+            const generatedAtStr = "2026-11-21(土) 12:53:14";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
