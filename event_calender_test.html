@@ -74,10 +74,10 @@
             z-index: 20;
         }
 
-        /* ジャンプ先イベントの上下指差しアニメーション（各5つ・画面タップで消える） */
-        .jump-pointer-row {
+        /* ジャンプ先イベントの上下大きい指差し（各1個・画面タップで消える） */
+        .jump-pointer-single {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
             width: 100%;
             pointer-events: none;
@@ -85,38 +85,34 @@
             position: relative;
             z-index: 30;
         }
-        .jump-pointer-row.top-row {
+        .jump-pointer-single.top-pointer {
             margin-bottom: 4px;
         }
-        .jump-pointer-row.bottom-row {
+        .jump-pointer-single.bottom-pointer {
             margin-top: 4px;
             margin-bottom: 12px;
         }
-        .pointer-finger {
+        .pointer-finger-lg {
             display: inline-block;
-            font-size: 34px;
+            font-size: 64px;
             line-height: 1;
-            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
             pointer-events: none;
         }
-        .pointer-finger.down {
-            animation: fingerWiggleDown 0.65s ease-in-out infinite;
+        .pointer-finger-lg.down {
+            animation: fingerBigWiggleDown 0.7s ease-in-out infinite;
         }
-        .pointer-finger.up {
-            animation: fingerWiggleUp 0.65s ease-in-out infinite;
+        .pointer-finger-lg.up {
+            animation: fingerBigWiggleUp 0.7s ease-in-out infinite;
         }
-        .pointer-finger:nth-child(2) { animation-delay: 0.12s; }
-        .pointer-finger:nth-child(3) { animation-delay: 0.24s; }
-        .pointer-finger:nth-child(4) { animation-delay: 0.36s; }
-        .pointer-finger:nth-child(5) { animation-delay: 0.48s; }
 
-        @keyframes fingerWiggleDown {
-            0%, 100% { transform: translateY(0px) rotate(-6deg) scale(1); }
-            50% { transform: translateY(8px) rotate(6deg) scale(1.12); }
+        @keyframes fingerBigWiggleDown {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(12px) scale(1.08); }
         }
-        @keyframes fingerWiggleUp {
-            0%, 100% { transform: translateY(0px) rotate(6deg) scale(1); }
-            50% { transform: translateY(-8px) rotate(-6deg) scale(1.12); }
+        @keyframes fingerBigWiggleUp {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-12px) scale(1.08); }
         }
 
         /* PayPay送金用カスタムポップアップ */
@@ -361,7 +357,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-21(土) 13:26:48</div>
+    <div class="footer">更新日時: 2026-11-21(土) 13:33:51</div>
     
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1109,29 +1105,27 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 document.removeEventListener('pointerdown', dismissJumpGuideListener);
                 dismissJumpGuideListener = null;
             }
-            document.querySelectorAll('.jump-pointer-row').forEach(el => el.remove());
+            document.querySelectorAll('.jump-pointer-single').forEach(el => el.remove());
             document.querySelectorAll('.event-highlight').forEach(el => {
                 el.classList.remove('event-highlight');
             });
         }
 
-        function createFingerRow(directionClass, emoji) {
-            const row = document.createElement('div');
-            row.className = `jump-pointer-row ${directionClass === 'down' ? 'top-row' : 'bottom-row'}`;
-            for (let i = 0; i < 5; i++) {
-                const span = document.createElement('span');
-                span.className = `pointer-finger ${directionClass}`;
-                span.textContent = emoji;
-                row.appendChild(span);
-            }
-            return row;
+        function createBigFinger(positionClass, directionClass, emoji) {
+            const div = document.createElement('div');
+            div.className = `jump-pointer-single ${positionClass}`;
+            const span = document.createElement('span');
+            span.className = `pointer-finger-lg ${directionClass}`;
+            span.textContent = emoji;
+            div.appendChild(span);
+            return div;
         }
 
         function attachJumpPointers(targetCard) {
-            const topRow = createFingerRow('down', '👇');
-            const bottomRow = createFingerRow('up', '👆');
-            targetCard.parentNode.insertBefore(topRow, targetCard);
-            targetCard.parentNode.insertBefore(bottomRow, targetCard.nextSibling);
+            const topPointer = createBigFinger('top-pointer', 'down', '👇');
+            const bottomPointer = createBigFinger('bottom-pointer', 'up', '👆');
+            targetCard.parentNode.insertBefore(topPointer, targetCard);
+            targetCard.parentNode.insertBefore(bottomPointer, targetCard.nextSibling);
 
             dismissJumpGuideListener = () => {
                 clearJumpPointersAndHighlight();
@@ -1183,7 +1177,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
             
-            const generatedAtStr = "2026-11-21(土) 13:26:48";
+            const generatedAtStr = "2026-11-21(土) 13:33:51";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
