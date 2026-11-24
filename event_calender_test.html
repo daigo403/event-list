@@ -26,10 +26,10 @@
 
         /* 参加者詳細モーダル専用スタイル */
         #memberModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.55); z-index: 2100; }
-        .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 640px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
+        .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 660px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
         .member-info-table { width: 100%; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 18px; }
         .member-info-table th, .member-info-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; height: auto; }
-        .member-info-table th { width: 38%; background: #f8fafc; color: #334155; font-weight: bold; }
+        .member-info-table th { width: 32%; background: #f8fafc; color: #334155; font-weight: bold; }
         .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 18px 0; }
         .member-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 8px; text-align: center; }
         .member-stat-label { font-size: 14px; color: #475569; font-weight: bold; margin-bottom: 4px; }
@@ -40,7 +40,7 @@
         .btn-external-profile { display: inline-block; font-size: 17px; font-weight: bold; padding: 10px 16px; background: #0284c7; color: #ffffff !important; text-decoration: none; border-radius: 8px; }
         .btn-external-profile:hover { background: #0369a1; }
 
-        /* ベアレベルバッジ（参加者名に付記） */
+        /* ベアレベルバッジ（Lv.1〜Lv.9で明確に色分け） */
         .bear-lv-badge {
             display: inline-block;
             font-size: 13px;
@@ -54,9 +54,15 @@
             letter-spacing: 0.02em;
             white-space: nowrap;
         }
-        .bear-lv-high { background-color: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
-        .bear-lv-mid { background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
-        .bear-lv-low { background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+        .bear-lv-1 { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .bear-lv-2 { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .bear-lv-3 { background-color: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+        .bear-lv-4 { background-color: #ffedd5; color: #9a3412; border: 1px solid #fdba74; }
+        .bear-lv-5 { background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
+        .bear-lv-6 { background-color: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+        .bear-lv-7 { background-color: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
+        .bear-lv-8 { background-color: #fae8ff; color: #86198f; border: 1px solid #f0abfc; }
+        .bear-lv-9 { background-color: #ffe4e6; color: #9f1239; border: 1px solid #fda4af; }
         .bear-lv-default { background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
 
         /* 上部固定ヘッダー */
@@ -502,7 +508,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 15:20:21</div>
+    <div class="footer">更新日時: 2026-11-24(火) 15:45:35</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -513,7 +519,7 @@
         // --- 定数定義 ---
         const ADMIN_USER_ID = "82476";
         const PAYPAY_ID = "daigo403";
-        const PAYPAY_WARN_DAYS = 7;
+        const PAYPAY_WARN_DAYS = 2;
         const PAYPAY_ERROR_DAYS = 14;
         const PAYPAY_LINK_URL = "https://daigo403.github.io/event-list/paypay_link.txt";
         const PAYPAY_COMMIT_API_URL = "https://api.github.com/repos/daigo403/event-list/commits?path=paypay_link.txt&per_page=1";
@@ -995,14 +1001,39 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         // =========================================================================
         // 🎾 ベアレベル補助・参加者情報モーダル（自前データ＋代替UI）
         // =========================================================================
+        const BEAR_LEVEL_LABEL_MAP = {
+            1: "はじめて",
+            2: "初心者",
+            3: "初級",
+            4: "初中級",
+            5: "中級",
+            6: "中上級",
+            7: "上級",
+            8: "超上級",
+            9: "プロ"
+        };
+
+        function extractBearLevelNumber(levelStr) {
+            if (!levelStr) return null;
+            const match = String(levelStr).match(/(\d+)/);
+            if (!match) return null;
+            const num = parseInt(match[1], 10);
+            return isNaN(num) ? null : num;
+        }
+
+        function getBearLevelLabel(levelStr) {
+            const num = extractBearLevelNumber(levelStr);
+            if (num !== null && BEAR_LEVEL_LABEL_MAP[num]) {
+                return BEAR_LEVEL_LABEL_MAP[num];
+            }
+            return "";
+        }
+
         function getBearLevelStyleClass(levelStr) {
-            if (!levelStr) return "bear-lv-default";
-            const numMatch = String(levelStr).match(/(\d+(?:\.\d+)?)/);
-            if (!numMatch) return "bear-lv-default";
-            const lvNum = parseFloat(numMatch[1]);
-            if (lvNum >= 6) return "bear-lv-high";
-            if (lvNum >= 5) return "bear-lv-mid";
-            if (lvNum <= 4) return "bear-lv-low";
+            const num = extractBearLevelNumber(levelStr);
+            if (num !== null && num >= 1 && num <= 9) {
+                return `bear-lv-${num}`;
+            }
             return "bear-lv-default";
         }
 
@@ -1024,7 +1055,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             }
             if (!userId) return "";
             const sourceList = Array.isArray(allEvents) && allEvents.length > 0 ? allEvents : events;
-            // 日付降順で直近のレベルを探索
             const sortedEvents = [...sourceList].sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
             for (const e of sortedEvents) {
                 if (!Array.isArray(e.members)) continue;
@@ -1042,7 +1072,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             let futureCount = 0;
             const nowMs = Date.now();
 
-            // 同一イベントの重複レコードを防ぐため (date|time|title) でユニーク化
             const seenEvents = new Set();
             const sourceList = Array.isArray(allEvents) && allEvents.length > 0 ? allEvents : events;
 
@@ -1084,9 +1113,11 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 else if (displayName.includes('[m]')) gender = "男性";
                 else gender = "未設定";
             }
-            const realName = masterInfo.realName || "未設定";
+            const realName = masterInfo.realName || "";
+            const hasRealName = realName && realName !== "未設定";
             const joinDate = joinDates[userId] || masterInfo.joinDate || "未登録";
             const resolvedLevel = findLatestBearLevel(userId, bearLevel) || "未設定";
+            const levelLabel = resolvedLevel !== "未設定" ? getBearLevelLabel(resolvedLevel) : "";
             const counts = calcParticipationCounts(userId);
             const profileUrl = `https://www.tennisbear.net/user/${encodeURIComponent(userId)}/info`;
 
@@ -1096,18 +1127,25 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;");
 
-            const levelDisplayHtml = resolvedLevel !== "未設定"
-                ? `${renderBearLevelBadge(resolvedLevel)} <span style="font-size:15px; color:#64748b;">(${escapeHtml(resolvedLevel)})</span>`
-                : escapeHtml(resolvedLevel);
+            const combinedNameText = hasRealName
+                ? `${displayName}（${realName}）`
+                : displayName;
+
+            let levelDisplayHtml = escapeHtml(resolvedLevel);
+            if (resolvedLevel !== "未設定") {
+                const labelSuffix = levelLabel
+                    ? ` <span style="font-weight:bold; color:#1e293b;">${escapeHtml(levelLabel)}</span>`
+                    : "";
+                levelDisplayHtml = `${renderBearLevelBadge(resolvedLevel)}${labelSuffix}`;
+            }
 
             const bodyEl = document.getElementById('memberModalBody');
             bodyEl.innerHTML = `
                 <table class="member-info-table">
                     <tr><th>ユーザーID</th><td>${escapeHtml(userId)}</td></tr>
-                    <tr><th>表示名</th><td>${escapeHtml(displayName)}</td></tr>
+                    <tr><th>表示名（本名）</th><td>${escapeHtml(combinedNameText)}</td></tr>
                     <tr><th>ベアレベル</th><td>${levelDisplayHtml}</td></tr>
                     <tr><th>性別</th><td>${escapeHtml(gender)}</td></tr>
-                    <tr><th>本名</th><td>${escapeHtml(realName)}</td></tr>
                     <tr><th>加入年月日</th><td>${escapeHtml(joinDate)}</td></tr>
                 </table>
 
@@ -1636,7 +1674,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 15:20:21";
+            const generatedAtStr = "2026-11-24(火) 15:45:35";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
