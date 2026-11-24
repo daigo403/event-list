@@ -27,7 +27,7 @@
         /* 参加者詳細モーダル専用スタイル */
         #memberModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.55); z-index: 2100; }
         .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 660px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
-        .member-info-table { width: 100%; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 18px; }
+        .member-info-table { width: 100%; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 27px; }
         .member-info-table th, .member-info-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; height: auto; }
         .member-info-table th { width: 32%; background: #f8fafc; color: #334155; font-weight: bold; }
         .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 18px 0; }
@@ -37,7 +37,7 @@
         .member-stat-past .member-stat-num { color: #15803d; }
         .member-stat-future .member-stat-num { color: #1d4ed8; }
         .member-stat-total .member-stat-num { color: #7c3aed; }
-        .btn-external-profile { display: inline-block; font-size: 17px; font-weight: bold; padding: 10px 16px; background: #0284c7; color: #ffffff !important; text-decoration: none; border-radius: 8px; }
+        .btn-external-profile { display: inline-block; font-size: 25px; font-weight: bold; padding: 12px 20px; background: #0284c7; color: #ffffff !important; text-decoration: none; border-radius: 8px; }
         .btn-external-profile:hover { background: #0369a1; }
 
         /* ベアレベル「？」ヘルプボタン＆詳細表モーダル */
@@ -431,8 +431,8 @@
     <div id="memberModal" onclick="if(event.target === this) closeMemberModal();">
         <div class="member-modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
-                <h2 style="margin: 0; font-size: 22px; color: #0f172a;">👤 参加者情報</h2>
-                <button onclick="closeMemberModal()" style="font-size: 18px; padding: 6px 16px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
+                <h2 style="margin: 0; font-size: 33px; color: #0f172a;">👤 参加者情報</h2>
+                <button onclick="closeMemberModal()" style="font-size: 27px; padding: 8px 18px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
             </div>
             <div id="memberModalBody"></div>
         </div>
@@ -496,7 +496,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 19:32:45</div>
+    <div class="footer">更新日時: 2026-11-24(火) 19:41:52</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1273,7 +1273,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px;">
                     <a href="${profileUrl}" target="_blank" rel="noopener noreferrer" class="btn-external-profile">🔗 テニスベア公式プロフィールを開く</a>
-                    <button onclick="closeMemberModal()" style="font-size: 17px; padding: 10px 18px; background: #475569; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">閉じる</button>
+                    <button onclick="closeMemberModal()" style="font-size: 25px; padding: 12px 22px; background: #475569; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">閉じる</button>
+                 </div>
                 </div>
             `;
             document.getElementById('memberModal').style.display = 'block';
@@ -1778,7 +1779,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 19:32:45";
+            const generatedAtStr = "2026-11-24(火) 19:41:52";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
