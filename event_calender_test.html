@@ -27,6 +27,10 @@
         /* 参加者詳細モーダル専用スタイル */
         #memberModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.55); z-index: 2100; }
         .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 720px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
+        .member-modal-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        .member-modal-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .btn-member-back { font-size: 22px; padding: 8px 16px; background: #e0f2fe; color: #0369a1; border: 1px solid #0284c7; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.15s ease; }
+        .btn-member-back:hover { background: #0284c7; color: #ffffff; }
         .member-info-table { width: 100%; table-layout: auto; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 27px; }
         .member-info-table th, .member-info-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; height: auto; vertical-align: middle; }
         .member-info-table th { width: 34%; white-space: nowrap; background: #f8fafc; color: #334155; font-weight: bold; }
@@ -549,9 +553,12 @@
     <!-- 参加者詳細モーダル -->
     <div id="memberModal" onclick="if(event.target === this) closeMemberModal();">
         <div class="member-modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+            <div class="member-modal-header">
                 <h2 style="margin: 0; font-size: 33px; color: #0f172a;">👤 参加者情報</h2>
-                <button onclick="closeMemberModal()" style="font-size: 27px; padding: 8px 18px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
+                <div class="member-modal-actions">
+                    <button id="memberModalBackBtn" type="button" class="btn-member-back" style="display: none;" onclick="goBackMemberModal()">← 戻る</button>
+                    <button type="button" onclick="closeMemberModal()" style="font-size: 27px; padding: 8px 18px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
+                </div>
             </div>
             <div id="memberModalBody"></div>
         </div>
@@ -612,7 +619,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 23:51:00</div>
+    <div class="footer">更新日時: 2026-11-25(水) 00:06:35</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1109,6 +1116,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
         let currentModalBearLevelNum = null;
         let activeMemberStatPanel = null; // 'past' | 'future' | 'total' | null
+        let memberModalHistory = [];
+        let currentModalMemberInfo = null;
 
         function extractBearLevelNumber(levelStr) {
             if (!levelStr) return null;
@@ -1333,7 +1342,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         }
 
         function buildCategoryMatrixHtml(userId, mode, escapeHtmlFn) {
-            // mode: 'past'（過去参加回数のみ） or 'total'（過去＋参加予定の累計）
             const nowMs = Date.now();
             const seenEvents = new Set();
             const sourceList = Array.isArray(allEvents) && allEvents.length > 0 ? allEvents : events;
@@ -1344,7 +1352,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             });
             const categories = Array.from(categorySet);
 
-            const countsByYmCat = new Map(); // `${ym}|${cat}` -> count
+            const countsByYmCat = new Map();
             let maxYm = `${realNow.getFullYear()}-${String(realNow.getMonth() + 1).padStart(2, '0')}`;
 
             sourceList.forEach(e => {
@@ -1571,8 +1579,44 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return { stateClass, borderStyle, innerHtml };
         }
 
-        function openMemberModal(userId, displayName, bearLevel = "") {
+        function updateMemberModalBackButton() {
+            const backBtn = document.getElementById('memberModalBackBtn');
+            if (!backBtn) return;
+            if (memberModalHistory.length > 0) {
+                backBtn.style.display = 'inline-block';
+                backBtn.title = `前のユーザーに戻る（残り${memberModalHistory.length}件）`;
+            } else {
+                backBtn.style.display = 'none';
+                backBtn.title = '';
+            }
+        }
+
+        function navigateMemberModal(userId, displayName, bearLevel = "") {
             if (!userId) return;
+            if (currentModalMemberInfo && currentModalMemberInfo.userId) {
+                memberModalHistory.push({ ...currentModalMemberInfo });
+            }
+            openMemberModal(userId, displayName, bearLevel, { fromHistoryNav: true });
+        }
+
+        function goBackMemberModal() {
+            if (memberModalHistory.length === 0) return;
+            const prev = memberModalHistory.pop();
+            openMemberModal(prev.userId, prev.displayName, prev.bearLevel, { fromHistoryNav: true });
+        }
+
+        function openMemberModal(userId, displayName, bearLevel = "", options = {}) {
+            if (!userId) return;
+            if (!options.fromHistoryNav) {
+                memberModalHistory = [];
+            }
+            currentModalMemberInfo = {
+                userId: String(userId),
+                displayName: String(displayName || ""),
+                bearLevel: String(bearLevel || "")
+            };
+            updateMemberModalBackButton();
+
             activeMemberStatPanel = null;
 
             const masterInfo = userMaster[userId] || {};
@@ -1692,6 +1736,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function closeMemberModal() {
             currentModalBearLevelNum = null;
             activeMemberStatPanel = null;
+            memberModalHistory = [];
+            currentModalMemberInfo = null;
+            updateMemberModalBackButton();
             document.getElementById('memberModal').style.display = 'none';
         }
         // =========================================================================
@@ -1720,7 +1767,11 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 const safeUid = encodeURIComponent(member.userId);
                 const safeName = encodeURIComponent(name);
                 const safeLv = encodeURIComponent(bearLevel);
-                colored = `<span class="member-link-btn" onclick="event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'), decodeURIComponent('${safeLv}'))">${colored}</span>`;
+                const isInsideMemberModal = currentModalMemberInfo !== null;
+                const clickHandler = isInsideMemberModal
+                    ? `event.stopPropagation(); navigateMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'), decodeURIComponent('${safeLv}'))`
+                    : `event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'), decodeURIComponent('${safeLv}'))`;
+                colored = `<span class="member-link-btn" onclick="${clickHandler}">${colored}</span>`;
             }
 
             colored = `${colored}${lvBadgeHtml}`;
@@ -2199,7 +2250,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 23:51:00";
+            const generatedAtStr = "2026-11-25(水) 00:06:35";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
