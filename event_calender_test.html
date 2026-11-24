@@ -28,9 +28,8 @@
         #memberModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.55); z-index: 2100; }
         .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 660px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
         .member-info-table { width: 100%; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 27px; }
-        .member-info-table th, .member-info-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; height: auto; }
-        .member-info-table th { width: 32%; background: #f8fafc; color: #334155; font-weight: bold; }
-        .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 18px 0; }
+        .member-info-table th, .member-info-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; height: auto; vertical-align: middle; }
+        .member-info-table th { width: 1%; white-space: nowrap; background: #f8fafc; color: #334155; font-weight: bold; }        .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 18px 0; }
         .member-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 8px; text-align: center; }
         .member-stat-label { font-size: 14px; color: #475569; font-weight: bold; margin-bottom: 4px; }
         .member-stat-num { font-size: 26px; font-weight: bold; color: #0f172a; }
@@ -45,14 +44,14 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
-            margin-left: 8px;
+            width: 54px;
+            height: 54px;
+            margin-left: 10px;
             border-radius: 50%;
             border: 1px solid #0284c7;
             background-color: #e0f2fe;
             color: #0369a1;
-            font-size: 15px;
+            font-size: 33px;
             font-weight: bold;
             cursor: pointer;
             vertical-align: middle;
@@ -311,7 +310,7 @@
         /* 参加者名末尾のLvバッジ（添付画像のレベルグラデーション準拠） */
         .member-lv-badge {
             display: inline-block;
-            margin-left: 4px;
+            margin-left: 2px;
             padding: 1px 6px;
             border-radius: 999px;
             font-size: 0.78em;
@@ -522,7 +521,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 19:49:21</div>
+    <div class="footer">更新日時: 2026-11-24(火) 19:58:16</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1100,9 +1099,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 const isCurrent = (targetLv !== null && targetLv === item.level);
                 const rowClass = isCurrent ? ' class="bear-guide-row-current"' : '';
                 const currentTag = isCurrent ? '<span class="bear-current-tag">該当</span>' : '';
+                const lvBadgeClass = `lv-badge-${Math.min(Math.max(item.level, 1), 9)}`;
                 return `
                     <tr${rowClass}>
-                        <td style="white-space: nowrap; font-weight: bold;">${escapeHtml(item.code)}${currentTag}</td>
+                        <td style="white-space: nowrap; font-weight: bold;"><span class="member-lv-badge ${lvBadgeClass}" style="margin-left: 0; font-size: 14px; padding: 2px 8px;">${escapeHtml(item.code)}</span>${currentTag}</td>
                         <td style="white-space: nowrap; font-weight: bold; color: #0f172a;">${escapeHtml(item.name)}</td>
                         <td>${escapeHtml(item.desc)}</td>
                     </tr>
@@ -1275,7 +1275,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             bodyEl.innerHTML = `
                 <table class="member-info-table">
                     <tr><th>ユーザーID</th><td>${escapeHtml(userId)}</td></tr>
-                    <tr><th>表示名（本名）</th><td>${escapeHtml(combinedNameText)}</td></tr>
+                    <tr><th>ベア名（氏名）</th><td>${escapeHtml(combinedNameText)}</td></tr>
                     <tr><th>ベアレベル</th><td>${levelDisplayHtml}</td></tr>
                     <tr><th>性別</th><td>${escapeHtml(gender)}</td></tr>
                     <tr><th>加入年月日</th><td>${escapeHtml(joinDateDisplay)}</td></tr>
@@ -1816,7 +1816,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 19:49:21";
+            const generatedAtStr = "2026-11-24(火) 19:58:16";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
