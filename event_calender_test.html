@@ -27,9 +27,10 @@
         /* 参加者詳細モーダル専用スタイル */
         #memberModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.55); z-index: 2100; }
         .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 660px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
-        .member-info-table { width: 100%; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 27px; }
+        .member-info-table { width: 100%; table-layout: auto; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 27px; }
         .member-info-table th, .member-info-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; height: auto; vertical-align: middle; }
-        .member-info-table th { width: 1%; white-space: nowrap; background: #f8fafc; color: #334155; font-weight: bold; }        .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 18px 0; }
+        .member-info-table th { width: 34%; white-space: nowrap; background: #f8fafc; color: #334155; font-weight: bold; }
+        .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 18px 0; }
         .member-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 8px; text-align: center; }
         .member-stat-label { font-size: 14px; color: #475569; font-weight: bold; margin-bottom: 4px; }
         .member-stat-num { font-size: 26px; font-weight: bold; color: #0f172a; }
@@ -521,7 +522,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 19:58:16</div>
+    <div class="footer">更新日時: 2026-11-24(火) 20:01:24</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1300,7 +1301,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px;">
                     <a href="${profileUrl}" target="_blank" rel="noopener noreferrer" class="btn-external-profile">🔗 テニスベア公式プロフィールを開く</a>
                     <button onclick="closeMemberModal()" style="font-size: 25px; padding: 12px 22px; background: #475569; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">閉じる</button>
-                 </div>
                 </div>
             `;
             document.getElementById('memberModal').style.display = 'block';
@@ -1816,7 +1816,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 19:58:16";
+            const generatedAtStr = "2026-11-24(火) 20:01:24";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
