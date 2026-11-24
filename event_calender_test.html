@@ -552,7 +552,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 16:05:15</div>
+    <div class="footer">更新日時: 2026-11-24(火) 16:21:50</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -564,7 +564,7 @@
         const ADMIN_USER_ID = "82476";
         const PAYPAY_ID = "daigo403";
         const PAYPAY_WARN_DAYS = 7;
-        const PAYPAY_ERROR_DAYS = 2;
+        const PAYPAY_ERROR_DAYS = 14;
         const PAYPAY_LINK_URL = "https://daigo403.github.io/event-list/paypay_link.txt";
         const PAYPAY_COMMIT_API_URL = "https://api.github.com/repos/daigo403/event-list/commits?path=paypay_link.txt&per_page=1";
         const CIRCLE_INFO_URL = "https://www.tennisbear.net/circle/2461/info";
@@ -1863,7 +1863,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 16:05:15";
+            const generatedAtStr = "2026-11-24(火) 16:21:50";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
