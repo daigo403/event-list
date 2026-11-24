@@ -26,17 +26,113 @@
 
         /* 参加者詳細モーダル専用スタイル */
         #memberModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.55); z-index: 2100; }
-        .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 660px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
+        .member-modal-content { background: white; margin: 6% auto; padding: 24px; width: 88%; max-width: 720px; max-height: 84vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,0.32); }
         .member-info-table { width: 100%; table-layout: auto; border-collapse: collapse; margin: 14px 0 18px 0; font-size: 27px; }
         .member-info-table th, .member-info-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; height: auto; vertical-align: middle; }
         .member-info-table th { width: 34%; white-space: nowrap; background: #f8fafc; color: #334155; font-weight: bold; }
-        .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 18px 0; }
-        .member-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 8px; text-align: center; }
+        .member-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 12px 0; }
+        .member-stat-card {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+            user-select: none;
+        }
+        .member-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+        }
+        .member-stat-card.is-active {
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+        }
+        .member-stat-past.is-active { border-color: #15803d; background-color: #f0fdf4; }
+        .member-stat-future.is-active { border-color: #1d4ed8; background-color: #eff6ff; }
+        .member-stat-total.is-active { border-color: #7c3aed; background-color: #f5f3ff; }
         .member-stat-label { font-size: 14px; color: #475569; font-weight: bold; margin-bottom: 4px; }
         .member-stat-num { font-size: 26px; font-weight: bold; color: #0f172a; }
         .member-stat-past .member-stat-num { color: #15803d; }
         .member-stat-future .member-stat-num { color: #1d4ed8; }
         .member-stat-total .member-stat-num { color: #7c3aed; }
+        .member-stat-hint { font-size: 11px; color: #64748b; margin-top: 4px; }
+
+        /* ニョキっと展開／引っ込み（もぐら演出） */
+        .mole-drawer {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(22px) scaleY(0.88);
+            transform-origin: bottom center;
+            transition: max-height 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.28s ease,
+                        transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+        }
+        .mole-drawer.is-open {
+            max-height: 2400px;
+            opacity: 1;
+            transform: translateY(0) scaleY(1);
+            pointer-events: auto;
+        }
+
+        .matrix-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+            margin-bottom: 14px;
+            overflow-x: auto;
+        }
+        .matrix-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+        .matrix-table {
+            width: 100%;
+            min-width: 520px;
+            table-layout: auto;
+            border-collapse: collapse;
+            font-size: 15px;
+            background: #ffffff;
+        }
+        .matrix-table th, .matrix-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            height: auto;
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .matrix-table th {
+            background: #e2e8f0;
+            color: #1e293b;
+            font-weight: bold;
+        }
+        .matrix-table td:first-child, .matrix-table th:first-child {
+            text-align: left;
+            font-weight: bold;
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .matrix-table td.matrix-total-col, .matrix-table th.matrix-total-col {
+            background: #eef2ff;
+            font-weight: bold;
+            color: #1e1b4b;
+        }
+        .matrix-zero {
+            color: #94a3b8;
+        }
+        .matrix-nonzero {
+            color: #0f172a;
+            font-weight: bold;
+        }
+
         .btn-external-profile { display: inline-block; font-size: 25px; font-weight: bold; padding: 12px 20px; background: #0284c7; color: #ffffff !important; text-decoration: none; border-radius: 8px; }
         .btn-external-profile:hover { background: #0369a1; }
 
@@ -306,8 +402,7 @@
             appearance: none;
         }
         .member-link-btn:hover { opacity: 0.75; }
-        
-        
+
         /* 参加者名末尾のLvバッジ（添付画像のレベルグラデーション準拠） */
         .member-lv-badge {
             display: inline-block;
@@ -322,15 +417,6 @@
             white-space: nowrap;
             text-decoration: none;
         }
-        //.lv-badge-1 { background-color: #10d95a; }
-        //.lv-badge-2 { background-color: #09c663; }
-        //.lv-badge-3 { background-color: #05b368; }
-        //.lv-badge-4 { background-color: #069e6a; }
-        //.lv-badge-5 { background-color: #09886b; }
-        //.lv-badge-6 { background-color: #0d726b; }
-        //.lv-badge-7 { background-color: #115b69; }
-        //.lv-badge-8 { background-color: #134663; }
-        //.lv-badge-9 { background-color: #133359; }
         .lv-badge-1 { background-color: #eab308; color: #1e293b; }
         .lv-badge-2 { background-color: #f59e0b; color: #1e293b; }
         .lv-badge-3 { background-color: #f97316; color: #ffffff; }
@@ -426,7 +512,6 @@
             <span>👑 管理者モード（定型文コピー機能）</span>
             <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
         </h3>
-        <!-- スマホでの文字勝手拡大防止クラス(.admin-text-fix)を適用 -->
         <div class="admin-text-fix" style="margin-bottom: 12px; color: #166534; background: #dcfce7; padding: 8px 12px; border-radius: 6px; word-break: break-all;">
             <span style="font-weight: bold;">📱 GitHub上 PayPayリンク内容:</span> <span id="githubPaypayContent" style="font-family: monospace; font-weight: bold;">取得中...</span><br>
             <span style="font-weight: bold;">🕒 最終更新日時:</span> <span id="githubPaypayLastMod">取得中...</span> 
@@ -495,9 +580,7 @@
                 <span class="applied-tag applied-tag-yesterday" style="margin-right: 0;">昨日</span>
                 <span class="applied-tag applied-tag-two-days-ago" style="margin-right: 0;">一昨日</span>
             </div>
-            <div id="historyModalBody">
-                <!-- 動的生成 -->
-            </div>
+            <div id="historyModalBody"></div>
         </div>
     </div>
 
@@ -509,7 +592,6 @@
             <div style="font-size: 16px; color: #334155; line-height: 1.5;">
                 下のボタンからPayPayアプリを起動し、<br>コピーしたIDを貼り付けて送金してください。
             </div>
-            <!-- 動的取得したURLをセットするID -->
             <a href="paypay://" id="paypayAppLink" class="btn-open-paypay">📱 PayPayアプリを開く</a>
             <button class="btn-close-paypay" onclick="document.getElementById('paypayModal').style.display='none'">閉じる</button>
         </div>
@@ -530,7 +612,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 23:29:31</div>
+    <div class="footer">更新日時: 2026-11-24(火) 23:51:00</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1009,60 +1091,15 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         // 🎾 参加者情報モーダル・加入経過期間・レベル詳細表モーダル
         // =========================================================================
         const BEAR_LEVEL_GUIDE = [
-            {
-                level: 1,
-                code: "Lv.1",
-                name: "はじめて",
-                desc: "未経験者（テニスを始めたばかりのの人）"
-            },
-            {
-                level: 2,
-                code: "Lv.2",
-                name: "初心者",
-                desc: "上位者とであれば簡単なストロークラリーができる"
-            },
-            {
-                level: 3,
-                code: "Lv.3",
-                name: "初級",
-                desc: "サーブ・ボレー・スマッシュを学び、簡単なボールであれば相手コートに入れることができる"
-            },
-            {
-                level: 4,
-                code: "Lv.4",
-                name: "初中級",
-                desc: "ゲームのルールを理解している。簡単なセカンドサーブやロブを習得している。"
-            },
-            {
-                level: 5,
-                code: "Lv.5",
-                name: "中級",
-                desc: "一通りのショットを習得している。ショットの中には苦手なショットがあるが、深さやコースをコントロールするショットも打てる。中級クラスの草トーナメントで上位入賞～優勝することができる。"
-            },
-            {
-                level: 6,
-                code: "Lv.6",
-                name: "中上級",
-                desc: "陣形を考えてポジショニングができる。サーブ＆リターン・スマッシュに安定感があり、得意なショットを有する一方で、苦手なコースに配球されても守備的に返球ができる。オープンクラスの公式大会(市区町村の大会等)で安定して1,2勝できる"
-            },
-            {
-                level: 7,
-                code: "Lv.7",
-                name: "上級",
-                desc: "相手次第で戦略を変え、効果的なロブやドロップを含む様々なショットを使いこなすことができる。体育会に4年間所属し、オープンクラスの公式大会(市区町村の大会等)にて上位の戦績、優勝経験がある。"
-            },
-            {
-                level: 8,
-                code: "Lv.8",
-                name: "超上級",
-                desc: "超上級（セミプロ）。都道府県代表クラス。"
-            },
-            {
-                level: 9,
-                code: "Lv.9",
-                name: "プロ",
-                desc: "プロ。日本ランキング100位以内。日本選手権本戦出場。"
-            }
+            { level: 1, code: "Lv.1", name: "はじめて", desc: "未経験者（テニスを始めたばかりのの人）" },
+            { level: 2, code: "Lv.2", name: "初心者", desc: "上位者とであれば簡単なストロークラリーができる" },
+            { level: 3, code: "Lv.3", name: "初級", desc: "サーブ・ボレー・スマッシュを学び、簡単なボールであれば相手コートに入れることができる" },
+            { level: 4, code: "Lv.4", name: "初中級", desc: "ゲームのルールを理解している。簡単なセカンドサーブやロブを習得している。" },
+            { level: 5, code: "Lv.5", name: "中級", desc: "一通りのショットを習得している。ショットの中には苦手なショットがあるが、深さやコースをコントロールするショットも打てる。中級クラスの草トーナメントで上位入賞～優勝することができる。" },
+            { level: 6, code: "Lv.6", name: "中上級", desc: "陣形を考えてポジショニングができる。サーブ＆リターン・スマッシュに安定感があり、得意なショットを有する一方で、苦手なコースに配球されても守備的に返球ができる。オープンクラスの公式大会(市区町村の大会等)で安定して1,2勝できる" },
+            { level: 7, code: "Lv.7", name: "上級", desc: "相手次第で戦略を変え、効果的なロブやドロップを含む様々なショットを使いこなすことができる。体育会に4年間所属し、オープンクラスの公式大会(市区町村の大会等)にて上位の戦績、優勝経験がある。" },
+            { level: 8, code: "Lv.8", name: "超上級", desc: "超上級（セミプロ）。都道府県代表クラス。" },
+            { level: 9, code: "Lv.9", name: "プロ", desc: "プロ。日本ランキング100位以内。日本選手権本戦出場。" }
         ];
 
         const BEAR_LEVEL_LABEL_MAP = BEAR_LEVEL_GUIDE.reduce((acc, item) => {
@@ -1071,6 +1108,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         }, {});
 
         let currentModalBearLevelNum = null;
+        let activeMemberStatPanel = null; // 'past' | 'future' | 'total' | null
 
         function extractBearLevelNumber(levelStr) {
             if (!levelStr) return null;
@@ -1201,6 +1239,12 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return "";
         }
 
+        function isEventFinished(e, nowMs = Date.now()) {
+            const endTimeStr = e.end_time && /^\d{1,2}:\d{2}$/.test(e.end_time) ? e.end_time : "23:59";
+            const endDt = new Date(`${e.date}T${endTimeStr}:00`);
+            return !isNaN(endDt.getTime()) ? (endDt.getTime() < nowMs) : (e.date < getTodayStr());
+        }
+
         function calcParticipationCounts(userId) {
             let pastCount = 0;
             let futureCount = 0;
@@ -1220,11 +1264,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                 seenEvents.add(uniqueKey);
 
-                const endTimeStr = e.end_time && /^\d{1,2}:\d{2}$/.test(e.end_time) ? e.end_time : "23:59";
-                const endDt = new Date(`${e.date}T${endTimeStr}:00`);
-                const isPast = !isNaN(endDt.getTime()) ? (endDt.getTime() < nowMs) : (e.date < getTodayStr());
-
-                if (isPast) {
+                if (isEventFinished(e, nowMs)) {
                     pastCount++;
                 } else {
                     futureCount++;
@@ -1254,10 +1294,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 );
                 if (!isJoined) return;
 
-                const endTimeStr = e.end_time && /^\d{1,2}:\d{2}$/.test(e.end_time) ? e.end_time : "23:59";
-                const endDt = new Date(`${e.date}T${endTimeStr}:00`);
-                const isFuture = !isNaN(endDt.getTime()) ? (endDt.getTime() >= nowMs) : (e.date >= getTodayStr());
-                if (!isFuture) return;
+                if (isEventFinished(e, nowMs)) return;
 
                 seenEvents.add(uniqueKey);
                 matchedEvents.push(e);
@@ -1270,6 +1307,148 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             });
 
             return matchedEvents;
+        }
+
+        function buildYearMonthRange(startYm, endYm) {
+            const [sy, sm] = startYm.split('-').map(Number);
+            const [ey, em] = endYm.split('-').map(Number);
+            let curY = sy;
+            let curM = sm;
+            const list = [];
+            while (curY < ey || (curY === ey && curM <= em)) {
+                list.push(`${curY}-${String(curM).padStart(2, '0')}`);
+                curM++;
+                if (curM > 12) {
+                    curM = 1;
+                    curY++;
+                }
+            }
+            return list;
+        }
+
+        function formatYmLabel(ym) {
+            const parts = String(ym || "").split('-');
+            if (parts.length !== 2) return ym;
+            return `${parseInt(parts[0], 10)}年${parseInt(parts[1], 10)}月`;
+        }
+
+        function buildCategoryMatrixHtml(userId, mode, escapeHtmlFn) {
+            // mode: 'past'（過去参加回数のみ） or 'total'（過去＋参加予定の累計）
+            const nowMs = Date.now();
+            const seenEvents = new Set();
+            const sourceList = Array.isArray(allEvents) && allEvents.length > 0 ? allEvents : events;
+
+            const categorySet = new Set(Object.keys(colorMap));
+            sourceList.forEach(e => {
+                if (e.category) categorySet.add(e.category);
+            });
+            const categories = Array.from(categorySet);
+
+            const countsByYmCat = new Map(); // `${ym}|${cat}` -> count
+            let maxYm = `${realNow.getFullYear()}-${String(realNow.getMonth() + 1).padStart(2, '0')}`;
+
+            sourceList.forEach(e => {
+                if (!e.date || e.date.length < 7) return;
+                const uniqueKey = `${e.date}|${e.time}|${e.title}`;
+                if (seenEvents.has(uniqueKey)) return;
+
+                const isJoined = Array.isArray(e.members) && e.members.some(
+                    m => m.userId === userId && m.status === '○[参加]'
+                );
+                if (!isJoined) return;
+
+                const finished = isEventFinished(e, nowMs);
+                if (mode === 'past' && !finished) return;
+
+                seenEvents.add(uniqueKey);
+                const ym = e.date.slice(0, 7);
+                if (ym > maxYm) maxYm = ym;
+
+                const cat = e.category || "未分類";
+                if (!categories.includes(cat)) categories.push(cat);
+
+                const key = `${ym}|${cat}`;
+                countsByYmCat.set(key, (countsByYmCat.get(key) || 0) + 1);
+            });
+
+            const startYm = "2026-07";
+            const months = maxYm >= startYm ? buildYearMonthRange(startYm, maxYm) : [startYm];
+
+            const colTotals = new Array(categories.length).fill(0);
+            let grandTotal = 0;
+
+            const bodyRowsHtml = months.map(ym => {
+                let rowTotal = 0;
+                const cellsHtml = categories.map((cat, idx) => {
+                    const c = countsByYmCat.get(`${ym}|${cat}`) || 0;
+                    rowTotal += c;
+                    colTotals[idx] += c;
+                    const cls = c > 0 ? "matrix-nonzero" : "matrix-zero";
+                    return `<td class="${cls}">${c}回</td>`;
+                }).join('');
+                grandTotal += rowTotal;
+                return `
+                    <tr>
+                        <td>${escapeHtmlFn(formatYmLabel(ym))}</td>
+                        ${cellsHtml}
+                        <td class="matrix-total-col">${rowTotal}回</td>
+                    </tr>
+                `;
+            }).join('');
+
+            const footerCellsHtml = colTotals.map(tot => {
+                const cls = tot > 0 ? "matrix-nonzero" : "matrix-zero";
+                return `<td class="matrix-total-col ${cls}">${tot}回</td>`;
+            }).join('');
+
+            const headerCatsHtml = categories.map(cat => `<th>${escapeHtmlFn(cat)}</th>`).join('');
+            const titleText = mode === 'past'
+                ? "過去参加回数 年月／練習種別マトリックス（2026年7月～・○[参加]のみ）"
+                : "累計参加回数 年月／練習種別マトリックス（過去＋参加予定・○[参加]のみ）";
+
+            return `
+                <div class="matrix-box">
+                    <div class="matrix-title">${escapeHtmlFn(titleText)}</div>
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>年月／練習種別</th>
+                                ${headerCatsHtml}
+                                <th class="matrix-total-col">合計</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${bodyRowsHtml}
+                            <tr>
+                                <td class="matrix-total-col">総合計</td>
+                                ${footerCellsHtml}
+                                <td class="matrix-total-col">${grandTotal}回</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function setMemberStatPanel(panelType) {
+            const nextPanel = (activeMemberStatPanel === panelType) ? null : panelType;
+            activeMemberStatPanel = nextPanel;
+
+            const pastCard = document.getElementById('statCardPast');
+            const futureCard = document.getElementById('statCardFuture');
+            const totalCard = document.getElementById('statCardTotal');
+
+            if (pastCard) pastCard.classList.toggle('is-active', nextPanel === 'past');
+            if (futureCard) futureCard.classList.toggle('is-active', nextPanel === 'future');
+            if (totalCard) totalCard.classList.toggle('is-active', nextPanel === 'total');
+
+            const pastDrawer = document.getElementById('drawerPastMatrix');
+            const futureDrawer = document.getElementById('drawerFutureEvents');
+            const totalDrawer = document.getElementById('drawerTotalMatrix');
+
+            if (pastDrawer) pastDrawer.classList.toggle('is-open', nextPanel === 'past');
+            if (futureDrawer) futureDrawer.classList.toggle('is-open', nextPanel === 'future');
+            if (totalDrawer) totalDrawer.classList.toggle('is-open', nextPanel === 'total');
         }
 
         function getColoredBearNameText(displayName, masterGender = "", escapeHtmlFn = null) {
@@ -1394,6 +1573,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
         function openMemberModal(userId, displayName, bearLevel = "") {
             if (!userId) return;
+            activeMemberStatPanel = null;
+
             const masterInfo = userMaster[userId] || {};
             let gender = masterInfo.gender || "";
             if (!gender || gender === "未設定") {
@@ -1446,12 +1627,15 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const todayStr = getTodayStr();
             const tomorrowStr = getTomorrowStr();
 
-            const upcomingEventsHtml = upcomingEvents.length > 0
+            const pastMatrixHtml = buildCategoryMatrixHtml(userId, 'past', escapeHtml);
+            const totalMatrixHtml = buildCategoryMatrixHtml(userId, 'total', escapeHtml);
+
+            const upcomingEventsCardsHtml = upcomingEvents.length > 0
                 ? `<div style="margin-top: 10px;">${upcomingEvents.map(ev => {
                     const card = buildEventCardStyleAndHtml(ev, selectedViewerId, adminMode, todayStr, tomorrowStr);
                     return `<div class="${card.stateClass}" style="border-bottom:2px solid #ccc; padding:12px; margin-bottom:12px; font-size: 18px; border-radius: 8px; position: relative; overflow: hidden; ${card.borderStyle}">${card.innerHtml}</div>`;
                 }).join('')}</div>`
-                : `<p style="color: #64748b; font-size: 16px; margin-top: 8px;">未来の参加予定イベントはありません。</p>`;
+                : `<p style="color: #64748b; font-size: 16px; margin-top: 8px;">参加予定のイベントはありません。</p>`;
 
             const bodyEl = document.getElementById('memberModalBody');
             bodyEl.innerHTML = `
@@ -1465,24 +1649,37 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                 <div style="font-size: 16px; font-weight: bold; color: #334155;">参加回数集計（○[参加]のみ・申請/キャンセル除く）</div>
                 <div class="member-stats-grid">
-                    <div class="member-stat-card member-stat-past">
+                    <div id="statCardPast" role="button" tabindex="0" class="member-stat-card member-stat-past" onclick="setMemberStatPanel('past')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setMemberStatPanel('past');}">
                         <div class="member-stat-label">過去参加回数</div>
                         <div class="member-stat-num">${counts.pastCount}回</div>
+                        <div class="member-stat-hint">タップで年月/種別表</div>
                     </div>
-                    <div class="member-stat-card member-stat-future">
-                        <div class="member-stat-label">未来参加予定</div>
+                    <div id="statCardFuture" role="button" tabindex="0" class="member-stat-card member-stat-future" onclick="setMemberStatPanel('future')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setMemberStatPanel('future');}">
+                        <div class="member-stat-label">参加予定回数</div>
                         <div class="member-stat-num">${counts.futureCount}回</div>
+                        <div class="member-stat-hint">タップで参加予定を表示</div>
                     </div>
-                    <div class="member-stat-card member-stat-total">
+                    <div id="statCardTotal" role="button" tabindex="0" class="member-stat-card member-stat-total" onclick="setMemberStatPanel('total')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setMemberStatPanel('total');}">
                         <div class="member-stat-label">累計参加回数</div>
                         <div class="member-stat-num">${counts.totalCount}回</div>
+                        <div class="member-stat-hint">タップで過去+予定表</div>
                     </div>
                 </div>
 
-                <div style="font-size: 18px; font-weight: bold; color: #0f172a; margin-top: 16px; border-top: 2px solid #e2e8f0; padding-top: 14px;">
-                    未来参加予定イベント（${upcomingEvents.length}件）
+                <div id="drawerPastMatrix" class="mole-drawer">
+                    ${pastMatrixHtml}
                 </div>
-                ${upcomingEventsHtml}
+
+                <div id="drawerTotalMatrix" class="mole-drawer">
+                    ${totalMatrixHtml}
+                </div>
+
+                <div id="drawerFutureEvents" class="mole-drawer">
+                    <div style="font-size: 18px; font-weight: bold; color: #0f172a; margin-top: 12px; border-top: 2px solid #e2e8f0; padding-top: 12px;">
+                        参加予定（${upcomingEvents.length}件）
+                    </div>
+                    ${upcomingEventsCardsHtml}
+                </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px;">
                     <a href="${profileUrl}" target="_blank" rel="noopener noreferrer" class="btn-external-profile">🔗 テニスベア公式プロフィールを開く</a>
@@ -1494,6 +1691,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
         function closeMemberModal() {
             currentModalBearLevelNum = null;
+            activeMemberStatPanel = null;
             document.getElementById('memberModal').style.display = 'none';
         }
         // =========================================================================
@@ -1518,14 +1716,13 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 lvBadgeHtml = `<span class="member-lv-badge lv-badge-9">Lv.${lvNum}</span>`;
             }
 
-
             if (member.userId) {
                 const safeUid = encodeURIComponent(member.userId);
                 const safeName = encodeURIComponent(name);
                 const safeLv = encodeURIComponent(bearLevel);
                 colored = `<span class="member-link-btn" onclick="event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'), decodeURIComponent('${safeLv}'))">${colored}</span>`;
             }
-            
+
             colored = `${colored}${lvBadgeHtml}`;
 
             let adminBadge = "";
@@ -2002,7 +2199,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 23:29:31";
+            const generatedAtStr = "2026-11-24(火) 23:51:00";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
