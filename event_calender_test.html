@@ -552,7 +552,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 15:58:33</div>
+    <div class="footer">更新日時: 2026-11-24(火) 16:05:15</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1080,13 +1080,13 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 level: 6,
                 code: "Lv.6",
                 name: "中上級",
-                desc: "陣形を考えてポジショニングができる。サーブ＆リターン・スマッシュに安定感があり、得意なショットを有する一方で、苦手なコースに配球されても守備的に返球ができる。オープンクラスの草トーナメントや市区町村の大会で安定して1,2勝できる"
+                desc: "陣形を考えてポジショニングができる。サーブ＆リターン・スマッシュに安定感があり、得意なショットを有する一方で、苦手なコースに配球されても守備的に返球ができる。オープンクラスの公式大会(市区町村の大会等)で安定して1,2勝できる"
             },
             {
                 level: 7,
                 code: "Lv.7",
                 name: "上級",
-                desc: "相手次第で戦略を変え、効果的なロブやドロップを含む様々なショットを使いこなすことができる。体育会に4年間所属し、オープンクラスの草トーナメントや市区町村の大会にて上位の戦績、優勝経験がある。"
+                desc: "相手次第で戦略を変え、効果的なロブやドロップを含む様々なショットを使いこなすことができる。体育会に4年間所属し、オープンクラスの公式大会(市区町村の大会等)にて上位の戦績、優勝経験がある。"
             },
             {
                 level: 8,
@@ -1169,7 +1169,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const bodyEl = document.getElementById('bearLevelModalBody');
             bodyEl.innerHTML = `
                 <div style="font-size: 14px; color: #475569; margin-top: 10px;">
-                    ※複数当てはまる場合は、レベルが高い方を基準としています。
+                    ※テニスベア公式のレベル目安を引用
                 </div>
                 <table class="bear-guide-table">
                     <thead>
@@ -1863,7 +1863,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 15:58:33";
+            const generatedAtStr = "2026-11-24(火) 16:05:15";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
