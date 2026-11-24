@@ -306,6 +306,32 @@
             appearance: none;
         }
         .member-link-btn:hover { opacity: 0.75; }
+        
+        
+        /* 参加者名末尾のLvバッジ（添付画像のレベルグラデーション準拠） */
+        .member-lv-badge {
+            display: inline-block;
+            margin-left: 4px;
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-size: 0.78em;
+            font-weight: bold;
+            line-height: 1.25;
+            color: #ffffff;
+            vertical-align: middle;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .lv-badge-1 { background-color: #10d95a; }
+        .lv-badge-2 { background-color: #09c663; }
+        .lv-badge-3 { background-color: #05b368; }
+        .lv-badge-4 { background-color: #069e6a; }
+        .lv-badge-5 { background-color: #09886b; }
+        .lv-badge-6 { background-color: #0d726b; }
+        .lv-badge-7 { background-color: #115b69; }
+        .lv-badge-8 { background-color: #134663; }
+        .lv-badge-9 { background-color: #133359; }
+        
 
         .past-list-item { background-color: #cbd5e1 !important; border: 1px solid #94a3b8 !important; color: #334155 !important; }
         /* 本日：赤、明日：青 */
@@ -496,7 +522,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-24(火) 19:41:52</div>
+    <div class="footer">更新日時: 2026-11-24(火) 19:48:20</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1298,6 +1324,15 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 colored = `<span class="gender-unknown">${name}</span>`;
             }
 
+            const lvNum = extractBearLevelNumber(bearLevel);
+            let lvBadgeHtml = "";
+            if (lvNum !== null && lvNum >= 1 && lvNum <= 9) {
+                lvBadgeHtml = `<span class="member-lv-badge lv-badge-${lvNum}">Lv.${lvNum}</span>`;
+            } else if (lvNum !== null && lvNum > 9) {
+                lvBadgeHtml = `<span class="member-lv-badge lv-badge-9">Lv.${lvNum}</span>`;
+            }
+
+
             if (member.userId) {
                 const safeUid = encodeURIComponent(member.userId);
                 const safeName = encodeURIComponent(name);
@@ -1779,7 +1814,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-24(火) 19:41:52";
+            const generatedAtStr = "2026-11-24(火) 19:48:20";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
