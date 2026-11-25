@@ -283,21 +283,36 @@
             font-weight: bold;
         }
 
-        /* 申込日の3段階強調表示（今日・昨日・一昨日） */
-        .applied-today-item { background-color: #fef2f2; border: 2px solid #dc2626 !important; border-left: 7px solid #dc2626 !important; }
-        .applied-yesterday-item { background-color: #fff7ed; border: 2px solid #ea580c !important; border-left: 7px solid #ea580c !important; }
-        .applied-two-days-ago-item { background-color: #eff6ff; border: 2px solid #2563eb !important; border-left: 7px solid #2563eb !important; }
+        /* 申込時間の3段階強調表示（1h以内・12h以内・24h以内） */
+        .applied-1h-item { background-color: #fef2f2; border: 2px solid #dc2626 !important; border-left: 7px solid #dc2626 !important; }
+        .applied-12h-item { background-color: #fff7ed; border: 2px solid #ea580c !important; border-left: 7px solid #ea580c !important; }
+        .applied-24h-item { background-color: #eff6ff; border: 2px solid #2563eb !important; border-left: 7px solid #2563eb !important; }
 
         .applied-tag { display: inline-block; font-size: 13px; font-weight: bold; padding: 2px 8px; border-radius: 4px; margin-right: 8px; vertical-align: middle; }
-        .applied-tag-today { background-color: #dc2626; color: #ffffff; }
-        .applied-tag-yesterday { background-color: #ea580c; color: #ffffff; }
-        .applied-tag-two-days-ago { background-color: #2563eb; color: #ffffff; }
+        .applied-tag-1h { background-color: #dc2626; color: #ffffff; }
+        .applied-tag-12h { background-color: #ea580c; color: #ffffff; }
+        .applied-tag-24h { background-color: #2563eb; color: #ffffff; }
 
-        .applied-time-today { color: #b91c1c !important; font-weight: bold; }
-        .applied-time-yesterday { color: #c2410c !important; font-weight: bold; }
-        .applied-time-two-days-ago { color: #1d4ed8 !important; font-weight: bold; }
+        .applied-time-1h { color: #b91c1c !important; font-weight: bold; }
+        .applied-time-12h { color: #c2410c !important; font-weight: bold; }
+        .applied-time-24h { color: #1d4ed8 !important; font-weight: bold; }
 
         .btn-history-container { position: relative; display: inline-block; }
+        .history-count-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #dc2626;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.45);
+            line-height: 1.2;
+            pointer-events: none;
+        }
 
         /* イベントジャンプ時の強調ハイライト（9px・常時脈動アニメーション付き） */
         @keyframes highlightPulse {
@@ -492,6 +507,12 @@
         /* スマホでの勝手な文字拡大（フォントインフレーション）防止用 */
         .admin-text-fix { font-size: 14px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
+        /* PayPayリンク状態別スタイル（正常・警告・エラー） */
+        .paypay-status-box { margin-bottom: 12px; color: #166534; background: #dcfce7; padding: 8px 12px; border-radius: 6px; word-break: break-all; border: 1px solid #86efac; }
+        .paypay-status-box.is-warning { color: #854d0e; background: #fef9c3; border: 2px solid #eab308; }
+        .paypay-status-box.is-error { color: #991b1b; background: #fee2e2; border: 2px solid #dc2626; }
+        .paypay-status-alert { display: none; margin-top: 6px; font-weight: bold; font-size: 14px; }
+
         .warning-banner { display: none; background-color: #fef2f2; border: 3px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-size: 22px; font-weight: bold; text-align: center; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2); }
         .btn-link { display: inline-block; font-size: 18px; font-weight: bold; padding: 8px 16px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 6px; margin-right: 10px; margin-bottom: 10px; }
         .btn-link:hover { background-color: #1d4ed8; }
@@ -513,6 +534,7 @@
             <!-- 申込履歴ボタン（管理者モード時のみ表示） -->
             <div id="historyContainer" class="btn-history-container" style="display: none;">
                 <button class="btn-history-open" onclick="openHistoryModal()">📋 申込・キャンセル履歴</button>
+                <span id="history24hBadge" class="history-count-badge" style="display: none;">0</span>
             </div>
         </div>
 
@@ -542,10 +564,11 @@
             <span>👑 管理者モード（定型文コピー機能）</span>
             <span id="adminDisplayTime" class="admin-time">表示日時: --</span>
         </h3>
-        <div class="admin-text-fix" style="margin-bottom: 12px; color: #166534; background: #dcfce7; padding: 8px 12px; border-radius: 6px; word-break: break-all;">
+        <div id="githubPaypayStatusBox" class="admin-text-fix paypay-status-box">
             <span style="font-weight: bold;">📱 GitHub上 PayPayリンク内容:</span> <span id="githubPaypayContent" style="font-family: monospace; font-weight: bold;">取得中...</span><br>
             <span style="font-weight: bold;">🕒 最終更新日時:</span> <span id="githubPaypayLastMod">取得中...</span> 
             <span>(</span> <span id="githubPaypayDiff" style="font-weight: bold;">計算中...</span><span>)</span>
+            <div id="githubPaypayStatusAlert" class="paypay-status-alert"></div>
         </div>
         <div class="admin-btn-group">
             <button class="admin-btn" onclick="copyGeneralText(getMemberRegText('北区'), '北区依頼')">a) 北区依頼</button>
@@ -612,9 +635,9 @@
                 <button onclick="closeHistoryModal()" style="font-size: 18px; padding: 8px 18px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
             </div>
             <div class="history-legend">
-                <span class="applied-tag applied-tag-today" style="margin-right: 0;">今日</span>
-                <span class="applied-tag applied-tag-yesterday" style="margin-right: 0;">昨日</span>
-                <span class="applied-tag applied-tag-two-days-ago" style="margin-right: 0;">一昨日</span>
+                <span class="applied-tag applied-tag-1h" style="margin-right: 0;">1h以内</span>
+                <span class="applied-tag applied-tag-12h" style="margin-right: 0;">12h以内</span>
+                <span class="applied-tag applied-tag-24h" style="margin-right: 0;">24h以内</span>
             </div>
             <div id="historyModalBody"></div>
         </div>
@@ -648,7 +671,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-25(水) 06:45:14</div>
+    <div class="footer">更新日時: 2026-11-25(水) 20:48:04</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -659,6 +682,8 @@
         // --- 定数定義 ---
         const ADMIN_USER_ID = "82476";
         const PAYPAY_ID = "daigo403";
+        const PAYPAY_WARNING_DAYS = 7;
+        const PAYPAY_ERROR_DAYS = 10;
         const PAYPAY_LINK_URL = "https://daigo403.github.io/event-list/paypay_link.txt";
         const PAYPAY_COMMIT_API_URL = "https://api.github.com/repos/daigo403/event-list/commits?path=paypay_link.txt&per_page=1";
         const CIRCLE_INFO_URL = "https://www.tennisbear.net/circle/2461/info";
@@ -751,6 +776,24 @@
 
             if (targetElement) {
                 targetElement.innerText = relativeStr;
+            }
+
+            const statusBoxEl = document.getElementById('githubPaypayStatusBox');
+            const alertEl = document.getElementById('githubPaypayStatusAlert');
+            if (statusBoxEl && alertEl) {
+                statusBoxEl.classList.remove('is-warning', 'is-error');
+                if (diffDay >= PAYPAY_ERROR_DAYS) {
+                    statusBoxEl.classList.add('is-error');
+                    alertEl.style.display = 'block';
+                    alertEl.innerText = `🚨 エラー: PayPayリンクの最終更新から${PAYPAY_ERROR_DAYS}日以上（${diffDay}日）経過しています！至急リンクを更新してください。`;
+                } else if (diffDay >= PAYPAY_WARNING_DAYS) {
+                    statusBoxEl.classList.add('is-warning');
+                    alertEl.style.display = 'block';
+                    alertEl.innerText = `⚠️ 警告: PayPayリンクの最終更新から${PAYPAY_WARNING_DAYS}日以上（${diffDay}日）経過しています。リンクの有効期限をご確認ください。`;
+                } else {
+                    alertEl.style.display = 'none';
+                    alertEl.innerText = '';
+                }
             }
         }
 
@@ -1997,11 +2040,49 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return (daysAgo !== null) ? `（${daysAgo}日前）` : '';
         }
 
-        function getAppliedRecencyLevel(daysAgo) {
-            if (daysAgo === 0) return "today";
-            if (daysAgo === 1) return "yesterday";
-            if (daysAgo === 2) return "two-days-ago";
+        function getAppliedRecencyLevel(parsedDate, nowMs = Date.now()) {
+            if (!parsedDate) return "";
+            const diffMs = nowMs - parsedDate.getTime();
+            if (diffMs < 0) return "";
+            const oneHourMs = 60 * 60 * 1000;
+            if (diffMs <= oneHourMs) return "1h";
+            if (diffMs <= 12 * oneHourMs) return "12h";
+            if (diffMs <= 24 * oneHourMs) return "24h";
             return "";
+        }
+
+        function countHistoriesWithin24Hours() {
+            const nowMs = Date.now();
+            const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+            let count = 0;
+
+            events.forEach(e => {
+                e.members.forEach(m => {
+                    if (['○[参加]', '△[キャンセル待ち]', '▼[申請中]', '×[キャンセル]'].includes(m.status)) {
+                        const parsedDate = parseAppliedDateTime(m.applied_at || "");
+                        if (parsedDate) {
+                            const diffMs = nowMs - parsedDate.getTime();
+                            if (diffMs >= 0 && diffMs <= twentyFourHoursMs) {
+                                count++;
+                            }
+                        }
+                    }
+                });
+            });
+
+            return count;
+        }
+
+        function updateHistoryBadgeCount() {
+            const badgeEl = document.getElementById('history24hBadge');
+            if (!badgeEl) return;
+            const count = countHistoriesWithin24Hours();
+            if (count > 0) {
+                badgeEl.innerText = String(count);
+                badgeEl.style.display = 'inline-block';
+            } else {
+                badgeEl.style.display = 'none';
+            }
         }
 
         function getGenderAvatarClass(memberName) {
@@ -2032,6 +2113,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         function openHistoryModal() {
             const myUserId = document.getElementById('userSelect').value;
             const historyBody = document.getElementById('historyModalBody');
+            const nowMs = Date.now();
 
             let allHistories = [];
 
@@ -2054,7 +2136,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                         const parsedDate = parseAppliedDateTime(appliedAtStr);
                         let sortTime = parsedDate ? parsedDate.getTime() : 0;
 
-                        const daysAgo = getDaysAgoFromAppliedAt(appliedAtStr);
                         const badgeInfo = getActionBadgeInfo(m.status);
 
                         allHistories.push({
@@ -2073,7 +2154,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                             eventTime: e.time,
                             appliedAtStr: appliedAtStr,
                             elapsedSuffix: formatElapsedSuffix(appliedAtStr),
-                            recencyLevel: getAppliedRecencyLevel(daysAgo),
+                            recencyLevel: getAppliedRecencyLevel(parsedDate, nowMs),
                             sortTime: isNaN(sortTime) ? 0 : sortTime
                         });
                     }
@@ -2082,6 +2163,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
             allHistories.sort((a, b) => b.sortTime - a.sortTime);
             currentHistories = allHistories;
+            updateHistoryBadgeCount();
 
             if (allHistories.length === 0) {
                 historyBody.innerHTML = '<p style="text-align: center; color: #64748b; font-size: 18px; padding: 20px;">履歴データがありません。</p>';
@@ -2093,18 +2175,18 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     let badgeHtml = '';
                     let timeClass = 'history-time';
 
-                    if (item.recencyLevel === 'today') {
-                        itemClass += ' applied-today-item';
-                        badgeHtml = '<span class="applied-tag applied-tag-today">今日</span>';
-                        timeClass += ' applied-time-today';
-                    } else if (item.recencyLevel === 'yesterday') {
-                        itemClass += ' applied-yesterday-item';
-                        badgeHtml = '<span class="applied-tag applied-tag-yesterday">昨日</span>';
-                        timeClass += ' applied-time-yesterday';
-                    } else if (item.recencyLevel === 'two-days-ago') {
-                        itemClass += ' applied-two-days-ago-item';
-                        badgeHtml = '<span class="applied-tag applied-tag-two-days-ago">一昨日</span>';
-                        timeClass += ' applied-time-two-days-ago';
+                    if (item.recencyLevel === '1h') {
+                        itemClass += ' applied-1h-item';
+                        badgeHtml = '<span class="applied-tag applied-tag-1h">1h以内</span>';
+                        timeClass += ' applied-time-1h';
+                    } else if (item.recencyLevel === '12h') {
+                        itemClass += ' applied-12h-item';
+                        badgeHtml = '<span class="applied-tag applied-tag-12h">12h以内</span>';
+                        timeClass += ' applied-time-12h';
+                    } else if (item.recencyLevel === '24h') {
+                        itemClass += ' applied-24h-item';
+                        badgeHtml = '<span class="applied-tag applied-tag-24h">24h以内</span>';
+                        timeClass += ' applied-time-24h';
                     }
 
                     const avatarClass = item.avatarGenderClass ? `history-avatar ${item.avatarGenderClass}` : 'history-avatar';
@@ -2293,7 +2375,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-25(水) 06:45:14";
+            const generatedAtStr = "2026-11-25(水) 20:48:04";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
@@ -2316,7 +2398,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             if (isAdminUser()) {
                 adminArea.style.display = 'block';
                 if (noticeLink) noticeLink.style.display = 'inline-block';
-                if (historyContainer) historyContainer.style.display = 'inline-block';
+                if (historyContainer) {
+                    historyContainer.style.display = 'inline-block';
+                    updateHistoryBadgeCount();
+                }
                 if (adminDisplayTime) {
                     adminDisplayTime.innerText = "表示日時: " + getFormattedNow();
                 }
