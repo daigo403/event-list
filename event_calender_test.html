@@ -112,7 +112,7 @@
             background: #f8fafc;
             border: 1px solid #cbd5e1;
             border-radius: 10px;
-            padding: 14px;
+            padding: 12px;
             margin-top: 10px;
             margin-bottom: 14px;
             overflow-x: auto;
@@ -165,7 +165,7 @@
 
         /* 全ユーザー月別参加マトリックスモーダル専用スタイル */
         #allUsersMatrixModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.62); z-index: 2150; }
-        .all-matrix-modal-content { background: white; margin: 3% auto; padding: 0 24px 24px 24px; width: 94%; max-width: 1200px; max-height: 88vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 14px 34px rgba(0,0,0,0.36); }
+        .all-matrix-modal-content { background: white; margin: 3% auto; padding: 0 20px 24px 20px; width: 96%; max-width: 1200px; max-height: 88vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 14px 34px rgba(0,0,0,0.36); }
         .all-matrix-modal-header {
             position: sticky;
             top: 0;
@@ -189,24 +189,40 @@
             margin-bottom: 12px;
         }
         .all-users-matrix-table {
-            width: 100%;
-            min-width: 720px;
+            width: auto;
+            min-width: 100%;
             table-layout: auto;
             border-collapse: collapse;
-            font-size: 15px;
+            font-size: 13px;
             background: #ffffff;
         }
         .all-users-matrix-table th, .all-users-matrix-table td {
             border: 1px solid #cbd5e1;
-            padding: 8px 10px;
+            padding: 5px 4px;
             height: auto;
             vertical-align: middle;
             text-align: center;
             white-space: nowrap;
         }
-        .all-users-matrix-table th {
+        .all-users-matrix-table th.ym-col-th {
             background: #e2e8f0;
             color: #1e293b;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 1.2;
+            padding: 5px 3px;
+            min-width: 42px;
+        }
+        .ym-year-line {
+            display: block;
+            font-size: 11px;
+            color: #475569;
+            font-weight: normal;
+        }
+        .ym-month-line {
+            display: block;
+            font-size: 13px;
+            color: #0f172a;
             font-weight: bold;
         }
         .all-users-matrix-table td:first-child, .all-users-matrix-table th:first-child {
@@ -214,17 +230,21 @@
             font-weight: bold;
             background: #f1f5f9;
             color: #0f172a;
+            padding: 5px 8px;
             position: sticky;
             left: 0;
             z-index: 5;
         }
         .all-users-matrix-table th:first-child {
             z-index: 6;
+            font-size: 14px;
         }
         .all-users-matrix-table td.matrix-total-col, .all-users-matrix-table th.matrix-total-col {
             background: #eef2ff;
             font-weight: bold;
             color: #1e1b4b;
+            padding: 5px 6px;
+            min-width: 46px;
         }
         .all-users-matrix-table tr.all-users-sum-row td {
             background: #f8fafc;
@@ -768,7 +788,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-25(水) 21:46:24</div>
+    <div class="footer">更新日時: 2026-11-25(水) 21:56:36</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1532,8 +1552,18 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return `${parseInt(parts[0], 10)}年${parseInt(parts[1], 10)}月`;
         }
 
+        function formatYmTwoLineHeader(ym) {
+            const parts = String(ym || "").split('-');
+            if (parts.length !== 2) {
+                return `<span class="ym-month-line">${ym}</span>`;
+            }
+            const yStr = `${parseInt(parts[0], 10)}年`;
+            const mStr = `${parseInt(parts[1], 10)}月`;
+            return `<span class="ym-year-line">${yStr}</span><span class="ym-month-line">${mStr}</span>`;
+        }
+
         // =========================================================================
-        // 📊 全ユーザー月別参加マトリックス（全期間固定・加入年月日順・管理者専用）
+        // 📊 全ユーザー月別参加マトリックス（全期間固定・加入年月日順・最新月左・2段ヘッダー）
         // =========================================================================
         function buildAllUsersMonthlyMatrixHtml(escapeHtmlFn) {
             const seenEvents = new Set();
@@ -1568,7 +1598,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             });
 
             const startYm = "2026-07";
-            const months = maxYm >= startYm ? buildYearMonthRange(startYm, maxYm) : [startYm];
+            const monthsAsc = maxYm >= startYm ? buildYearMonthRange(startYm, maxYm) : [startYm];
+            // 最新年月が一番左にくるよう降順に並べる
+            const months = [...monthsAsc].reverse();
 
             const masterEntries = Object.entries(userMaster || {}).map(([uid, info], idx) => {
                 const displayName = findLatestMemberName(uid);
@@ -1582,7 +1614,6 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     displayName,
                     realName,
                     gender,
-                    joinDateStr,
                     joinDateMs: parsedJoinDate ? parsedJoinDate.getTime() : Number.MAX_SAFE_INTEGER,
                     hasValidJoinDate: parsedJoinDate !== null,
                     order
@@ -1617,18 +1648,15 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 const safeUid = encodeURIComponent(u.userId);
                 const safeName = encodeURIComponent(u.displayName);
                 const coloredUserHtml = getColoredBearNameText(u.displayName, u.gender, escapeHtmlFn);
-                const userIdSub = ` <span style="font-size: 12px; color: #475569; font-weight: normal;">(ID: ${escapeHtmlFn(u.userId)})</span>`;
-                const realNameSub = u.realName ? ` <span style="font-size: 12px; color: #64748b; font-weight: normal;">(${escapeHtmlFn(u.realName)})</span>` : "";
-                const joinDateSub = (u.joinDateStr && u.joinDateStr !== "未登録")
-                    ? ` <span style="font-size: 12px; color: #0f766e; font-weight: normal;">[加入: ${escapeHtmlFn(u.joinDateStr)}]</span>`
-                    : ` <span style="font-size: 12px; color: #94a3b8; font-weight: normal;">[加入: 未登録]</span>`;
-                const adminTag = (u.userId === ADMIN_USER_ID) ? `<span class="admin-badge" style="font-size: 11px; padding: 1px 5px; margin-right: 4px;">管理者</span>` : "";
+                const userIdSub = ` <span style="font-size: 11px; color: #475569; font-weight: normal;">(ID:${escapeHtmlFn(u.userId)})</span>`;
+                const realNameSub = u.realName ? ` <span style="font-size: 11px; color: #64748b; font-weight: normal;">(${escapeHtmlFn(u.realName)})</span>` : "";
+                const adminTag = (u.userId === ADMIN_USER_ID) ? `<span class="admin-badge" style="font-size: 10px; padding: 1px 4px; margin-right: 3px;">管理者</span>` : "";
                 const totalCls = rowTotal > 0 ? "matrix-nonzero" : "matrix-zero";
 
                 return `
                     <tr>
                         <td>
-                            ${adminTag}<span class="member-link-btn" onclick="event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'))">${coloredUserHtml}</span>${userIdSub}${realNameSub}${joinDateSub}
+                            ${adminTag}<span class="member-link-btn" onclick="event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'))">${coloredUserHtml}</span>${userIdSub}${realNameSub}
                         </td>
                         ${cellsHtml}
                         <td class="matrix-total-col ${totalCls}">${rowTotal}回</td>
@@ -1641,17 +1669,17 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 return `<td class="${cls}">${tot}回</td>`;
             }).join('');
 
-            const headerMonthsHtml = months.map(ym => `<th>${escapeHtmlFn(formatYmLabel(ym))}</th>`).join('');
+            const headerMonthsHtml = months.map(ym => `<th class="ym-col-th">${formatYmTwoLineHeader(ym)}</th>`).join('');
 
             return `
                 <div class="all-matrix-controls">
-                    <span style="font-size: 14px; color: #475569;">集計対象: 全期間（過去＋参加予定・○[参加]のみ／加入年月日順） ／ 登録ユーザー数: ${masterEntries.length}名</span>
+                    <span style="font-size: 14px; color: #475569;">集計対象: 全期間（過去＋参加予定・○[参加]のみ／加入年月日順・最新月左） ／ 登録ユーザー数: ${masterEntries.length}名</span>
                 </div>
                 <div class="matrix-box" style="margin-top: 0;">
                     <table class="all-users-matrix-table">
                         <thead>
                             <tr>
-                                <th>ユーザー（加入年月日順）</th>
+                                <th>ユーザー</th>
                                 ${headerMonthsHtml}
                                 <th class="matrix-total-col">累計</th>
                             </tr>
@@ -2667,7 +2695,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-25(水) 21:46:24";
+            const generatedAtStr = "2026-11-25(水) 21:56:36";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
