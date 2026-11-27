@@ -285,7 +285,7 @@
         }
         .all-users-matrix-table td.user-col-td {
             z-index: 5;
-            line-height: 1.35;
+            line-height: 1.3;
         }
         .user-col-sub {
             font-size: 11px;
@@ -889,7 +889,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-27(金) 16:41:31</div>
+    <div class="footer">更新日時: 2026-11-27(金) 17:19:38</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -1677,7 +1677,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         }
 
         // =========================================================================
-        // 📊 全ユーザー月別参加マトリックス（氏名・UID・加入経過年数表示＆ソート機能）
+        // 📊 全ユーザー月別参加マトリックス（2行コンパクト表示＆ソート機能）
         // =========================================================================
         function setAllMatrixSortKey(newKey) {
             if (allMatrixSortKey === newKey) {
@@ -1870,9 +1870,9 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     ? `<span class="admin-badge" style="font-size: 10px; padding: 1px 4px; margin-right: 3px;">管理者</span>`
                     : "";
                 const realNameText = (u.realName && u.realName !== "未設定") ? u.realName : "未設定";
-                const joinElapsedText = u.elapsedLabel
-                    ? `${u.joinDateStr}（経過${u.elapsedLabel}）`
-                    : (u.joinDateStr || "未登録");
+                const subLineText = u.elapsedLabel
+                    ? `${realNameText}（${u.elapsedLabel}）`
+                    : realNameText;
                 const totalCls = u.rowTotal > 0 ? "matrix-nonzero" : "matrix-zero";
 
                 return `
@@ -1881,8 +1881,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                             <div>
                                 ${adminTag}<span class="member-link-btn" onclick="event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'), decodeURIComponent('${safeLv}'))">${coloredUserHtml}</span>${lvBadgeHtml}
                             </div>
-                            <div class="user-col-sub">氏名: ${escapeHtmlFn(realNameText)} ／ UID: ${escapeHtmlFn(u.userId)}</div>
-                            <div class="user-col-sub">加入: ${escapeHtmlFn(joinElapsedText)}</div>
+                            <div class="user-col-sub">${escapeHtmlFn(subLineText)}</div>
                         </td>
                         ${cellsHtml}
                         <td class="matrix-total-col ${totalCls}">${u.rowTotal}回</td>
@@ -1925,7 +1924,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     <table class="all-users-matrix-table">
                         <thead>
                             <tr>
-                                <th class="user-col-th" rowspan="2">ユーザー（表示名・氏名・UID・加入）</th>
+                                <th class="user-col-th" rowspan="2">ユーザー（表示名・氏名・経過）</th>
                                 ${headerYearsHtml}
                                 <th class="matrix-total-col" rowspan="2">累計</th>
                             </tr>
@@ -2978,7 +2977,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-27(金) 16:41:31";
+            const generatedAtStr = "2026-11-27(金) 17:19:38";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
