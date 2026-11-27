@@ -199,9 +199,23 @@
             gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .all-matrix-sort-select, .all-matrix-sort-btn {
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #94a3b8;
+            background: #ffffff;
+            color: #0f172a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .all-matrix-sort-btn:hover {
+            background: #e2e8f0;
         }
         .all-matrix-scroll-box {
-            max-height: calc(88vh - 150px);
+            max-height: calc(88vh - 165px);
             overflow: auto;
             padding-top: 0;
         }
@@ -218,7 +232,7 @@
         .all-users-matrix-table th, .all-users-matrix-table td {
             border-right: 1px solid #cbd5e1;
             border-bottom: 1px solid #cbd5e1;
-            padding: 5px 5px;
+            padding: 5px 6px;
             height: auto;
             vertical-align: middle;
             text-align: center;
@@ -259,7 +273,7 @@
             font-weight: bold;
             background: #f1f5f9;
             color: #0f172a;
-            padding: 5px 7px;
+            padding: 5px 8px;
             position: sticky;
             left: 0;
         }
@@ -271,6 +285,13 @@
         }
         .all-users-matrix-table td.user-col-td {
             z-index: 5;
+            line-height: 1.3;
+        }
+        .user-col-sub {
+            font-size: 11px;
+            font-weight: normal;
+            color: #475569;
+            margin-top: 2px;
         }
         .all-users-matrix-table td.matrix-total-col, .all-users-matrix-table th.matrix-total-col {
             background: #eef2ff;
@@ -359,6 +380,38 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
         }
 
+        /* 常時表示の最新申込履歴サマリー */
+        .latest-history-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #1e293b;
+            max-width: 100%;
+        }
+        .latest-history-label {
+            font-weight: bold;
+            color: #6d28d9;
+            white-space: nowrap;
+        }
+        .latest-history-elapsed {
+            font-weight: bold;
+            color: #b91c1c;
+            white-space: nowrap;
+        }
+        .latest-history-summary {
+            color: #334155;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 420px;
+        }
+
         /* 申込履歴モーダル専用スタイル */
         #historyModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1500; }
         .history-modal-content { background: white; margin: 5% auto; padding: 25px; width: 85%; max-width: 750px; max-height: 85vh; overflow-y: auto; border-radius: 12px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
@@ -432,7 +485,7 @@
             font-weight: bold;
         }
 
-        /* 申込時間の3段階強調表示（1h以内・12h以内・24h以内） */
+        /* 申込時間の3段階強調表示 */
         .applied-1h-item { background-color: #fef2f2; border: 2px solid #dc2626 !important; border-left: 7px solid #dc2626 !important; }
         .applied-12h-item { background-color: #fff7ed; border: 2px solid #ea580c !important; border-left: 7px solid #ea580c !important; }
         .applied-24h-item { background-color: #eff6ff; border: 2px solid #2563eb !important; border-left: 7px solid #2563eb !important; }
@@ -446,7 +499,8 @@
         .applied-time-12h { color: #c2410c !important; font-weight: bold; }
         .applied-time-24h { color: #1d4ed8 !important; font-weight: bold; }
 
-        .btn-history-container { position: relative; display: inline-block; }
+        .btn-history-container { position: relative; display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .history-btn-wrapper { position: relative; display: inline-block; }
         .history-count-badge {
             position: absolute;
             top: -10px;
@@ -680,10 +734,17 @@
                 <a href="https://www.tennisbear.net/circle/2461/events" target="_blank" class="btn-link">🎾 テニスベア練習会一覧</a>
                 <a href="https://www.tennisbear.net/my-page/notice" target="_blank" id="noticeLink" class="btn-link" style="background-color: #d97706; display: none;">🔔 お知らせページ (管理者)</a>
             </div>
-            <!-- 申込履歴ボタン（管理者モード時のみ表示） -->
+            <!-- 申込履歴ボタン＆最新履歴常時表示（管理者モード時のみ表示） -->
             <div id="historyContainer" class="btn-history-container" style="display: none;">
-                <button class="btn-history-open" onclick="openHistoryModal()">📋 申込・キャンセル履歴</button>
-                <span id="history24hBadge" class="history-count-badge" style="display: none;">0</span>
+                <div id="latestHistoryAlwaysBar" class="latest-history-bar" title="最新の申込・キャンセル履歴">
+                    <span class="latest-history-label">🕒 最新申込:</span>
+                    <span id="latestHistoryElapsed" class="latest-history-elapsed">計算中...</span>
+                    <span id="latestHistorySummary" class="latest-history-summary"></span>
+                </div>
+                <div class="history-btn-wrapper">
+                    <button class="btn-history-open" onclick="openHistoryModal()">📋 申込・キャンセル履歴</button>
+                    <span id="historyBadge" class="history-count-badge" style="display: none;">0</span>
+                </div>
             </div>
         </div>
 
@@ -795,11 +856,7 @@
                 <h2 style="margin: 0; font-size: 24px; color: #1e293b;">📋 申込・キャンセル履歴</h2>
                 <button onclick="closeHistoryModal()" style="font-size: 18px; padding: 8px 18px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">✕ 閉じる</button>
             </div>
-            <div class="history-legend">
-                <span class="applied-tag applied-tag-1h" style="margin-right: 0;">1h以内</span>
-                <span class="applied-tag applied-tag-12h" style="margin-right: 0;">12h以内</span>
-                <span class="applied-tag applied-tag-24h" style="margin-right: 0;">24h以内</span>
-            </div>
+            <div id="historyLegend" class="history-legend"></div>
             <div id="historyModalBody"></div>
         </div>
     </div>
@@ -832,7 +889,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-27(金) 17:07:16</div>
+    <div class="footer">更新日時: 2026-11-27(金) 20:23:33</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -845,6 +902,10 @@
         const PAYPAY_ID = "daigo403";
         const PAYPAY_WARNING_DAYS = 7;
         const PAYPAY_ERROR_DAYS = 10;
+        const HISTORY_BADGE_HOURS = 1;
+        const HISTORY_RECENCY_1H_HOURS = 1;
+        const HISTORY_RECENCY_12H_HOURS = 12;
+        const HISTORY_RECENCY_24H_HOURS = 24;
         const PAYPAY_LINK_URL = "https://daigo403.github.io/event-list/paypay_link.txt";
         const PAYPAY_COMMIT_API_URL = "https://api.github.com/repos/daigo403/event-list/commits?path=paypay_link.txt&per_page=1";
         const CIRCLE_INFO_URL = "https://www.tennisbear.net/circle/2461/info";
@@ -860,6 +921,10 @@
         const realNow = new Date();
         let currentYear = realNow.getFullYear();
         let currentMonth = realNow.getMonth() + 1;
+
+        // 全ユーザーマトリックスのソート状態（デフォルト：加入年月日 昇順）
+        let allMatrixSortKey = "joinDate"; // "joinDate" | "userId" | "bearName" | "realName" | "totalCount" | "level"
+        let allMatrixSortOrder = "asc"; // "asc" | "desc"
 
         // =========================================================================
         // GitHubから paypay_link.txt の中身と最終更新日時を動的取得し、送金ボタンのリンクも更新
@@ -1448,26 +1513,34 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return dt;
         }
 
-        function formatJoinDateWithElapsed(dateStr) {
-            if (!dateStr || dateStr === "未登録") return dateStr || "未登録";
+        function getElapsedMonthsFromJoinDate(dateStr) {
             const parsed = parseJoinDate(dateStr);
-            if (!parsed) return dateStr;
-
+            if (!parsed) return null;
             const now = new Date();
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            if (parsed > today) return dateStr;
-
+            if (parsed > today) return 0;
             let totalMonths = (today.getFullYear() - parsed.getFullYear()) * 12 + (today.getMonth() - parsed.getMonth());
             if (today.getDate() < parsed.getDate()) {
                 totalMonths -= 1;
             }
-            if (totalMonths < 0) totalMonths = 0;
+            return Math.max(0, totalMonths);
+        }
 
+        function formatElapsedYearsLabel(dateStr) {
+            const totalMonths = getElapsedMonthsFromJoinDate(dateStr);
+            if (totalMonths === null) return "";
             if (totalMonths < 12) {
-                return `${dateStr}（${totalMonths}か月）`;
+                return `${totalMonths}か月`;
             }
             const years = Math.floor(totalMonths / 12);
-            return `${dateStr}（${years}年）`;
+            return `${years}年`;
+        }
+
+        function formatJoinDateWithElapsed(dateStr) {
+            if (!dateStr || dateStr === "未登録") return dateStr || "未登録";
+            const elapsedLabel = formatElapsedYearsLabel(dateStr);
+            if (!elapsedLabel) return dateStr;
+            return `${dateStr}（${elapsedLabel}）`;
         }
 
         function findLatestBearLevel(userId, fallbackLevel = "") {
@@ -1604,8 +1677,83 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
         }
 
         // =========================================================================
-        // 📊 全ユーザー月別参加マトリックス（全期間固定・加入年月日順・最新月左・年結合・2段ヘッダー固定）
+        // 📊 全ユーザー月別参加マトリックス（2行コンパクト表示＆ソート機能）
         // =========================================================================
+        function setAllMatrixSortKey(newKey) {
+            if (allMatrixSortKey === newKey) {
+                allMatrixSortOrder = (allMatrixSortOrder === "asc") ? "desc" : "asc";
+            } else {
+                allMatrixSortKey = newKey;
+                allMatrixSortOrder = (newKey === "totalCount" || newKey === "level") ? "desc" : "asc";
+            }
+            renderAllUsersMatrixModal();
+        }
+
+        function toggleAllMatrixSortOrder() {
+            allMatrixSortOrder = (allMatrixSortOrder === "asc") ? "desc" : "asc";
+            renderAllUsersMatrixModal();
+        }
+
+        function compareUserEntriesForMatrix(a, b, key, order) {
+            const dir = (order === "desc") ? -1 : 1;
+
+            if (key === "joinDate") {
+                if (a.hasValidJoinDate !== b.hasValidJoinDate) {
+                    return a.hasValidJoinDate ? -1 : 1;
+                }
+                if (a.joinDateMs !== b.joinDateMs) {
+                    return (a.joinDateMs - b.joinDateMs) * dir;
+                }
+                return a.order - b.order;
+            }
+
+            if (key === "userId") {
+                const aNum = Number(a.userId);
+                const bNum = Number(b.userId);
+                if (!isNaN(aNum) && !isNaN(bNum) && String(aNum) === a.userId && String(bNum) === b.userId) {
+                    if (aNum !== bNum) return (aNum - bNum) * dir;
+                } else {
+                    const cmp = String(a.userId || "").localeCompare(String(b.userId || ""), "ja");
+                    if (cmp !== 0) return cmp * dir;
+                }
+                return a.order - b.order;
+            }
+
+            if (key === "bearName") {
+                const cmp = String(a.displayName || "").localeCompare(String(b.displayName || ""), "ja");
+                if (cmp !== 0) return cmp * dir;
+                return a.order - b.order;
+            }
+
+            if (key === "realName") {
+                const aUnset = (!a.realName || a.realName === "未設定") ? 1 : 0;
+                const bUnset = (!b.realName || b.realName === "未設定") ? 1 : 0;
+                if (aUnset !== bUnset) return aUnset - bUnset;
+                const cmp = String(a.realName || "").localeCompare(String(b.realName || ""), "ja");
+                if (cmp !== 0) return cmp * dir;
+                return a.order - b.order;
+            }
+
+            if (key === "totalCount") {
+                if (a.rowTotal !== b.rowTotal) {
+                    return (a.rowTotal - b.rowTotal) * dir;
+                }
+                return a.order - b.order;
+            }
+
+            if (key === "level") {
+                const aHasLv = a.levelNum !== null ? 1 : 0;
+                const bHasLv = b.levelNum !== null ? 1 : 0;
+                if (aHasLv !== bHasLv) return bHasLv - aHasLv;
+                if (a.levelNum !== b.levelNum) {
+                    return ((a.levelNum || 0) - (b.levelNum || 0)) * dir;
+                }
+                return a.order - b.order;
+            }
+
+            return a.order - b.order;
+        }
+
         function buildAllUsersMonthlyMatrixHtml(escapeHtmlFn) {
             const seenEvents = new Set();
             const sourceList = Array.isArray(allEvents) && allEvents.length > 0 ? allEvents : events;
@@ -1670,45 +1818,48 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const masterEntries = Object.entries(userMaster || {}).map(([uid, info], idx) => {
                 const displayName = findLatestMemberName(uid);
                 const bearLevel = findLatestBearLevel(uid);
+                const levelNum = extractBearLevelNumber(bearLevel);
                 const gender = (info && info.gender) ? info.gender : "";
-                const joinDateStr = (info && info.joinDate) ? info.joinDate : "";
+                const realName = (info && info.realName) ? info.realName : "未設定";
+                const joinDateStr = (info && info.joinDate) ? info.joinDate : "未登録";
                 const parsedJoinDate = parseJoinDate(joinDateStr);
+                const elapsedLabel = formatElapsedYearsLabel(joinDateStr);
                 const order = (info && typeof info.order === "number") ? info.order : idx;
+
+                let rowTotal = 0;
+                months.forEach(ym => {
+                    rowTotal += (countsByUserYm.get(`${uid}|${ym}`) || 0);
+                });
+
                 return {
                     userId: uid,
                     displayName,
+                    realName,
                     bearLevel,
+                    levelNum,
                     gender,
+                    joinDateStr,
+                    elapsedLabel,
                     joinDateMs: parsedJoinDate ? parsedJoinDate.getTime() : Number.MAX_SAFE_INTEGER,
                     hasValidJoinDate: parsedJoinDate !== null,
+                    rowTotal,
                     order
                 };
             });
 
-            // 加入年月日順（未登録・日付不正は末尾、同日はCSV順）
-            masterEntries.sort((a, b) => {
-                if (a.hasValidJoinDate !== b.hasValidJoinDate) {
-                    return a.hasValidJoinDate ? -1 : 1;
-                }
-                if (a.joinDateMs !== b.joinDateMs) {
-                    return a.joinDateMs - b.joinDateMs;
-                }
-                return a.order - b.order;
-            });
+            masterEntries.sort((a, b) => compareUserEntriesForMatrix(a, b, allMatrixSortKey, allMatrixSortOrder));
 
             const colTotals = new Array(months.length).fill(0);
             let grandTotal = 0;
 
             const bodyRowsHtml = masterEntries.map(u => {
-                let rowTotal = 0;
                 const cellsHtml = months.map((ym, idx) => {
                     const c = countsByUserYm.get(`${u.userId}|${ym}`) || 0;
-                    rowTotal += c;
                     colTotals[idx] += c;
                     const cls = c > 0 ? "matrix-nonzero" : "matrix-zero";
                     return `<td class="${cls}">${c}回</td>`;
                 }).join('');
-                grandTotal += rowTotal;
+                grandTotal += u.rowTotal;
 
                 const safeUid = encodeURIComponent(u.userId);
                 const safeName = encodeURIComponent(u.displayName);
@@ -1718,15 +1869,22 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 const adminTag = (u.userId === ADMIN_USER_ID)
                     ? `<span class="admin-badge" style="font-size: 10px; padding: 1px 4px; margin-right: 3px;">管理者</span>`
                     : "";
-                const totalCls = rowTotal > 0 ? "matrix-nonzero" : "matrix-zero";
+                const realNameText = (u.realName && u.realName !== "未設定") ? u.realName : "未設定";
+                const subLineText = u.elapsedLabel
+                    ? `${realNameText}（${u.elapsedLabel}）`
+                    : realNameText;
+                const totalCls = u.rowTotal > 0 ? "matrix-nonzero" : "matrix-zero";
 
                 return `
                     <tr>
                         <td class="user-col-td">
-                            ${adminTag}<span class="member-link-btn" onclick="event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'), decodeURIComponent('${safeLv}'))">${coloredUserHtml}</span>${lvBadgeHtml}
+                            <div>
+                                ${adminTag}<span class="member-link-btn" onclick="event.stopPropagation(); openMemberModal(decodeURIComponent('${safeUid}'), decodeURIComponent('${safeName}'), decodeURIComponent('${safeLv}'))">${coloredUserHtml}</span>${lvBadgeHtml}
+                            </div>
+                            <div class="user-col-sub">${escapeHtmlFn(subLineText)}</div>
                         </td>
                         ${cellsHtml}
-                        <td class="matrix-total-col ${totalCls}">${rowTotal}回</td>
+                        <td class="matrix-total-col ${totalCls}">${u.rowTotal}回</td>
                     </tr>
                 `;
             }).join('');
@@ -1736,15 +1894,37 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 return `<td class="${cls}">${tot}回</td>`;
             }).join('');
 
+            const sortLabels = {
+                joinDate: "加入年月日",
+                userId: "UID",
+                bearName: "表示名",
+                realName: "氏名",
+                totalCount: "累計参加回数",
+                level: "LV"
+            };
+            const orderLabel = allMatrixSortOrder === "asc" ? "昇順 ▲" : "降順 ▼";
+
             return `
                 <div class="all-matrix-controls">
-                    <span style="font-size: 13px; color: #475569;">○[参加]のみ ／ 加入年月日順 ／ 最新月左（${masterEntries.length}名）</span>
+                    <label style="font-weight: bold; color: #0f172a;">
+                        並び替え:
+                        <select class="all-matrix-sort-select" onchange="setAllMatrixSortKey(this.value)">
+                            <option value="joinDate" ${allMatrixSortKey === "joinDate" ? "selected" : ""}>加入年月日</option>
+                            <option value="userId" ${allMatrixSortKey === "userId" ? "selected" : ""}>UID</option>
+                            <option value="bearName" ${allMatrixSortKey === "bearName" ? "selected" : ""}>表示名</option>
+                            <option value="realName" ${allMatrixSortKey === "realName" ? "selected" : ""}>氏名</option>
+                            <option value="totalCount" ${allMatrixSortKey === "totalCount" ? "selected" : ""}>累計参加回数</option>
+                            <option value="level" ${allMatrixSortKey === "level" ? "selected" : ""}>LV</option>
+                        </select>
+                    </label>
+                    <button type="button" class="all-matrix-sort-btn" onclick="toggleAllMatrixSortOrder()">${escapeHtmlFn(orderLabel)}</button>
+                    <span style="font-size: 13px; color: #475569;">○[参加]のみ ／ ${escapeHtmlFn(sortLabels[allMatrixSortKey] || "加入年月日")}（${escapeHtmlFn(allMatrixSortOrder === "asc" ? "昇順" : "降順")}） ／ 最新月左（${masterEntries.length}名）</span>
                 </div>
                 <div class="matrix-box all-matrix-scroll-box" style="margin-top: 0; padding: 0;">
                     <table class="all-users-matrix-table">
                         <thead>
                             <tr>
-                                <th class="user-col-th" rowspan="2">ユーザー</th>
+                                <th class="user-col-th" rowspan="2">ユーザー（表示名・氏名・経過）</th>
                                 ${headerYearsHtml}
                                 <th class="matrix-total-col" rowspan="2">累計</th>
                             </tr>
@@ -1783,6 +1963,8 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 alert("この機能は管理者のみ利用できます。");
                 return;
             }
+            allMatrixSortKey = "joinDate";
+            allMatrixSortOrder = "asc";
             renderAllUsersMatrixModal();
             const modalEl = document.getElementById('allUsersMatrixModal');
             const contentEl = modalEl ? modalEl.querySelector('.all-matrix-modal-content') : null;
@@ -2397,23 +2579,28 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             return diffDays >= 0 ? diffDays : null;
         }
 
-        function formatElapsedSuffix(appliedAtStr) {
+        function formatElapsedLabel(appliedAtStr, nowMs = Date.now()) {
             const parsedDate = parseAppliedDateTime(appliedAtStr);
             if (parsedDate) {
-                const diffMs = Date.now() - parsedDate.getTime();
+                const diffMs = nowMs - parsedDate.getTime();
                 if (diffMs >= 0) {
                     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                     if (diffHours < 24) {
                         if (diffHours >= 1) {
-                            return `（${diffHours}時間前）`;
+                            return `${diffHours}時間前`;
                         }
                         const diffMins = Math.floor(diffMs / (1000 * 60));
-                        return diffMins >= 1 ? `（${diffMins}分前）` : `（たった今）`;
+                        return diffMins >= 1 ? `${diffMins}分前` : `たった今`;
                     }
                 }
             }
             const daysAgo = getDaysAgoFromAppliedAt(appliedAtStr);
-            return (daysAgo !== null) ? `（${daysAgo}日前）` : '';
+            return (daysAgo !== null) ? `${daysAgo}日前` : '';
+        }
+
+        function formatElapsedSuffix(appliedAtStr) {
+            const label = formatElapsedLabel(appliedAtStr);
+            return label ? `（${label}）` : '';
         }
 
         function getAppliedRecencyLevel(parsedDate, nowMs = Date.now()) {
@@ -2421,44 +2608,122 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const diffMs = nowMs - parsedDate.getTime();
             if (diffMs < 0) return "";
             const oneHourMs = 60 * 60 * 1000;
-            if (diffMs <= oneHourMs) return "1h";
-            if (diffMs <= 12 * oneHourMs) return "12h";
-            if (diffMs <= 24 * oneHourMs) return "24h";
+            if (diffMs <= HISTORY_RECENCY_1H_HOURS * oneHourMs) return "1h";
+            if (diffMs <= HISTORY_RECENCY_12H_HOURS * oneHourMs) return "12h";
+            if (diffMs <= HISTORY_RECENCY_24H_HOURS * oneHourMs) return "24h";
             return "";
         }
 
-        function countHistoriesWithin24Hours() {
-            const nowMs = Date.now();
-            const twentyFourHoursMs = 24 * 60 * 60 * 1000;
-            let count = 0;
-
+        function collectSortedHistories(nowMs = Date.now()) {
+            const list = [];
             events.forEach(e => {
                 e.members.forEach(m => {
                     if (['○[参加]', '△[キャンセル待ち]', '▼[申請中]', '×[キャンセル]'].includes(m.status)) {
-                        const parsedDate = parseAppliedDateTime(m.applied_at || "");
-                        if (parsedDate) {
-                            const diffMs = nowMs - parsedDate.getTime();
-                            if (diffMs >= 0 && diffMs <= twentyFourHoursMs) {
-                                count++;
-                            }
+                        let actionText = "に、参加申込しました✋";
+                        if (m.status === '△[キャンセル待ち]') {
+                            actionText = "のキャンセル待ちに登録しました⏳";
+                        } else if (m.status === '▼[申請中]') {
+                            actionText = "に申請中です📝";
+                        } else if (m.status === '×[キャンセル]') {
+                            actionText = "をキャンセルしました❌";
                         }
+
+                        let cleanName = m.name.replace(/\[[fm]\]/g, '').trim();
+                        let initial = cleanName.slice(0, 2) || '🎾';
+
+                        let appliedAtStr = m.applied_at || "";
+                        const parsedDate = parseAppliedDateTime(appliedAtStr);
+                        let sortTime = parsedDate ? parsedDate.getTime() : 0;
+
+                        const badgeInfo = getActionBadgeInfo(m.status);
+
+                        list.push({
+                            name: m.name,
+                            cleanName: cleanName,
+                            initial: initial,
+                            avatarGenderClass: getGenderAvatarClass(m.name),
+                            actionBadgeLabel: badgeInfo.label,
+                            actionBadgeClass: badgeInfo.cls,
+                            userId: m.userId,
+                            bearLevel: m.bear_level || "",
+                            status: m.status,
+                            actionText: actionText,
+                            eventTitle: e.title,
+                            eventDate: e.date,
+                            eventDateStr: e.date_str,
+                            eventTime: e.time,
+                            appliedAtStr: appliedAtStr,
+                            elapsedLabel: formatElapsedLabel(appliedAtStr, nowMs),
+                            elapsedSuffix: formatElapsedSuffix(appliedAtStr),
+                            recencyLevel: getAppliedRecencyLevel(parsedDate, nowMs),
+                            sortTime: isNaN(sortTime) ? 0 : sortTime
+                        });
                     }
                 });
+            });
+            list.sort((a, b) => b.sortTime - a.sortTime);
+            return list;
+        }
+
+        function countHistoriesWithinBadgeHours(histories = null) {
+            const nowMs = Date.now();
+            const badgeThresholdMs = HISTORY_BADGE_HOURS * 60 * 60 * 1000;
+            const source = Array.isArray(histories) ? histories : collectSortedHistories(nowMs);
+            let count = 0;
+
+            source.forEach(item => {
+                const parsedDate = parseAppliedDateTime(item.appliedAtStr || "");
+                if (parsedDate) {
+                    const diffMs = nowMs - parsedDate.getTime();
+                    if (diffMs >= 0 && diffMs <= badgeThresholdMs) {
+                        count++;
+                    }
+                }
             });
 
             return count;
         }
 
-        function updateHistoryBadgeCount() {
-            const badgeEl = document.getElementById('history24hBadge');
+        function updateLatestHistoryAlwaysDisplay(histories = null) {
+            const elapsedEl = document.getElementById('latestHistoryElapsed');
+            const summaryEl = document.getElementById('latestHistorySummary');
+            if (!elapsedEl || !summaryEl) return;
+
+            const list = Array.isArray(histories) ? histories : collectSortedHistories();
+            if (!list || list.length === 0) {
+                elapsedEl.innerText = "履歴なし";
+                summaryEl.innerText = "";
+                return;
+            }
+
+            const latest = list[0];
+            elapsedEl.innerText = latest.elapsedLabel || (latest.appliedAtStr || "-");
+            summaryEl.innerText = `${latest.cleanName || latest.name}（${latest.actionBadgeLabel}：${latest.eventDateStr} ${latest.eventTime}）`;
+        }
+
+        function updateHistoryBadgeCount(histories = null) {
+            const list = Array.isArray(histories) ? histories : collectSortedHistories();
+            updateLatestHistoryAlwaysDisplay(list);
+
+            const badgeEl = document.getElementById('historyBadge');
             if (!badgeEl) return;
-            const count = countHistoriesWithin24Hours();
+            const count = countHistoriesWithinBadgeHours(list);
             if (count > 0) {
                 badgeEl.innerText = String(count);
                 badgeEl.style.display = 'inline-block';
             } else {
                 badgeEl.style.display = 'none';
             }
+        }
+
+        function renderHistoryLegend() {
+            const legendEl = document.getElementById('historyLegend');
+            if (!legendEl) return;
+            legendEl.innerHTML = `
+                <span class="applied-tag applied-tag-1h" style="margin-right: 0;">${HISTORY_RECENCY_1H_HOURS}h以内</span>
+                <span class="applied-tag applied-tag-12h" style="margin-right: 0;">${HISTORY_RECENCY_12H_HOURS}h以内</span>
+                <span class="applied-tag applied-tag-24h" style="margin-right: 0;">${HISTORY_RECENCY_24H_HOURS}h以内</span>
+            `;
         }
 
         function getGenderAvatarClass(memberName) {
@@ -2491,55 +2756,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const historyBody = document.getElementById('historyModalBody');
             const nowMs = Date.now();
 
-            let allHistories = [];
-
-            events.forEach(e => {
-                e.members.forEach(m => {
-                    if (['○[参加]', '△[キャンセル待ち]', '▼[申請中]', '×[キャンセル]'].includes(m.status)) {
-                        let actionText = "に、参加申込しました✋";
-                        if (m.status === '△[キャンセル待ち]') {
-                            actionText = "のキャンセル待ちに登録しました⏳";
-                        } else if (m.status === '▼[申請中]') {
-                            actionText = "に申請中です📝";
-                        } else if (m.status === '×[キャンセル]') {
-                            actionText = "をキャンセルしました❌";
-                        }
-
-                        let cleanName = m.name.replace(/\[[fm]\]/g, '').trim();
-                        let initial = cleanName.slice(0, 2) || '🎾';
-
-                        let appliedAtStr = m.applied_at || "";
-                        const parsedDate = parseAppliedDateTime(appliedAtStr);
-                        let sortTime = parsedDate ? parsedDate.getTime() : 0;
-
-                        const badgeInfo = getActionBadgeInfo(m.status);
-
-                        allHistories.push({
-                            name: m.name,
-                            initial: initial,
-                            avatarGenderClass: getGenderAvatarClass(m.name),
-                            actionBadgeLabel: badgeInfo.label,
-                            actionBadgeClass: badgeInfo.cls,
-                            userId: m.userId,
-                            bearLevel: m.bear_level || "",
-                            status: m.status,
-                            actionText: actionText,
-                            eventTitle: e.title,
-                            eventDate: e.date,
-                            eventDateStr: e.date_str,
-                            eventTime: e.time,
-                            appliedAtStr: appliedAtStr,
-                            elapsedSuffix: formatElapsedSuffix(appliedAtStr),
-                            recencyLevel: getAppliedRecencyLevel(parsedDate, nowMs),
-                            sortTime: isNaN(sortTime) ? 0 : sortTime
-                        });
-                    }
-                });
-            });
-
-            allHistories.sort((a, b) => b.sortTime - a.sortTime);
+            renderHistoryLegend();
+            const allHistories = collectSortedHistories(nowMs);
             currentHistories = allHistories;
-            updateHistoryBadgeCount();
+            updateHistoryBadgeCount(allHistories);
 
             if (allHistories.length === 0) {
                 historyBody.innerHTML = '<p style="text-align: center; color: #64748b; font-size: 18px; padding: 20px;">履歴データがありません。</p>';
@@ -2553,15 +2773,15 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
                     if (item.recencyLevel === '1h') {
                         itemClass += ' applied-1h-item';
-                        badgeHtml = '<span class="applied-tag applied-tag-1h">1h以内</span>';
+                        badgeHtml = `<span class="applied-tag applied-tag-1h">${HISTORY_RECENCY_1H_HOURS}h以内</span>`;
                         timeClass += ' applied-time-1h';
                     } else if (item.recencyLevel === '12h') {
                         itemClass += ' applied-12h-item';
-                        badgeHtml = '<span class="applied-tag applied-tag-12h">12h以内</span>';
+                        badgeHtml = `<span class="applied-tag applied-tag-12h">${HISTORY_RECENCY_12H_HOURS}h以内</span>`;
                         timeClass += ' applied-time-12h';
                     } else if (item.recencyLevel === '24h') {
                         itemClass += ' applied-24h-item';
-                        badgeHtml = '<span class="applied-tag applied-tag-24h">24h以内</span>';
+                        badgeHtml = `<span class="applied-tag applied-tag-24h">${HISTORY_RECENCY_24H_HOURS}h以内</span>`;
                         timeClass += ' applied-time-24h';
                     }
 
@@ -2757,7 +2977,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-27(金) 17:07:16";
+            const generatedAtStr = "2026-11-27(金) 20:23:33";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
@@ -2781,7 +3001,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 adminArea.style.display = 'block';
                 if (noticeLink) noticeLink.style.display = 'inline-block';
                 if (historyContainer) {
-                    historyContainer.style.display = 'inline-block';
+                    historyContainer.style.display = 'inline-flex';
                     updateHistoryBadgeCount();
                 }
                 if (adminDisplayTime) {
