@@ -687,6 +687,7 @@
         .past-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #dc2626; color: #dc2626; font-size: 62px; font-weight: bold; padding: 8px 30px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 8px; z-index: 10; white-space: nowrap; }
         .full-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #16a34a; color: #16a34a; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; white-space: nowrap; }
         .participate-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #d97706; color: #d97706; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 11; white-space: nowrap; }
+        .canceled-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg); border: 6px solid #475569; color: #475569; font-size: 56px; font-weight: bold; padding: 8px 24px; border-radius: 14px; opacity: 0.85; pointer-events: none; letter-spacing: 6px; z-index: 10; white-space: nowrap; }
 
         /* スタンプ併用時（終了＋参加 / 満員＋参加）に重ならないよう左右にずらす */
         .stamp-pair-left { left: 32%; }
@@ -891,7 +892,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-28(土) 19:37:02</div>
+    <div class="footer">更新日時: 2026-11-28(土) 20:16:26</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -2136,11 +2137,14 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const isTomorrowEvent = (e.date === tomorrowStr);
 
             let stateClass = "";
-            let borderStyle = (isParticipating || isWaitlisting || isApplying) ? "border: 2px solid #d00; background-color: #fff9f9;" : "border: 1px solid #e0e0e0; background-color: #fff;";
+            const hasMyStatus = Boolean(isParticipating || isWaitlisting || isApplying);
+            let borderStyle = hasMyStatus ? "border: 2px solid #d00; background-color: #fff9f9;" : "border: 1px solid #e0e0e0; background-color: #fff;";
 
             if (canceled) {
                 stateClass = "canceled-list-item";
-                borderStyle = "border: 1px dashed #94a3b8; background-color: #e2e8f0; opacity: 0.8;";
+                borderStyle = hasMyStatus
+                    ? "border: 2px solid #d00; background-color: #e2e8f0; opacity: 0.85;"
+                    : "border: 1px dashed #94a3b8; background-color: #e2e8f0; opacity: 0.8;";
             } else if (isTodayEvent && past) {
                 stateClass = "today-past-list-item";
                 borderStyle = "border: 2px solid #b22222; background-color: #cbd5e1;";
@@ -2170,11 +2174,13 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
 
             const isFull = !canceled && e.title.includes('満');
             const showFullStamp = (!past && isFull);
-            const hasBaseStamp = (past || showFullStamp);
+            const showPastStamp = (!canceled && past);
+            const hasBaseStamp = (showPastStamp || showFullStamp || canceled);
             const hasDualStamp = (hasBaseStamp && isParticipating);
 
-            const pastStamp = past ? `<div class="past-stamp${hasDualStamp ? ' stamp-pair-left' : ''}">終了</div>` : '';
+            const pastStamp = showPastStamp ? `<div class="past-stamp${hasDualStamp ? ' stamp-pair-left' : ''}">終了</div>` : '';
             const fullStamp = showFullStamp ? `<div class="full-stamp${hasDualStamp ? ' stamp-pair-left' : ''}">満員</div>` : '';
+            const canceledStamp = canceled ? `<div class="canceled-stamp${hasDualStamp ? ' stamp-pair-left' : ''}">中止</div>` : '';
             const participateStamp = isParticipating ? `<div class="participate-stamp${hasDualStamp ? ' stamp-pair-right' : ''}">参加</div>` : '';
 
             let badgeHtml = '';
@@ -2210,6 +2216,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             const innerHtml = `
                 ${pastStamp}
                 ${fullStamp}
+                ${canceledStamp}
                 ${participateStamp}
                 <div style="${titleStyle}">${badgeHtml}${e.date_str} ${e.time}～${e.end_time} [${e.place}]<br>${e.title}</div>
                 <div style="color:#555;">参加人数: ${e.capacity}</div>
@@ -2524,9 +2531,10 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                     borderStyle = "border: 1px solid #94a3b8; background-color: #cbd5e1;";
                 }
 
-                const pastStamp = past ? '<div class="past-stamp">終了</div>' : '';
+                const pastStamp = (!canceled && past) ? '<div class="past-stamp">終了</div>' : '';
                 const isFull = !canceled && e.title.includes('満');
                 const fullStamp = (!past && isFull) ? '<div class="full-stamp">満員</div>' : '';
+                const canceledStamp = canceled ? '<div class="canceled-stamp">中止</div>' : '';
 
                 const dtTextEscaped = generateDateTimePlaceText(e);
                 const eventInfoLabel = `${e.date_str} ${e.time}～${e.end_time} [${e.place}]`;
@@ -2547,6 +2555,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
                 html += `<div style="${borderStyle} padding:12px; margin-bottom:12px; border-radius:8px; position:relative; overflow:hidden;">
                     ${pastStamp}
                     ${fullStamp}
+                    ${canceledStamp}
                     <div style="${modalTitleStyle}">${e.title}</div>
                     <div style="${modalDateStyle}"> ${e.date_str} ${e.time} ～ ${e.end_time} [${e.place}]</div>
                     <div style="color:#555; font-size:20px;">参加人数: ${e.capacity}</div>
@@ -2995,7 +3004,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-28(土) 19:37:02";
+            const generatedAtStr = "2026-11-28(土) 20:16:26";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
