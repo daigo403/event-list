@@ -677,7 +677,7 @@
         .lv-badge-9 { background-color: #14532d; color: #ffffff; }
 
         .past-list-item { background-color: #cbd5e1 !important; border: 1px solid #94a3b8 !important; color: #334155 !important; }
-        .canceled-list-item { background-color: #e2e8f0 !important; border: 1px dashed #94a3b8 !important; color: #64748b !important; opacity: 0.8; }
+        .canceled-list-item { background-color: #e2e8f0 !important; color: #64748b !important; opacity: 0.8; }
         /* 本日：赤、明日：青 */
         .today-list-item { border: 2px solid #b22222 !important; background-color: #fdf2f2 !important; }
         .tomorrow-list-item { border: 2px solid #1a73e8 !important; background-color: #f1f6ff !important; }
@@ -892,7 +892,7 @@
         <button onclick="changeMonth(0)">当月</button>
         <button onclick="changeMonth(1)">次月 ＞</button>
     </div>
-    <div class="footer">更新日時: 2026-11-28(土) 20:16:57</div>
+    <div class="footer">更新日時: 2026-11-28(土) 20:24:23</div>
 
     <div id="eventListArea" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
         <h2 id="eventListTitle" style="margin-top: 0;">当月のイベント一覧</h2>
@@ -2139,24 +2139,30 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             let stateClass = "";
             const hasMyStatus = Boolean(isParticipating || isWaitlisting || isApplying);
             let borderStyle = hasMyStatus ? "border: 2px solid #d00; background-color: #fff9f9;" : "border: 1px solid #e0e0e0; background-color: #fff;";
+            let defaultBorder = hasMyStatus ? "border: 2px solid #d00;" : (canceled ? "border: 1px dashed #94a3b8;" : "border: 1px solid #e0e0e0;");
 
             if (canceled) {
                 stateClass = "canceled-list-item";
                 borderStyle = hasMyStatus
                     ? "border: 2px solid #d00; background-color: #e2e8f0; opacity: 0.85;"
-                    : "border: 1px dashed #94a3b8; background-color: #e2e8f0; opacity: 0.8;";
-            } else if (isTodayEvent && past) {
-                stateClass = "today-past-list-item";
-                borderStyle = "border: 2px solid #b22222; background-color: #cbd5e1;";
+                    : `${defaultBorder} background-color: #e2e8f0; opacity: 0.8;`;
+            } else if (past) {
+                stateClass = "past-list-item";
+                borderStyle = `${defaultBorder} background-color: #cbd5e1;`;
+            }
+
+            if (isTodayEvent) {
+                stateClass = past ? "today-past-list-item" : "today-list-item";
+                borderStyle = `border: 2px solid #b22222; background-color: ${past ? "#cbd5e1" : (canceled ? "#e2e8f0" : "#fdf2f2")};`;
+            } else if (isTomorrowEvent) {
+                stateClass = canceled ? "canceled-list-item" : "tomorrow-list-item";
+                borderStyle = `border: 2px solid #1a73e8; background-color: ${canceled ? "#e2e8f0" : "#f1f6ff"};`;
             } else if (isTodayEvent) {
                 stateClass = "today-list-item";
                 borderStyle = "border: 2px solid #b22222; background-color: #fdf2f2;";
             } else if (past) {
                 stateClass = "past-list-item";
                 borderStyle = "border: 1px solid #94a3b8; background-color: #cbd5e1;";
-            } else if (isTomorrowEvent) {
-                stateClass = "tomorrow-list-item";
-                borderStyle = "border: 2px solid #1a73e8; background-color: #f1f6ff;";
             }
 
             const participantsHtml = participants.map(m => getColoredName(m, myUserId)).join(', ');
@@ -3004,7 +3010,7 @@ https://apps.apple.com/jp/app/%E3%83%86%E3%83%8B%E3%82%B9%E3%83%99%E3%82%A2-tenn
             clearJumpPointersAndHighlight();
             updatePulldown();
 
-            const generatedAtStr = "2026-11-28(土) 20:16:57";
+            const generatedAtStr = "2026-11-28(土) 20:24:23";
             const cleanGenStr = generatedAtStr.replace(/\([^)]+\)/, '');
             const genTime = new Date(cleanGenStr.replace(/-/g, '/'));
             const nowTime = new Date();
